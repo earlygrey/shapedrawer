@@ -31,9 +31,9 @@ public class ShapeDrawer extends AbstractShapeDrawer {
     // MEMBERS
     //================================================================================
 
-    final LineDrawer lineDrawer;
-    final PathDrawer pathDrawer;
-    final PolygonDrawer polygonDrawer;
+    protected final LineDrawer lineDrawer;
+    protected final PathDrawer pathDrawer;
+    protected final PolygonDrawer polygonDrawer;
 
 
     //================================================================================

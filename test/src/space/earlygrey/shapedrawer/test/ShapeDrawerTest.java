@@ -381,6 +381,8 @@ public class ShapeDrawerTest extends ApplicationAdapter {
 
 		runTime += Gdx.graphics.getDeltaTime();
 
+		drawer.update(); //doesn't really do anything in this test
+
 		srPreview.localToStageCoordinates(v.set(srPreview.getWidth(), srPreview.getHeight()).scl(0.5f));
 		int srX = (int) v.x, srY = (int) v.y;
 		preview.localToStageCoordinates(v.set(preview.getWidth(), preview.getHeight()).scl(0.5f));
