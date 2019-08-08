@@ -1,5 +1,8 @@
 # Shape Drawer
 
+[![Release](https://jitpack.io/v/User/Repo.svg)]
+(https://jitpack.io/#User/Repo)
+
 ---
 
 Draws simple shapes like libgdx's ShapeRenderer does, but uses a Batch to perform the drawing.
@@ -54,11 +57,11 @@ Then instantiate a ShapeDrawer:
 ShapeDrawer drawer = new ShapeDrawer(batch, region);
 ```
 
-To use it, simply call its drawing methods in between `Batch.begin()` and `Batch#end()`. Something like this:
+To use it, simply call its drawing methods in between `Batch#begin()` and `Batch#end()`. Something like this:
 
 ```java
 batch.begin();
-drawer.line(0,0,100,100);
+drawer.line(0, 0, 100, 100);
 batch.end();
 ```
 
