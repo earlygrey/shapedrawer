@@ -1,7 +1,7 @@
 # Shape Drawer
 
-[![Release](https://jitpack.io/v/User/Repo.svg)]
-(https://jitpack.io/#User/Repo)
+[![Release](https://jitpack.io/v/earlygrey/shapedrawer.svg)]
+(https://jitpack.io/#earlygrey/shapedrawer)
 
 ---
 
