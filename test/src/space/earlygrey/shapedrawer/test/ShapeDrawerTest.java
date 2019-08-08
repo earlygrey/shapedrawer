@@ -115,17 +115,6 @@ public class ShapeDrawerTest extends ApplicationAdapter {
 			@Override
 			public void changed(ChangeEvent event, Actor actor) {
 				joinType = selectBoxJoin.getSelected();
-				switch (joinType){
-					case NONE:
-						break;
-					case SMOOTH:
-						break;
-					case POINTY:
-						if (shapeMode==ShapeMode.PATH) {
-							tipLabel.setText("Tip: Try clicking instead of dragging.");
-						}
-						break;
-				}
 			}
 		});
 

@@ -22,7 +22,7 @@ and this is best packed into an atlas with your other textures. However for test
 Pixmap pixmap = new Pixmap(1, 1, Format.RGBA8888);
 pixmap.setColor(Color.WHITE);
 pixmap.drawPixel(0, 0);
-texture = new Texture(pixmap);
+texture = new Texture(pixmap); //remember to dispose of later
 pixmap.dispose();
 TextureRegion region = new TextureRegion(texture, 0, 0, 1, 1);
 ```

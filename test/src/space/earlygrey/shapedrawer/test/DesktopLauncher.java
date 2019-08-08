@@ -9,6 +9,7 @@ public class DesktopLauncher {
 		config.width = 1200;
 		config.height = 800;
 		config.resizable  = false;
+		config.samples = 4;
 		new LwjglApplication(new ShapeDrawerTest(), config);
 	}
 }
