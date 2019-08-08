@@ -26,7 +26,7 @@ abstract class AbstractShapeDrawer {
     float pixelSize = 1, halfPixelSize = 0.5f * pixelSize;
     float offset = ShapeUtils.EPSILON * pixelSize;
     float defaultLineWidth = pixelSize;
-    boolean defaultSnap = true;
+    boolean defaultSnap = false;
 
 
     //================================================================================
