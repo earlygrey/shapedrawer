@@ -4,14 +4,12 @@ import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.utils.Array;
 import com.badlogic.gdx.utils.FloatArray;
 
-import java.util.Arrays;
-
 class PathDrawer extends DrawerTemplate {
 
-    //Array<Vector2> path = new Array<Vector2>();
     FloatArray path = new FloatArray();
     FloatArray tempPath = new FloatArray();
 
+    static final Vector2 D0 = new Vector2(), E0 = new Vector2();
 
     PathDrawer(ShapeDrawer drawer) {
         super(drawer);
@@ -50,25 +48,26 @@ class PathDrawer extends DrawerTemplate {
 
         switch(joinType) {
             case NONE:
-                drawPathNoJoin(path.items, path.size, lineWidth);
+                drawPathNoJoin(path.items, path.size, lineWidth, true);
                 break;
             case SMOOTH:
-                drawPathSmoothJoin(path.items, path.size, lineWidth);
+                drawPathSmoothJoin(path.items, path.size, lineWidth, true);
                 break;
             case POINTY:
-                drawPathPointyJoin(path.items, path.size, lineWidth);
+                drawPathPointyJoin(path.items, path.size, lineWidth, true);
                 break;
         }
         path.clear();
     }
 
-    void drawPathNoJoin(float[] path, int size, float lineWidth) {
-        for (int i = 0; i < size-2; i+=2) {
-            drawer.line(path[i], path[i+1], path[i+2], path[i+3], lineWidth);
+    void drawPathNoJoin(float[] path, int size, float lineWidth, boolean open) {
+        int n = open?size-2:size;
+        for (int i = 0; i < n; i+=2) {
+            drawer.line(path[i], path[i+1], path[(i+2)%size], path[(i+3)%size], lineWidth);
         }
     }
 
-    void drawPathPointyJoin(float[] path, int size, float lineWidth) {
+    void drawPathPointyJoin(float[] path, int size, float lineWidth, boolean open) {
         float halfLineWidth =  0.5f*lineWidth;
 
         for (int i = 2; i < size-2; i+=2) {
@@ -81,21 +80,42 @@ class PathDrawer extends DrawerTemplate {
             vert3(D);
             vert4(E);
             if (i==2) {
-                preparePathEndpoint(path[2], path[3], path[0], path[1], D, E, halfLineWidth);
-                vert1(E);
-                vert2(D);
+                if (open) {
+                    preparePathEndpoint(path[2], path[3], path[0], path[1], D, E, halfLineWidth);
+                    vert1(E);
+                    vert2(D);
+                } else {
+                    vec1.set(path[size-2], path[size-1]);
+                    Joiner.preparePointyJoin(vec1, A, B, D0, E0, halfLineWidth);
+                    vert1(E0);
+                    vert2(D0);
+                }
             }
             drawVerts();
             vert1(x4(), y4());
             vert2(x3(), y3());
         }
-        preparePathEndpoint(B, C, D, E, halfLineWidth);
-        vert1(D);
-        vert2(E);
-        drawVerts();
+        if (open) {
+            //draw last link on path
+            preparePathEndpoint(B, C, D, E, halfLineWidth);
+            vert1(D);
+            vert2(E);
+            drawVerts();
+        } else {
+            //draw last link on path
+            A.set(path[0], path[1]);
+            Joiner.preparePointyJoin(B, C, A, D, E, halfLineWidth);
+            vert1(E);
+            vert2(D);
+            drawVerts();
+            //draw connection back to first vertex
+            vert3(D0);
+            vert4(E0);
+            drawVerts();
+        }
     }
 
-    void drawPathSmoothJoin(float[] path, int size, float lineWidth) {
+    void drawPathSmoothJoin(float[] path, int size, float lineWidth, boolean open) {
         float halfLineWidth =  0.5f*lineWidth;
 
         A.set(path[0], path[1]);
@@ -108,7 +128,13 @@ class PathDrawer extends DrawerTemplate {
             vert4(D);
 
             if (i==4) {
-                preparePathEndpoint(B, A, D, E, halfLineWidth);
+                if (open) {
+                    preparePathEndpoint(B, A, D, E, halfLineWidth);
+                } else {
+                    vec1.set(path[size-2], path[size-1]);
+                    Joiner.prepareSmoothJoin(vec1, A, B, D0, E0, halfLineWidth, false);
+                    Joiner.prepareSmoothJoin(vec1, A, B, D, E, halfLineWidth, true);
+                }
                 vert1(D);
                 vert2(E);
             }
@@ -126,10 +152,33 @@ class PathDrawer extends DrawerTemplate {
                 C.set(path[i+2], path[i+3]);
             }
         }
-        preparePathEndpoint(B, C, D, E, halfLineWidth);
-        vert3(D);
-        vert4(E);
-        drawVerts();
+        if (open) {
+            //draw last link on path
+            preparePathEndpoint(B, C, D, E, halfLineWidth);
+            vert3(D);
+            vert4(E);
+            drawVerts();
+        } else {
+            //draw last link on path
+            A.set(B);
+            B.set(C);
+            C.set(path[0], path[1]);
+            Joiner.prepareSmoothJoin(A, B, C, D, E, halfLineWidth, false);
+            vert3(E);
+            vert4(D);
+            drawVerts();
+            drawSmoothJoinFill(A, B, C, D, E, halfLineWidth);
+            //draw connection back to first vertex
+            Joiner.prepareSmoothJoin(A, B, C, D, E, halfLineWidth, true);
+            vert3(E);
+            vert4(D);
+            vert1(D0);
+            vert2(E0);
+            drawVerts();
+            A.set(path[2], path[3]);
+            drawSmoothJoinFill(B, C, A, D0, E0, halfLineWidth);
+        }
+
     }
 
 
