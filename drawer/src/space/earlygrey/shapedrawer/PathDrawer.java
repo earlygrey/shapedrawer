@@ -2,74 +2,86 @@ package space.earlygrey.shapedrawer;
 
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.utils.Array;
+import com.badlogic.gdx.utils.FloatArray;
+
+import java.util.Arrays;
 
 class PathDrawer extends DrawerTemplate {
 
-    Array<Vector2> path = new Array<Vector2>();
+    //Array<Vector2> path = new Array<Vector2>();
+    FloatArray path = new FloatArray();
+    FloatArray tempPath = new FloatArray();
+
 
     PathDrawer(ShapeDrawer drawer) {
         super(drawer);
     }
 
     <T extends Vector2> void path(Array<T> userPath, float lineWidth, JoinType joinType) {
+        for (int i = 0; i < userPath.size; i++) {
+            Vector2 v = userPath.get(i);
+            tempPath.add(v.x, v.y);
+        }
+        path(tempPath.items, 0, tempPath.size, lineWidth, joinType);
+        tempPath.clear();
+    }
 
-        if (userPath.size < 2) return;
+    void path (float[] userPath, int start, int end, float lineWidth, JoinType joinType) {
+
+        if (userPath.length < 4) return;
 
         //construct new path consisting of unique consecutive points
-        int n = userPath.size;
-        path.add(userPath.get(0));
-        for(int i = 1; i < n; i++) {
-            if(!userPath.get(i-1).epsilonEquals(userPath.get(i))) {
-                path.add(userPath.get(i));
+        path.add(userPath[start]);
+        path.add(userPath[start+1]);
+        for(int i = start+2; i < end; i+=2) {
+            if (!ShapeUtils.epsilonEquals(userPath[i-2], userPath[i]) && !ShapeUtils.epsilonEquals(userPath[i-1], userPath[i+1])) {
+                path.add(userPath[i], userPath[i+1]);
             }
         }
-        if (path.size < 2) {
+        if (path.size < 4) {
             path.clear();
             return;
         }
-        if (path.size == 2) {
-            drawer.line(path.get(0), path.get(1), lineWidth);
+        if (path.size == 4) {
+            drawer.line(path.items[0], path.items[1], path.items[2], path.items[3], lineWidth);
             path.clear();
             return;
         }
 
         switch(joinType) {
             case NONE:
-                drawPathNoJoin(path, lineWidth);
+                drawPathNoJoin(path.items, path.size, lineWidth);
                 break;
             case SMOOTH:
-                drawPathSmoothJoin(path, lineWidth);
+                drawPathSmoothJoin(path.items, path.size, lineWidth);
                 break;
             case POINTY:
-                drawPathPointyJoin(path, lineWidth);
+                drawPathPointyJoin(path.items, path.size, lineWidth);
                 break;
         }
         path.clear();
     }
 
-    <T extends Vector2> void drawPathNoJoin(Array<T> path, float lineWidth) {
-        int n = path.size;
-        for (int i = 0; i < n-1; i++) {
-            drawer.line(path.get(i), path.get(i+1), lineWidth);
+    void drawPathNoJoin(float[] path, int size, float lineWidth) {
+        for (int i = 0; i < size-2; i+=2) {
+            drawer.line(path[i], path[i+1], path[i+2], path[i+3], lineWidth);
         }
     }
 
-    <T extends Vector2> void drawPathPointyJoin(Array<T> path, float lineWidth) {
+    void drawPathPointyJoin(float[] path, int size, float lineWidth) {
         float halfLineWidth =  0.5f*lineWidth;
 
-        int n = path.size;
+        for (int i = 2; i < size-2; i+=2) {
 
-        for (int i = 1; i < n-1; i++) {
-
-            A.set(path.get(i-1));
-            B.set(path.get(i));
-            C.set(path.get(i+1));
+            A.set(path[i-2], path[i-1]);
+            B.set(path[i], path[i+1]);
+            C.set(path[i+2], path[i+3]);
 
             Joiner.preparePointyJoin(A, B, C, D, E, halfLineWidth);
             vert3(D);
             vert4(E);
-            if (i==1) {
-                preparePathEndpoint(path.get(1), path.get(0), D, E, halfLineWidth);
+            if (i==2) {
+                preparePathEndpoint(path[2], path[3], path[0], path[1], D, E, halfLineWidth);
                 vert1(E);
                 vert2(D);
             }
@@ -83,20 +95,19 @@ class PathDrawer extends DrawerTemplate {
         drawVerts();
     }
 
-    <T extends Vector2> void drawPathSmoothJoin(Array<T> path, float lineWidth) {
+    void drawPathSmoothJoin(float[] path, int size, float lineWidth) {
         float halfLineWidth =  0.5f*lineWidth;
 
-        A.set(path.get(0));
-        B.set(path.get(1));
-        C.set(path.get(2));
+        A.set(path[0], path[1]);
+        B.set(path[2], path[3]);
+        C.set(path[4], path[5]);
 
-        int n = path.size;
-        for (int i = 2; i < n; i++) {
+        for (int i = 4; i < size; i+=2) {
             Joiner.prepareSmoothJoin(A, B, C, D, E, halfLineWidth, false);
             vert3(E);
             vert4(D);
 
-            if (i==2) {
+            if (i==4) {
                 preparePathEndpoint(B, A, D, E, halfLineWidth);
                 vert1(D);
                 vert2(E);
@@ -109,10 +120,10 @@ class PathDrawer extends DrawerTemplate {
             vert1(D);
             vert2(E);
 
-            if (i<n-1) {
-                A.set(path.get(i-1));
-                B.set(path.get(i));
-                C.set(path.get(i+1));
+            if (i<size-2) {
+                A.set(path[i-2], path[i-1]);
+                B.set(path[i], path[i+1]);
+                C.set(path[i+2], path[i+3]);
             }
         }
         preparePathEndpoint(B, C, D, E, halfLineWidth);
@@ -121,10 +132,15 @@ class PathDrawer extends DrawerTemplate {
         drawVerts();
     }
 
+
+    void preparePathEndpoint(float pathPointX, float pathPointY, float endPointX, float endPointY, Vector2 D, Vector2 E, float halfLineWidth) {
+        vec1.set(endPointX, endPointY).sub(pathPointX, pathPointY).setLength(halfLineWidth);
+        D.set(vec1.y, -vec1.x).add(endPointX, endPointY);
+        E.set(-vec1.y, vec1.x).add(endPointX, endPointY);
+    }
+
     void preparePathEndpoint(Vector2 pathPoint, Vector2 endPoint, Vector2 D, Vector2 E, float halfLineWidth) {
-        vec1.set(endPoint).sub(pathPoint).setLength(halfLineWidth);
-        D.set(vec1.y, -vec1.x).add(endPoint);
-        E.set(-vec1.y, vec1.x).add(endPoint);
+        preparePathEndpoint(pathPoint.x, pathPoint.y, endPoint.x, endPoint.y, D, E, halfLineWidth);
     }
 
 }
