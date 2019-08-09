@@ -38,25 +38,15 @@ See the [jitpack website](https://jitpack.io/#earlygrey/shapedrawer/-SNAPSHOT) f
 
 ## Usage
 
-To create a ShapeDrawer instance you just need a Batch and a TextureRegion. Typically this is a single white pixel so that you can easily colour it,
-and this is best packed into an atlas with your other textures. However for testing purposes you can make one programmatically:
+To create a ShapeDrawer instance you just need a Batch and a TextureRegion. Typically this is a single white pixel so that you can easily colour it, and is best packed into an atlas with your other textures.
 
-```java   
-Pixmap pixmap = new Pixmap(1, 1, Format.RGBA8888);
-pixmap.setColor(Color.WHITE);
-pixmap.drawPixel(0, 0);
-texture = new Texture(pixmap); //remember to dispose of later
-pixmap.dispose();
-TextureRegion region = new TextureRegion(texture, 0, 0, 1, 1);
-```
-
-Then instantiate a ShapeDrawer:
+To instantiate a ShapeDrawer, use:
 
 ```java
 ShapeDrawer drawer = new ShapeDrawer(batch, region);
 ```
 
-To use it, simply call its drawing methods in between `Batch#begin()` and `Batch#end()`. Something like this:
+And to use it, simply call its drawing methods in between `Batch#begin()` and `Batch#end()`. Something like this:
 
 ```java
 batch.begin();
