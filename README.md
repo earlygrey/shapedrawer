@@ -29,7 +29,7 @@ To use this in your gradle project, add the following to your root build.gradle 
 And  in your core project add the dependency:
 ```
 	dependencies {
-	        implementation 'com.github.earlygrey:shapedrawer:master-SNAPSHOT'
+	        implementation 'space.earlygrey:shapedrawer:master-SNAPSHOT'
 	}
 ```
 
