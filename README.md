@@ -66,6 +66,14 @@ batch.end();
 
 That's it!
 
+---
+
+Check the [wiki](https://github.com/earlygrey/shapedrawer/wiki) for more info, including:
+* [Using Shape Drawer](https://github.com/earlygrey/shapedrawer/wiki/Using-Shape-Drawer)
+* [Shapes](https://github.com/earlygrey/shapedrawer/wiki/Shapes)
+* [Join Types](https://github.com/earlygrey/shapedrawer/wiki/Join-Types)
+* [Pixel Snapping](https://github.com/earlygrey/shapedrawer/wiki/Pixel-Snapping)
+
 
 ---
 
