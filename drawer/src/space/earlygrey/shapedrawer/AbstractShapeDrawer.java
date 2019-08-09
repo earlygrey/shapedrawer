@@ -14,7 +14,7 @@ import com.badlogic.gdx.math.Vector2;
  * @author earlygrey
  */
 
-abstract class AbstractShapeDrawer {
+public abstract class AbstractShapeDrawer {
 
     //================================================================================
     // MEMBERS
@@ -88,6 +88,20 @@ abstract class AbstractShapeDrawer {
         float worldWidth = 2f / scaleX;
         float newPixelSize = worldWidth / Gdx.graphics.getWidth();
         return setPixelSize(newPixelSize);
+    }
+
+    //================================================================================
+    // HELPERS
+    //================================================================================
+
+    /**
+     * <p>Makes a guess as to whether joins will be discernible on the screen on based on the thickness of the line.
+     * This affects the default behaviour when a {@link JoinType} is unspecified.</p>
+     * @param lineWidth
+     * @return whether drawing joins will likely be discernible
+     */
+    protected boolean isJoinNecessary(float lineWidth) {
+        return lineWidth > 2 * pixelSize;
     }
 
     //================================================================================

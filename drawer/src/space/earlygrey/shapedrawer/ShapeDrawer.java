@@ -180,12 +180,11 @@ public class ShapeDrawer extends AbstractShapeDrawer {
     //=======================================
 
     /**
-     * <p>Calls {@link #path(Array, float, JoinType)} with {@code lineWidth} set to the current default and
-     * {@code joinType} set to {@link JoinType#SMOOTH}.</p>
+     * <p>Calls {@link #path(Array, float)} with {@code lineWidth} set to the current default.</p>
      * @param path an ordered Array of Vector2s representing path points
      */
     public void path(Array<Vector2> path) {
-        path(path, defaultLineWidth, (defaultLineWidth*pixelSize<=1)?JoinType.NONE:JoinType.SMOOTH);
+        path(path, defaultLineWidth);
     }
 
     /**
@@ -198,12 +197,13 @@ public class ShapeDrawer extends AbstractShapeDrawer {
     }
 
     /**
-     * <p>Calls {@link #path(Array, float, JoinType)} with {@code joinType} set to {@link JoinType#SMOOTH}.</p>
+     * <p>Calls {@link #path(Array, float, JoinType)} with {@code joinType} set to {@link JoinType#SMOOTH}
+     *  (also see {@link #isJoinNecessary(float)}).</p>
      * @param path an ordered Array of Vector2s representing path points
      * @param lineWidth the type of join, see {@link JoinType}
      */
     public void path(Array<Vector2> path, float lineWidth) {
-        path(path, lineWidth, (defaultLineWidth*pixelSize<=1)?JoinType.NONE:JoinType.SMOOTH);
+        path(path, lineWidth, isJoinNecessary(lineWidth)?JoinType.SMOOTH:JoinType.NONE);
     }
 
     /**
@@ -288,7 +288,7 @@ public class ShapeDrawer extends AbstractShapeDrawer {
         float a = Math.min(radiusX, radiusY), b = Math.max(radiusX, radiusY);
         float eccentricity = (float) Math.sqrt(1-((a*a) / (b*b)));
         sides += (sides * eccentricity) / 2;
-        polygon(centreX, centreY, sides, radiusX, radiusY, rotation, lineWidth, JoinType.SMOOTH);
+        polygon(centreX, centreY, sides, radiusX, radiusY, rotation, lineWidth, isJoinNecessary(lineWidth)?JoinType.SMOOTH:JoinType.NONE);
     }
 
 
@@ -323,7 +323,23 @@ public class ShapeDrawer extends AbstractShapeDrawer {
     }
 
     /**
-     * <p>Calls {@link #polygon(float, float, int, float, float, float, float, JoinType)} with joinType set to {@link JoinType#POINTY}.</p>
+     * <p>Calls {@link #polygon(float, float, int, float, float, float, float, JoinType)}
+     * with the current default line width and
+     * with joinType set to {@link JoinType#POINTY} (also see {@link #isJoinNecessary(float)}).</p>
+     * @param centreX the x-coordinate of the centre point
+     * @param centreY the y-coordinate of the centre point
+     * @param sides the number of sides
+     * @param rotation the rotation in radians after scaling
+     * @param scaleX the scale along the x-axis
+     * @param scaleY the scale along the y-axis
+     */
+    public void polygon(float centreX, float centreY, int sides, float scaleX, float scaleY, float rotation) {
+        polygon(centreX, centreY, sides, scaleX, scaleY, rotation, defaultLineWidth, isJoinNecessary(defaultLineWidth)?JoinType.POINTY:JoinType.NONE);
+    }
+
+    /**
+     * <p>Calls {@link #polygon(float, float, int, float, float, float, float, JoinType)}
+     * with joinType set to {@link JoinType#POINTY} (also see {@link #isJoinNecessary(float)}).</p>
      * @param centreX the x-coordinate of the centre point
      * @param centreY the y-coordinate of the centre point
      * @param sides the number of sides
@@ -333,7 +349,7 @@ public class ShapeDrawer extends AbstractShapeDrawer {
      * @param scaleY the scale along the y-axis
      */
     public void polygon(float centreX, float centreY, int sides, float scaleX, float scaleY, float rotation, float lineWidth) {
-        polygon(centreX, centreY, sides, scaleX, scaleY, rotation, lineWidth, JoinType.POINTY);
+        polygon(centreX, centreY, sides, scaleX, scaleY, rotation, lineWidth, isJoinNecessary(lineWidth)?JoinType.POINTY:JoinType.NONE);
     }
 
     /**
