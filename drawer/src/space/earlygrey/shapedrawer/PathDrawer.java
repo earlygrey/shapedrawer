@@ -24,7 +24,15 @@ class PathDrawer extends DrawerTemplate {
         tempPath.clear();
     }
 
+    void path (float[] userPath, float lineWidth, JoinType joinType) {
+        path (userPath, 0, userPath.length, lineWidth, joinType);
+    }
+
     void path (float[] userPath, int start, int end, float lineWidth, JoinType joinType) {
+        path(userPath, start, end, lineWidth, joinType, true);
+    }
+
+    void path (float[] userPath, int start, int end, float lineWidth, JoinType joinType, boolean open) {
 
         if (userPath.length < 4) return;
 
@@ -48,13 +56,13 @@ class PathDrawer extends DrawerTemplate {
 
         switch(joinType) {
             case NONE:
-                drawPathNoJoin(path.items, path.size, lineWidth, true);
+                drawPathNoJoin(path.items, path.size, lineWidth, open);
                 break;
             case SMOOTH:
-                drawPathSmoothJoin(path.items, path.size, lineWidth, true);
+                drawPathSmoothJoin(path.items, path.size, lineWidth, open);
                 break;
             case POINTY:
-                drawPathPointyJoin(path.items, path.size, lineWidth, true);
+                drawPathPointyJoin(path.items, path.size, lineWidth, open);
                 break;
         }
         path.clear();

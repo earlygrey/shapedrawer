@@ -5,6 +5,7 @@ import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.g2d.Batch;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.math.MathUtils;
+import com.badlogic.gdx.math.Polygon;
 import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.utils.Array;
@@ -419,6 +420,43 @@ public class ShapeDrawer extends AbstractShapeDrawer {
      */
     public void polygon(float centreX, float centreY, int sides, float scaleX, float scaleY, float rotation, float lineWidth, JoinType joinType) {
         polygonDrawer.polygon(centreX, centreY, sides,  scaleX, scaleY, rotation, lineWidth, joinType);
+    }
+
+    /**
+     * <p>Calls {@link #polygon(Polygon, float, JoinType)} with default line width and join type set to {@link JoinType#POINTY}.</p>
+     * @param polygon the polygon
+     */
+    public void polygon(Polygon polygon) {
+        polygon(polygon, defaultLineWidth, isJoinNecessary(defaultLineWidth)?JoinType.POINTY:JoinType.NONE);
+    }
+
+    /**
+     * <p>Calls {@link #polygon(Polygon, float, JoinType)} with join type set to {@link JoinType#POINTY}.</p>
+     * @param polygon the polygon
+     * @param lineWidth the line width
+     */
+    public void polygon(Polygon polygon, float lineWidth) {
+        polygon(polygon, lineWidth, isJoinNecessary(defaultLineWidth)?JoinType.POINTY:JoinType.NONE);
+    }
+
+    /**
+     * <p>Calls {@link #polygon(Polygon, float, JoinType)} with default line width.</p>
+     * @param polygon the polygon
+     * @param joinType the type of join, see {@link JoinType}
+     */
+    public void polygon(Polygon polygon, JoinType joinType) {
+        polygon(polygon, defaultLineWidth, joinType);
+    }
+
+    /**
+     * <p>Draws the boundary of the polygon with the given line width and join type.</p>
+     * @param polygon the polygon
+     * @param lineWidth the line width
+     * @param joinType the type of join, see {@link JoinType}
+     */
+    public void polygon(Polygon polygon, float lineWidth, JoinType joinType) {
+        float[] vxs = polygon.getTransformedVertices();
+        pathDrawer.path(vxs, 0, vxs.length, lineWidth, joinType, false);
     }
 
 
