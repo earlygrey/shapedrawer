@@ -24,7 +24,8 @@ class PathDrawer extends DrawerTemplate {
             Vector2 v = userPath.get(i);
             tempPath.add(v.x, v.y);
         }
-        path(tempPath.items, 0, tempPath.size, lineWidth, joinType);
+
+        path(tempPath.items, 0, tempPath.size, lineWidth, joinType, open);
         tempPath.clear();
     }
 
