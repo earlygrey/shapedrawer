@@ -16,6 +16,10 @@ class PathDrawer extends DrawerTemplate {
     }
 
     <T extends Vector2> void path(Array<T> userPath, float lineWidth, JoinType joinType) {
+        path(userPath, lineWidth, joinType, true);
+    }
+
+    <T extends Vector2> void path(Array<T> userPath, float lineWidth, JoinType joinType, boolean open) {
         for (int i = 0; i < userPath.size; i++) {
             Vector2 v = userPath.get(i);
             tempPath.add(v.x, v.y);
@@ -26,6 +30,10 @@ class PathDrawer extends DrawerTemplate {
 
     void path (float[] userPath, float lineWidth, JoinType joinType) {
         path (userPath, 0, userPath.length, lineWidth, joinType);
+    }
+
+    void path (float[] userPath, float lineWidth, JoinType joinType, boolean open) {
+        path (userPath, 0, userPath.length, lineWidth, joinType, open);
     }
 
     void path (float[] userPath, int start, int end, float lineWidth, JoinType joinType) {

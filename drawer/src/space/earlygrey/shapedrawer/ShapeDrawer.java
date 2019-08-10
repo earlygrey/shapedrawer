@@ -189,22 +189,33 @@ public class ShapeDrawer extends AbstractShapeDrawer {
     }
 
     /**
-     * <p>Calls {@link #path(Array, float, JoinType)} with {@code lineWidth} set to the current default.</p>
+     * <p>Calls {@link #path(Array, float, JoinType, boolean)} with open set to true and {@code lineWidth}
+     * set to the current default.</p>
      * @param path an ordered Array of Vector2s representing path points
      * @param joinType the type of join, see {@link JoinType}
      */
     public void path(Array<Vector2> path, JoinType joinType) {
-        path(path, defaultLineWidth, joinType);
+        path(path, defaultLineWidth, joinType, true);
     }
 
     /**
-     * <p>Calls {@link #path(Array, float, JoinType)} with {@code joinType} set to {@link JoinType#SMOOTH}
-     *  (also see {@link #isJoinNecessary(float)}).</p>
+     * <p>Calls {@link #path(Array, float, boolean)} with open set to true.</p>
      * @param path an ordered Array of Vector2s representing path points
      * @param lineWidth the type of join, see {@link JoinType}
      */
     public void path(Array<Vector2> path, float lineWidth) {
-        path(path, lineWidth, isJoinNecessary(lineWidth)?JoinType.SMOOTH:JoinType.NONE);
+        path(path, lineWidth, true);
+    }
+
+    /**
+     * <p>Calls {@link #path(Array, float, JoinType, boolean)} with {@code joinType} set to {@link JoinType#SMOOTH}
+     *  (also see {@link #isJoinNecessary(float)}).</p>
+     * @param path an ordered Array of Vector2s representing path points
+     * @param lineWidth the type of join, see {@link JoinType}
+     * @param open if false then the first and last points are connected
+     */
+    public void path(Array<Vector2> path, float lineWidth, boolean open) {
+        path(path, lineWidth, isJoinNecessary(lineWidth)?JoinType.SMOOTH:JoinType.NONE, open);
     }
 
     /**
@@ -219,9 +230,10 @@ public class ShapeDrawer extends AbstractShapeDrawer {
      * @param path an {@code Array<Vector2>} containing the ordered points in the path
      * @param lineWidth the width of the line in world units the width of each line
      * @param joinType see {@link JoinType} the type of join, see method description
+     * @param open if false then the first and last points are connected
      */
-    public void path(Array<Vector2> path, float lineWidth, JoinType joinType) {
-        pathDrawer.path(path, lineWidth, joinType);
+    public void path(Array<Vector2> path, float lineWidth, JoinType joinType, boolean open) {
+        pathDrawer.path(path, lineWidth, joinType, open);
     }
 
 
