@@ -20,4 +20,10 @@ class ShapeUtils {
         return Math.abs(a-b) < EPSILON;
     }
 
+    public static float normaliseAngleToPositive(float angle) {
+        angle =  angle % PI2;
+        angle = (angle + PI2) % PI2;
+        return angle;
+    }
+
 }

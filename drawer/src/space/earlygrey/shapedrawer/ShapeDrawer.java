@@ -323,7 +323,8 @@ public class ShapeDrawer extends AbstractShapeDrawer {
 
 
     /**
-     * <p>Draws an ellipse as a stretched regular polygon, estimating the number of sides required to appear smooth enough based on the
+     * <p>Draws an ellipse as a stretched regular polygon, estimating the number of sides required
+     * (see {@link #estimateSidesRequired(float, float)}) to appear smooth enough based on the
      * pixel size set. Calls {@link #polygon(float, float, int, float, float, float, JoinType)}.</p>
      * @param centreX the x-coordinate of the centre point
      * @param centreY the y-coordinate of the centre point
@@ -334,17 +335,19 @@ public class ShapeDrawer extends AbstractShapeDrawer {
      * @param joinType the type of join, see {@link JoinType}
      */
     public void ellipse(float centreX, float centreY, float radiusX, float radiusY, float rotation, float lineWidth, JoinType joinType) {
-        float circumference = (float) (MathUtils.PI2 * Math.sqrt((radiusX*radiusX + radiusY*radiusY)/2f));
-        int sides = (int) (circumference / (24 * pixelSize));
-        float a = Math.min(radiusX, radiusY), b = Math.max(radiusX, radiusY);
-        float eccentricity = (float) Math.sqrt(1-((a*a) / (b*b)));
-        sides += (sides * eccentricity) / 16;
-        polygon(centreX, centreY, sides, radiusX, radiusY, rotation, lineWidth, joinType);
+        polygon(centreX, centreY, estimateSidesRequired(radiusX, radiusY), radiusX, radiusY, rotation, lineWidth, joinType);
     }
 
+    //=======================================
+    //                 ARCS
+    //=======================================
+
+    public void arc(float centreX, float centreY, float radiusX, float radiusY, float startAngle, float endAngle) {
+        polygon(centreX, centreY, estimateSidesRequired(radiusX, radiusY), radiusX, radiusY, 0, defaultLineWidth, JoinType.POINTY, startAngle, endAngle);
+    }
 
     //=======================================
-    //               POLYGONS
+    //           REGULAR POLYGONS
     //=======================================
 
 
@@ -418,8 +421,8 @@ public class ShapeDrawer extends AbstractShapeDrawer {
     }
 
     /**
-     * <p>Draws a regular polygon, with the number of sides specified, stretched along the x-axis by {@code scaleX}
-     * and along the y-axis by {@code scaleY}, then rotated to the given rotation.</p>
+     * <p>Calls {@link #polygon(float, float, int, float, float, float, float, JoinType, float, float)}
+     * with start angle 0 and end angle 2*PI.</p>
      *
      * @param centreX the x-coordinate of the centre point
      * @param centreY the y-coordinate of the centre point
@@ -431,8 +434,31 @@ public class ShapeDrawer extends AbstractShapeDrawer {
      * @param joinType the type of join, see {@link JoinType}
      */
     public void polygon(float centreX, float centreY, int sides, float scaleX, float scaleY, float rotation, float lineWidth, JoinType joinType) {
-        polygonDrawer.polygon(centreX, centreY, sides,  scaleX, scaleY, rotation, lineWidth, joinType);
+        polygon(centreX, centreY, sides,  scaleX, scaleY, rotation, lineWidth, joinType, 0, ShapeUtils.PI2-0.2f);
     }
+
+    /**
+     * <p>Draws a regular polygon, with the number of sides specified, stretched along the x-axis by {@code scaleX}
+     * and along the y-axis by {@code scaleY}, then rotated to the given rotation.</p>
+     *
+     * @param centreX the x-coordinate of the centre point
+     * @param centreY the y-coordinate of the centre point
+     * @param sides the number of sides
+     * @param scaleX the scale along the x-axis
+     * @param scaleY the scale along the y-axis
+     * @param rotation the rotation in radians after scaling
+     * @param lineWidth the width of the line in world units
+     * @param joinType the type of join, see {@link JoinType}
+     * @param startAngle the angle in radians from which to start drawing
+     * @param radians the angle in radians past the start angle at which which drawing should end
+     */
+    public void polygon(float centreX, float centreY, int sides, float scaleX, float scaleY, float rotation, float lineWidth, JoinType joinType, float startAngle, float radians) {
+        polygonDrawer.polygon(centreX, centreY, sides,  scaleX, scaleY, rotation, lineWidth, joinType, startAngle, radians);
+    }
+
+    //=======================================
+    //           ARBITRARY POLYGONS
+    //=======================================
 
     /**
      * <p>Calls {@link #polygon(Polygon, float, JoinType)} with default line width and join type set to {@link JoinType#POINTY}.</p>

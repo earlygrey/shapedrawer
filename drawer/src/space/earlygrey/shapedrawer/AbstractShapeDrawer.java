@@ -5,6 +5,7 @@ import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.g2d.Batch;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
+import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.math.Matrix4;
 import com.badlogic.gdx.math.Vector2;
 
@@ -103,6 +104,15 @@ public abstract class AbstractShapeDrawer {
      */
     protected boolean isJoinNecessary(float lineWidth) {
         return lineWidth > 3 * pixelSize;
+    }
+
+    protected int estimateSidesRequired(float radiusX, float radiusY) {
+        float circumference = (float) (MathUtils.PI2 * Math.sqrt((radiusX*radiusX + radiusY*radiusY)/2f));
+        int sides = (int) (circumference / (24 * pixelSize));
+        float a = Math.min(radiusX, radiusY), b = Math.max(radiusX, radiusY);
+        float eccentricity = (float) Math.sqrt(1-((a*a) / (b*b)));
+        sides += (sides * eccentricity) / 16;
+        return Math.max(sides, 20);
     }
 
     //================================================================================
