@@ -98,7 +98,7 @@ class PathDrawer extends DrawerTemplate {
             vert4(E);
             if (i==2) {
                 if (open) {
-                    preparePathEndpoint(path[2], path[3], path[0], path[1], D, E, halfLineWidth);
+                    Joiner.prepareFlatEndpoint(path[2], path[3], path[0], path[1], D, E, halfLineWidth);
                     vert1(E);
                     vert2(D);
                 } else {
@@ -114,7 +114,7 @@ class PathDrawer extends DrawerTemplate {
         }
         if (open) {
             //draw last link on path
-            preparePathEndpoint(B, C, D, E, halfLineWidth);
+            Joiner.prepareFlatEndpoint(B, C, D, E, halfLineWidth);
             vert1(D);
             vert2(E);
             drawVerts();
@@ -146,7 +146,7 @@ class PathDrawer extends DrawerTemplate {
 
             if (i==4) {
                 if (open) {
-                    preparePathEndpoint(B, A, D, E, halfLineWidth);
+                    Joiner.prepareFlatEndpoint(B, A, D, E, halfLineWidth);
                 } else {
                     vec1.set(path[size-2], path[size-1]);
                     Joiner.prepareSmoothJoin(vec1, A, B, D0, E0, halfLineWidth, false);
@@ -171,7 +171,7 @@ class PathDrawer extends DrawerTemplate {
         }
         if (open) {
             //draw last link on path
-            preparePathEndpoint(B, C, D, E, halfLineWidth);
+            Joiner.prepareFlatEndpoint(B, C, D, E, halfLineWidth);
             vert3(D);
             vert4(E);
             drawVerts();
@@ -196,17 +196,6 @@ class PathDrawer extends DrawerTemplate {
             drawSmoothJoinFill(B, C, A, D0, E0, halfLineWidth);
         }
 
-    }
-
-
-    void preparePathEndpoint(float pathPointX, float pathPointY, float endPointX, float endPointY, Vector2 D, Vector2 E, float halfLineWidth) {
-        vec1.set(endPointX, endPointY).sub(pathPointX, pathPointY).setLength(halfLineWidth);
-        D.set(vec1.y, -vec1.x).add(endPointX, endPointY);
-        E.set(-vec1.y, vec1.x).add(endPointX, endPointY);
-    }
-
-    void preparePathEndpoint(Vector2 pathPoint, Vector2 endPoint, Vector2 D, Vector2 E, float halfLineWidth) {
-        preparePathEndpoint(pathPoint.x, pathPoint.y, endPoint.x, endPoint.y, D, E, halfLineWidth);
     }
 
 }
