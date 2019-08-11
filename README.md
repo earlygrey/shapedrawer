@@ -19,18 +19,18 @@ Just needs to be provided with a Batch (SpriteBatch or PolygonSpriteBatch will w
 To use this in your gradle project, add the following to your root build.gradle file:
  
 ```
-	allprojects {
-		repositories {
-			...
-			maven { url 'https://jitpack.io' }
-		}
+allprojects {
+	repositories {
+		...
+		maven { url 'https://jitpack.io' }
 	}
+}
 ```
 And  in your core project add the dependency:
 ```
-	dependencies {
-	        implementation 'space.earlygrey:shapedrawer:master-SNAPSHOT'
-	}
+dependencies {
+        implementation 'space.earlygrey:shapedrawer:1.0.0'
+}
 ```
 
 See the [jitpack website](https://jitpack.io/#earlygrey/shapedrawer/-SNAPSHOT) for more info.
