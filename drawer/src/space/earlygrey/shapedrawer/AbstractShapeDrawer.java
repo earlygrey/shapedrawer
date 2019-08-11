@@ -97,11 +97,12 @@ public abstract class AbstractShapeDrawer {
     /**
      * <p>Makes a guess as to whether joins will be discernible on the screen on based on the thickness of the line.
      * This affects the default behaviour when a {@link JoinType} is unspecified.</p>
+     * <p>You can override this if you want to change this behaviour.</p>
      * @param lineWidth
      * @return whether drawing joins will likely be discernible
      */
     protected boolean isJoinNecessary(float lineWidth) {
-        return lineWidth > 2 * pixelSize;
+        return lineWidth > 3 * pixelSize;
     }
 
     //================================================================================

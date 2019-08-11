@@ -269,7 +269,7 @@ public class ShapeDrawer extends AbstractShapeDrawer {
      * @param lineWidth the width of the line in world units
      */
     public void circle(float centreX, float centreY, float radius, float lineWidth) {
-        circle(centreX, centreY, radius, lineWidth, JoinType.SMOOTH);
+        circle(centreX, centreY, radius, lineWidth, isJoinNecessary(lineWidth)?JoinType.SMOOTH:JoinType.NONE);
     }
 
     /**
