@@ -33,6 +33,26 @@ dependencies {
 }
 ```
 
+For HTML5/GWT support, add the dependency to the html project:
+
+```groovy
+project(":html") {
+    apply plugin: "gwt"
+    apply plugin: "war"
+
+
+    dependencies {
+        ...
+        implementation 'space.earlygrey:shapedrawer:1.0.0:sources'
+    }
+}
+```
+
+And add the following line to the GdxDefinition.gwt.xml file in the HTML project:
+```xml
+<inherits name="space.earlygrey.shapedrawer"/>
+```
+
 See the [jitpack website](https://jitpack.io/#earlygrey/shapedrawer/-SNAPSHOT) for more info.
 
 
