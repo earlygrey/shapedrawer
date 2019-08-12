@@ -76,10 +76,14 @@ class PolygonDrawer extends DrawerTemplate {
 
         for (int i = start; i <= end; i++) {
 
-            if (smooth) {
-                Joiner.prepareSmoothJoin(A, B, C, D, E, halfLineWidth, true);
+            if (i==start) {
+                Joiner.prepareRadialEndpoint(B, D, E, halfLineWidth);
             } else {
-                Joiner.preparePointyJoin(A, B, C, D, E, halfLineWidth);
+                if (smooth) {
+                    Joiner.prepareSmoothJoin(A, B, C, D, E, halfLineWidth, true);
+                } else {
+                    Joiner.preparePointyJoin(A, B, C, D, E, halfLineWidth);
+                }
             }
             vert1(E.x*cosRot-E.y*sinRot  + centre.x, E.x*sinRot+E.y*cosRot + centre.y);
             vert2(D.x*cosRot-D.y*sinRot  + centre.x, D.x*sinRot+D.y*cosRot + centre.y);

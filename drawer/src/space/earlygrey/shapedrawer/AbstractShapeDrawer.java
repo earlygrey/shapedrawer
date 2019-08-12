@@ -107,7 +107,7 @@ public abstract class AbstractShapeDrawer {
     }
 
     protected int estimateSidesRequired(float radiusX, float radiusY) {
-        float circumference = (float) (MathUtils.PI2 * Math.sqrt((radiusX*radiusX + radiusY*radiusY)/2f));
+        float circumference = (float) (ShapeUtils.PI2 * Math.sqrt((radiusX*radiusX + radiusY*radiusY)/2f));
         int sides = (int) (circumference / (24 * pixelSize));
         float a = Math.min(radiusX, radiusY), b = Math.max(radiusX, radiusY);
         float eccentricity = (float) Math.sqrt(1-((a*a) / (b*b)));
