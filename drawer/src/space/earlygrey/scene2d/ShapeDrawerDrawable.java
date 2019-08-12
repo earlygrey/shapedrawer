@@ -1,4 +1,4 @@
-package com.ray3k.template;
+package space.earlygrey.scene2d;
 
 import com.badlogic.gdx.graphics.g2d.Batch;
 import com.badlogic.gdx.scenes.scene2d.utils.BaseDrawable;
