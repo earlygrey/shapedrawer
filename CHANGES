@@ -1,6 +1,6 @@
-[1.0.0]
-- initial code
-
 [1.1.0]
 - Added HTML5 support.
 - Added ShapeDrawerDrawable to allow shape drawing in Scene2D UI's.
+
+[1.0.0]
+- initial code
