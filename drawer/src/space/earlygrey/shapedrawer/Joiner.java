@@ -77,4 +77,10 @@ class Joiner {
         prepareFlatEndpoint(pathPoint.x, pathPoint.y, endPoint.x, endPoint.y, D, E, halfLineWidth);
     }
 
+    static void prepareRadialEndpoint(Vector2 A, Vector2 D, Vector2 E, float halfLineWidth) {
+        v.set(A).setLength(halfLineWidth);
+        D.set(A).sub(v);
+        E.set(A).add(v);
+    }
+
 }

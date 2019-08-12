@@ -1,10 +1,6 @@
 package space.earlygrey.shapedrawer;
-
-import com.badlogic.gdx.Gdx;
-import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.math.Vector2;
-import com.badlogic.gdx.utils.TimeUtils;
 
 class PolygonDrawer extends DrawerTemplate {
 
@@ -51,7 +47,7 @@ class PolygonDrawer extends DrawerTemplate {
         for (int i = start; i <= end; i++) {
             float x1 = A.x*cosRot-A.y*sinRot  + centre.x, y1 = A.x*sinRot+A.y*cosRot + centre.y;
             float x2 = B.x*cosRot-B.y*sinRot  + centre.x, y2 = B.x*sinRot+B.y*cosRot + centre.y;
-            drawer.line(x1, y1, x2, y2, lineWidth);
+            drawer.line(x1, y1, x2, y2, lineWidth, false);
             if (i<end-1) {
                 A.set(B);
                 dir.set(dir.x * cos - dir.y * sin, dir.x * sin + dir.y * cos);
@@ -88,31 +84,37 @@ class PolygonDrawer extends DrawerTemplate {
             vert1(E.x*cosRot-E.y*sinRot  + centre.x, E.x*sinRot+E.y*cosRot + centre.y);
             vert2(D.x*cosRot-D.y*sinRot  + centre.x, D.x*sinRot+D.y*cosRot + centre.y);
 
-            if (i==end) {
-                A.set(B);
-                B.set(1, 0).rotateRad(endAngle).scl(radius);
-                dir.set(dir.x * cos - dir.y * sin, dir.x * sin + dir.y * cos);
-                C.set(dir).scl(radius);
-            } else {
+
+            if (i<end) {
                 A.set(B);
                 B.set(C);
                 dir.set(dir.x * cos - dir.y * sin, dir.x * sin + dir.y * cos);
                 C.set(dir).scl(radius);
+            } else {
+                B.set(1, 0).rotateRad(endAngle).scl(radius);
             }
 
-            if (smooth) {
-                Joiner.prepareSmoothJoin(A, B, C, D, E, halfLineWidth, false);
+
+            if (i<end) {
+                if (smooth) {
+                    Joiner.prepareSmoothJoin(A, B, C, D, E, halfLineWidth, false);
+                } else {
+                    Joiner.preparePointyJoin(A, B, C, D, E, halfLineWidth);
+                }
             } else {
-                Joiner.preparePointyJoin(A, B, C, D, E, halfLineWidth);
+                Joiner.prepareRadialEndpoint(B, D, E, halfLineWidth);
             }
+
             vert3(D.x*cosRot-D.y*sinRot  + centre.x, D.x*sinRot+D.y*cosRot + centre.y);
             vert4(E.x*cosRot-E.y*sinRot  + centre.x, E.x*sinRot+E.y*cosRot + centre.y);
 
             drawVerts(); //draw current AB
-            
-            if (smooth) drawSmoothJoinFill(A, B, C, D, E, centre, cosRot, sinRot, halfLineWidth);
+
+            if (smooth && i<end) drawSmoothJoinFill(A, B, C, D, E, centre, cosRot, sinRot, halfLineWidth);
 
         }
     }
+
+
 
 }
