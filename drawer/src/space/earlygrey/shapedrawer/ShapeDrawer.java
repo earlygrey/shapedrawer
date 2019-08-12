@@ -343,7 +343,7 @@ public class ShapeDrawer extends AbstractShapeDrawer {
     //=======================================
 
     public void arc(float centreX, float centreY, float radiusX, float radiusY, float startAngle, float endAngle, JoinType joinType) {
-        polygon(centreX, centreY, (int) (0.2f*estimateSidesRequired(radiusX, radiusY)), radiusX, radiusY, 0, defaultLineWidth, joinType, startAngle, endAngle);
+        polygon(centreX, centreY, estimateSidesRequired(radiusX, radiusY), radiusX, radiusY, 0, defaultLineWidth, joinType, startAngle, endAngle);
     }
 
     //=======================================

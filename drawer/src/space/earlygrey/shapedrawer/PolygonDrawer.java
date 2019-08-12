@@ -20,13 +20,10 @@ class PolygonDrawer extends DrawerTemplate {
         centre.set(centreX, centreY);
         radius.set(radiusX, radiusY);
 
-        switch (joinType) {
-            case NONE:
-                drawPolygonNoJoin(centre, sides, lineWidth, rotation, radius, startAngle, radians);
-                break;
-            case SMOOTH: case POINTY: default:
-                drawPolygonWithJoin(centre, sides, halfLineWidth, rotation, radius, startAngle, radians, joinType==JoinType.SMOOTH);
-                break;
+        if (joinType==JoinType.NONE) {
+            drawPolygonNoJoin(centre, sides, lineWidth, rotation, radius, startAngle, radians);
+        } else {
+            drawPolygonWithJoin(centre, sides, halfLineWidth, rotation, radius, startAngle, radians, joinType==JoinType.SMOOTH);
         }
     }
 
