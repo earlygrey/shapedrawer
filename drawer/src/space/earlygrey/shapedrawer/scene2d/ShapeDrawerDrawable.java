@@ -1,4 +1,4 @@
-package space.earlygrey.scene2d;
+package space.earlygrey.shapedrawer.scene2d;
 
 import com.badlogic.gdx.graphics.g2d.Batch;
 import com.badlogic.gdx.scenes.scene2d.utils.BaseDrawable;
