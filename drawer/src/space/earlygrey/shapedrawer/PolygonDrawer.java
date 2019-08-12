@@ -28,11 +28,8 @@ class PolygonDrawer extends DrawerTemplate {
             case NONE:
                 drawPolygonNoJoin(centre, sides, lineWidth, rotation, radius, startAngle, radians);
                 break;
-            case SMOOTH:
-                drawPolygonSmoothJoin(centre, sides, halfLineWidth, rotation, radius, startAngle, radians);
-                break;
-            case POINTY: default:
-                drawPolygonPointyJoin(centre, sides, halfLineWidth, rotation, radius, startAngle, radians);
+            case SMOOTH: case POINTY: default:
+                drawPolygonWithJoin(centre, sides, halfLineWidth, rotation, radius, startAngle, radians, joinType==JoinType.SMOOTH);
                 break;
         }
     }
@@ -66,49 +63,7 @@ class PolygonDrawer extends DrawerTemplate {
         }
     }
 
-    void drawPolygonPointyJoin(Vector2 centre, int sides, float halfLineWidth, float rotation, Vector2 radius, float startAngle, float radians) {
-        float angleInterval = MathUtils.PI2 / sides;
-        float endAngle = startAngle + radians;
-
-        float cos = (float) Math.cos(angleInterval), sin = (float) Math.sin(angleInterval);
-        float cosRot = (float) Math.cos(rotation), sinRot = (float) Math.sin(rotation);
-
-        int start = (int) Math.ceil(sides * (startAngle / ShapeUtils.PI2));
-        int end = (int) Math.floor(sides * (endAngle / ShapeUtils.PI2)) + 1;
-
-        dir.set(1, 0).rotateRad(Math.min(start * angleInterval, endAngle));
-        A.set(1, 0).rotateRad((start-1) * angleInterval).scl(radius);
-        B.set(1, 0).rotateRad(startAngle).scl(radius);
-        C.set(dir).scl(radius);
-
-        for (int i = start; i <= end; i++) {
-            Joiner.preparePointyJoin(A, B, C, D, E, halfLineWidth);
-            vert1(E.x*cosRot-E.y*sinRot  + centre.x, E.x*sinRot+E.y*cosRot + centre.y);
-            vert2(D.x*cosRot-D.y*sinRot  + centre.x, D.x*sinRot+D.y*cosRot + centre.y);
-
-            if (i==end) {
-                A.set(B);
-                B.set(1, 0).rotateRad(endAngle).scl(radius);
-                dir.set(dir.x * cos - dir.y * sin, dir.x * sin + dir.y * cos);
-                C.set(dir).scl(radius);
-                drawABC();
-                drawDE();
-            } else {
-                A.set(B);
-                B.set(C);
-                dir.set(dir.x * cos - dir.y * sin, dir.x * sin + dir.y * cos);
-                C.set(dir).scl(radius);
-            }
-
-            Joiner.preparePointyJoin(A, B, C, D, E, halfLineWidth);
-            vert3(D.x*cosRot-D.y*sinRot  + centre.x, D.x*sinRot+D.y*cosRot + centre.y);
-            vert4(E.x*cosRot-E.y*sinRot  + centre.x, E.x*sinRot+E.y*cosRot + centre.y);
-
-            drawVerts(); //draws current AB
-        }
-    }
-
-    void drawPolygonSmoothJoin(Vector2 centre, int sides, float halfLineWidth, float rotation, Vector2 radius, float startAngle, float radians) {
+    void drawPolygonWithJoin(Vector2 centre, int sides, float halfLineWidth, float rotation, Vector2 radius, float startAngle, float radians, boolean smooth) {
         float angleInterval = MathUtils.PI2 / sides;
         float endAngle = startAngle + radians;
 
@@ -125,7 +80,11 @@ class PolygonDrawer extends DrawerTemplate {
 
         for (int i = start; i <= end; i++) {
 
-            Joiner.prepareSmoothJoin(A, B, C, D, E, halfLineWidth, true);
+            if (smooth) {
+                Joiner.prepareSmoothJoin(A, B, C, D, E, halfLineWidth, true);
+            } else {
+                Joiner.preparePointyJoin(A, B, C, D, E, halfLineWidth);
+            }
             vert1(E.x*cosRot-E.y*sinRot  + centre.x, E.x*sinRot+E.y*cosRot + centre.y);
             vert2(D.x*cosRot-D.y*sinRot  + centre.x, D.x*sinRot+D.y*cosRot + centre.y);
 
@@ -134,8 +93,6 @@ class PolygonDrawer extends DrawerTemplate {
                 B.set(1, 0).rotateRad(endAngle).scl(radius);
                 dir.set(dir.x * cos - dir.y * sin, dir.x * sin + dir.y * cos);
                 C.set(dir).scl(radius);
-                drawABC();
-                drawDE();
             } else {
                 A.set(B);
                 B.set(C);
@@ -143,12 +100,19 @@ class PolygonDrawer extends DrawerTemplate {
                 C.set(dir).scl(radius);
             }
 
-            Joiner.prepareSmoothJoin(A, B, C, D, E, halfLineWidth, false);
+            if (smooth) {
+                Joiner.prepareSmoothJoin(A, B, C, D, E, halfLineWidth, false);
+            } else {
+                Joiner.preparePointyJoin(A, B, C, D, E, halfLineWidth);
+            }
             vert3(D.x*cosRot-D.y*sinRot  + centre.x, D.x*sinRot+D.y*cosRot + centre.y);
             vert4(E.x*cosRot-E.y*sinRot  + centre.x, E.x*sinRot+E.y*cosRot + centre.y);
+
             drawVerts(); //draw current AB
-            drawSmoothJoinFill(A, B, C, D, E, centre, cosRot, sinRot, halfLineWidth);
+            
+            if (smooth) drawSmoothJoinFill(A, B, C, D, E, centre, cosRot, sinRot, halfLineWidth);
 
         }
     }
+
 }
