@@ -342,8 +342,8 @@ public class ShapeDrawer extends AbstractShapeDrawer {
     //                 ARCS
     //=======================================
 
-    public void arc(float centreX, float centreY, float radiusX, float radiusY, float startAngle, float endAngle) {
-        polygon(centreX, centreY, estimateSidesRequired(radiusX, radiusY), radiusX, radiusY, 0, defaultLineWidth, JoinType.POINTY, startAngle, endAngle);
+    public void arc(float centreX, float centreY, float radiusX, float radiusY, float startAngle, float endAngle, JoinType joinType) {
+        polygon(centreX, centreY, (int) (0.2f*estimateSidesRequired(radiusX, radiusY)), radiusX, radiusY, 0, defaultLineWidth, joinType, startAngle, endAngle);
     }
 
     //=======================================
@@ -434,7 +434,7 @@ public class ShapeDrawer extends AbstractShapeDrawer {
      * @param joinType the type of join, see {@link JoinType}
      */
     public void polygon(float centreX, float centreY, int sides, float scaleX, float scaleY, float rotation, float lineWidth, JoinType joinType) {
-        polygon(centreX, centreY, sides,  scaleX, scaleY, rotation, lineWidth, joinType, 0, ShapeUtils.PI2-0.2f);
+        polygon(centreX, centreY, sides,  scaleX, scaleY, rotation, lineWidth, joinType, 0, ShapeUtils.PI2);
     }
 
     /**
