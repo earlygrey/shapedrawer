@@ -78,6 +78,7 @@ class PolygonDrawer extends DrawerTemplate {
             B.set(1, 0).rotateRad((start-1) * angleInterval).scl(radius);
         } else {
             start = (int) Math.ceil(sides * (startAngle / ShapeUtils.PI2));
+            if (ShapeUtils.epsilonEquals(sides * start, startAngle)) start++;
             end = (int) Math.floor(sides * (endAngle / ShapeUtils.PI2)) + 1;
             end = Math.min(end, start + sides);
             dir.set(1, 0).rotateRad(Math.min(start * angleInterval, endAngle));
