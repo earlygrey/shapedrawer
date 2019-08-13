@@ -342,8 +342,8 @@ public class ShapeDrawer extends AbstractShapeDrawer {
     //                 ARCS
     //=======================================
 
-    public void arc(float centreX, float centreY, float radiusX, float radiusY, float startAngle, float endAngle, JoinType joinType) {
-        polygon(centreX, centreY, estimateSidesRequired(radiusX, radiusY), radiusX, radiusY, 0, defaultLineWidth, joinType, startAngle, endAngle);
+    public void arc(float centreX, float centreY, float radiusX, float radiusY, float startAngle, float radians, JoinType joinType) {
+        polygonDrawer.polygon(centreX, centreY, (int) (0.1f*estimateSidesRequired(radiusX, radiusY)), radiusX, radiusY, 0, defaultLineWidth, joinType, startAngle, radians);
     }
 
     //=======================================
@@ -421,7 +421,7 @@ public class ShapeDrawer extends AbstractShapeDrawer {
     }
 
     /**
-     * <p>Calls {@link #polygon(float, float, int, float, float, float, float, JoinType, float, float)}
+     * <p>Calls {@link #polygon(float, float, int, float, float, float, float, JoinType,)}
      * with start angle 0 and end angle 2*PI.</p>
      *
      * @param centreX the x-coordinate of the centre point
@@ -434,26 +434,7 @@ public class ShapeDrawer extends AbstractShapeDrawer {
      * @param joinType the type of join, see {@link JoinType}
      */
     public void polygon(float centreX, float centreY, int sides, float scaleX, float scaleY, float rotation, float lineWidth, JoinType joinType) {
-        polygon(centreX, centreY, sides,  scaleX, scaleY, rotation, lineWidth, joinType, 0, ShapeUtils.PI2);
-    }
-
-    /**
-     * <p>Draws a regular polygon, with the number of sides specified, stretched along the x-axis by {@code scaleX}
-     * and along the y-axis by {@code scaleY}, then rotated to the given rotation.</p>
-     *
-     * @param centreX the x-coordinate of the centre point
-     * @param centreY the y-coordinate of the centre point
-     * @param sides the number of sides
-     * @param scaleX the scale along the x-axis
-     * @param scaleY the scale along the y-axis
-     * @param rotation the rotation in radians after scaling
-     * @param lineWidth the width of the line in world units
-     * @param joinType the type of join, see {@link JoinType}
-     * @param startAngle the angle in radians from which to start drawing
-     * @param radians the angle in radians past the start angle at which which drawing should end
-     */
-    public void polygon(float centreX, float centreY, int sides, float scaleX, float scaleY, float rotation, float lineWidth, JoinType joinType, float startAngle, float radians) {
-        polygonDrawer.polygon(centreX, centreY, sides,  scaleX, scaleY, rotation, lineWidth, joinType, startAngle, radians);
+        polygonDrawer.polygon(centreX, centreY, sides,  scaleX, scaleY, rotation, lineWidth, joinType, 0, ShapeUtils.PI2);
     }
 
     //=======================================
