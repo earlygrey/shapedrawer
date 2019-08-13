@@ -36,6 +36,7 @@ import com.badlogic.gdx.utils.viewport.FitViewport;
 
 import space.earlygrey.shapedrawer.JoinType;
 import space.earlygrey.shapedrawer.ShapeDrawer;
+import space.earlygrey.shapedrawer.ShapeUtils;
 
 public class ShapeDrawerTest extends ApplicationAdapter {
 
@@ -388,7 +389,7 @@ public class ShapeDrawerTest extends ApplicationAdapter {
 		preview.localToStageCoordinates(v.set(preview.getWidth(), preview.getHeight()).scl(0.5f));
 		int x = (int) v.x, y = (int) v.y;
 		float rotation = v.set(anchor).sub(x, y).angleRad();
-		//rotation = ShapeUtils.normaliseAngleToPositive(runTime);
+		rotation = ShapeUtils.normaliseAngleToPositive(rotation);
 		float scale = anchor.dst(x, y);
 
 
