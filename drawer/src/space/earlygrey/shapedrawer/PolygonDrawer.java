@@ -1,4 +1,5 @@
 package space.earlygrey.shapedrawer;
+import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.math.Vector2;
 
@@ -57,23 +58,36 @@ class PolygonDrawer extends DrawerTemplate {
     }
 
     void drawPolygonWithJoin(Vector2 centre, int sides, float halfLineWidth, float rotation, Vector2 radius, float startAngle, float radians, boolean smooth) {
+
+        boolean full = ShapeUtils.epsilonEquals(radians, ShapeUtils.PI2);
+
         float angleInterval = MathUtils.PI2 / sides;
         float endAngle = startAngle + radians;
 
         float cos = (float) Math.cos(angleInterval), sin = (float) Math.sin(angleInterval);
         float cosRot = (float) Math.cos(rotation), sinRot = (float) Math.sin(rotation);
 
-        int start = (int) Math.ceil(sides * (startAngle / ShapeUtils.PI2));
-        int end = (int) Math.floor(sides * (endAngle / ShapeUtils.PI2)) + 1;
+        int start, end;
 
-        dir.set(1, 0).rotateRad(Math.min(start * angleInterval, endAngle));
-        A.set(1, 0).rotateRad((start-1) * angleInterval).scl(radius);
-        B.set(1, 0).rotateRad(startAngle).scl(radius);
-        C.set(dir).scl(radius);
-
+        if (full) {
+            start = 1;
+            end = sides;
+            dir.set(1, 0).rotateRad(start * angleInterval);
+            A.set(1, 0).rotateRad((start-2) * angleInterval).scl(radius);
+            C.set(dir).scl(radius);
+            B.set(1, 0).rotateRad((start-1) * angleInterval).scl(radius);
+        } else {
+            start = (int) Math.ceil(sides * (startAngle / ShapeUtils.PI2));
+            end = (int) Math.floor(sides * (endAngle / ShapeUtils.PI2)) + 1;
+            end = Math.min(end, start + sides);
+            dir.set(1, 0).rotateRad(Math.min(start * angleInterval, endAngle));
+            A.set(1, 0).rotateRad((start-1) * angleInterval).scl(radius);
+            B.set(1, 0).rotateRad(startAngle).scl(radius);
+            C.set(dir).scl(radius);
+        }
         for (int i = start; i <= end; i++) {
 
-            if (i==start) {
+            if (!full && i==start) {
                 Joiner.prepareRadialEndpoint(B, D, E, halfLineWidth);
             } else {
                 if (smooth) {
@@ -85,8 +99,7 @@ class PolygonDrawer extends DrawerTemplate {
             vert1(E.x*cosRot-E.y*sinRot  + centre.x, E.x*sinRot+E.y*cosRot + centre.y);
             vert2(D.x*cosRot-D.y*sinRot  + centre.x, D.x*sinRot+D.y*cosRot + centre.y);
 
-
-            if (i<end) {
+            if (full || i<end) {
                 A.set(B);
                 B.set(C);
                 dir.set(dir.x * cos - dir.y * sin, dir.x * sin + dir.y * cos);
@@ -95,8 +108,7 @@ class PolygonDrawer extends DrawerTemplate {
                 B.set(1, 0).rotateRad(endAngle).scl(radius);
             }
 
-
-            if (i<end) {
+            if (full || i<end) {
                 if (smooth) {
                     Joiner.prepareSmoothJoin(A, B, C, D, E, halfLineWidth, false);
                 } else {
@@ -111,8 +123,7 @@ class PolygonDrawer extends DrawerTemplate {
 
             drawVerts(); //draw current AB
 
-            if (smooth && i<end) drawSmoothJoinFill(A, B, C, D, E, centre, cosRot, sinRot, halfLineWidth);
-
+            if (smooth && (full || i<end)) drawSmoothJoinFill(A, B, C, D, E, centre, cosRot, sinRot, halfLineWidth);
         }
     }
 
