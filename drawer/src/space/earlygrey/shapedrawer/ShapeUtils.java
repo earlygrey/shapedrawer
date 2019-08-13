@@ -2,7 +2,7 @@ package space.earlygrey.shapedrawer;
 
 import com.badlogic.gdx.math.MathUtils;
 
-class ShapeUtils {
+public class ShapeUtils {
 
     public static final float EPSILON = 0.001f;
     public static final float PI = MathUtils.PI;
@@ -18,6 +18,20 @@ class ShapeUtils {
 
     public static boolean epsilonEquals(float a, float b) {
         return Math.abs(a-b) < EPSILON;
+    }
+
+    public static float normaliseAngleToPositive(float angle) {
+        angle =  angle % PI2;
+        angle = (angle + PI2) % PI2;
+        return angle;
+    }
+
+    public static float floor(float x, float interval) {
+        return (float) (Math.floor(x / interval) * interval);
+    }
+
+    public static float ceil(float x, float interval) {
+        return (float) (Math.ceil(x / interval) * interval);
     }
 
 }

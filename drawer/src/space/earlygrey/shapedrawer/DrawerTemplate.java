@@ -83,34 +83,41 @@ abstract class DrawerTemplate {
 
     }
     void draw1234() {
-        float s = 3;
+        float s = 3, c = drawer.getPackedColor();
         drawer.getBatch().setColor(Color.GREEN);
         drawer.getBatch().draw(drawer.getRegion(), x1()-s, y1()-s, 2*s, 2*s);
         drawer.getBatch().setColor(Color.ORANGE);
         drawer.getBatch().draw(drawer.getRegion(), x2()-s, y2()-s, 2*s, 2*s);
-        drawer.getBatch().setColor(Color.BLUE);
+        drawer.getBatch().setColor(Color.YELLOW);
         drawer.getBatch().draw(drawer.getRegion(), x3()-s, y3()-s, 2*s, 2*s);
         drawer.getBatch().setColor(Color.PURPLE);
         drawer.getBatch().draw(drawer.getRegion(), x4()-s, y4()-s, 2*s, 2*s);
-        drawer.getBatch().setColor(Color.WHITE);
+        drawer.setColor(c);
     }
+
     void drawABC() {
-        float s = 4;
-        drawer.getBatch().setColor(Color.GREEN);
-        drawer.getBatch().draw(drawer.getRegion(), A.x-s, A.y-s, 2*s, 2*s);
-        drawer.getBatch().setColor(Color.ORANGE);
-        drawer.getBatch().draw(drawer.getRegion(), B.x-s, B.y-s, 2*s, 2*s);
-        drawer.getBatch().setColor(Color.BLUE);
-        drawer.getBatch().draw(drawer.getRegion(), C.x-s, C.y-s, 2*s, 2*s);
-        drawer.getBatch().setColor(Color.WHITE);
+        drawABC(Vector2.Zero);
     }
+
+    void drawABC(Vector2 offset) {
+        float s1 = 4, s2 = 3, s3 = 2, c = drawer.getPackedColor();
+        drawer.getBatch().setColor(Color.GREEN);
+        drawer.getBatch().draw(drawer.getRegion(), A.x-s1+offset.x, A.y-s1+offset.y, 2*s1, 2*s1);
+        drawer.getBatch().setColor(Color.ORANGE);
+        drawer.getBatch().draw(drawer.getRegion(), B.x-s2+offset.x, B.y-s2+offset.y, 2*s2, 2*s2);
+        drawer.getBatch().setColor(Color.YELLOW);
+        drawer.getBatch().draw(drawer.getRegion(), C.x-s3+offset.x, C.y-s3+offset.y, 2*s3, 2*s3);
+        drawer.setColor(c);
+    }
+
+
     void drawDE(boolean scheme1) {
-        float s = 2;
+        float s = 2, c = drawer.getPackedColor();
         drawer.getBatch().setColor(scheme1?Color.YELLOW:Color.CHARTREUSE);
         drawer.getBatch().draw(drawer.getRegion(), D.x-s, D.y-s, 2*s, 2*s);
         drawer.getBatch().setColor(scheme1?Color.PINK:Color.TAN);
         drawer.getBatch().draw(drawer.getRegion(), E.x-s, E.y-s, 2*s, 2*s);
-        drawer.getBatch().setColor(Color.WHITE);
+        drawer.setColor(c);
     }
     void drawDE() {
         drawDE(true);

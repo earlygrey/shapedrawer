@@ -323,7 +323,8 @@ public class ShapeDrawer extends AbstractShapeDrawer {
 
 
     /**
-     * <p>Draws an ellipse as a stretched regular polygon, estimating the number of sides required to appear smooth enough based on the
+     * <p>Draws an ellipse as a stretched regular polygon, estimating the number of sides required
+     * (see {@link #estimateSidesRequired(float, float)}) to appear smooth enough based on the
      * pixel size set. Calls {@link #polygon(float, float, int, float, float, float, JoinType)}.</p>
      * @param centreX the x-coordinate of the centre point
      * @param centreY the y-coordinate of the centre point
@@ -334,17 +335,70 @@ public class ShapeDrawer extends AbstractShapeDrawer {
      * @param joinType the type of join, see {@link JoinType}
      */
     public void ellipse(float centreX, float centreY, float radiusX, float radiusY, float rotation, float lineWidth, JoinType joinType) {
-        float circumference = (float) (MathUtils.PI2 * Math.sqrt((radiusX*radiusX + radiusY*radiusY)/2f));
-        int sides = (int) (circumference / (24 * pixelSize));
-        float a = Math.min(radiusX, radiusY), b = Math.max(radiusX, radiusY);
-        float eccentricity = (float) Math.sqrt(1-((a*a) / (b*b)));
-        sides += (sides * eccentricity) / 16;
-        polygon(centreX, centreY, sides, radiusX, radiusY, rotation, lineWidth, joinType);
+        polygon(centreX, centreY, estimateSidesRequired(radiusX, radiusY), radiusX, radiusY, rotation, lineWidth, joinType);
     }
 
+    //=======================================
+    //                 ARCS
+    //=======================================
+
+    /**
+     * <p>Calls {@link #arc(float, float, float, float, float, float)} with default line width.</p>
+     * @param centreX the x-coordinate of the centre point
+     * @param centreY the y-coordinate of the centre point
+     * @param radius the radius of the circle that this arc is a part of
+     * @param startAngle the angle at which the arc starts
+     * @param radians the angle subtended by the arc
+     */
+    public void arc(float centreX, float centreY, float radius, float startAngle, float radians) {
+        arc(centreX, centreY, radius, startAngle, radians, defaultLineWidth);
+    }
+
+    /**
+     * <p>Calls {@link #arc(float, float, float, float, float, float, boolean)} with useJoin set to true.</p>
+     * @param centreX the x-coordinate of the centre point
+     * @param centreY the y-coordinate of the centre point
+     * @param radius the radius of the circle that this arc is a part of
+     * @param startAngle the angle at which the arc starts
+     * @param radians the angle subtended by the arc
+     * @param lineWidth the width of the line
+     */
+    public void arc(float centreX, float centreY, float radius, float startAngle, float radians, float lineWidth) {
+        arc(centreX, centreY, radius, startAngle, radians, lineWidth, true);
+    }
+
+    /**
+     * <p>Calls {@link #arc(float, float, float, float, float, float, boolean, int)} with the number of sides estimated by {@link #estimateSidesRequired(float, float)}.</p>
+     * @param centreX the x-coordinate of the centre point
+     * @param centreY the y-coordinate of the centre point
+     * @param radius the radius of the circle that this arc is a part of
+     * @param startAngle the angle at which the arc starts
+     * @param radians the angle subtended by the arc
+     * @param lineWidth the width of the line
+     * @param useJoin whether to use a join type, either {@link JoinType#POINTY} or none. See {@link #isJoinNecessary(float)}
+     */
+    public void arc(float centreX, float centreY, float radius, float startAngle, float radians, float lineWidth, boolean useJoin) {
+        arc(centreX, centreY, radius, startAngle, radians, lineWidth, useJoin, estimateSidesRequired(radius, radius));
+    }
+
+    /**
+     * <p>Draws an arc from {@code startAngle} anti-clockwise for {@code radians}.</p>
+     * @param centreX the x-coordinate of the centre point
+     * @param centreY the y-coordinate of the centre point
+     * @param radius the radius of the circle that this arc is a part of
+     * @param startAngle the angle at which the arc starts
+     * @param radians the angle subtended by the arc
+     * @param lineWidth the width of the line
+     * @param useJoin whether to use a join type, either {@link JoinType#POINTY} or none. See {@link #isJoinNecessary(float)}
+     * @param sides the number of straight line segments to draw the arc with
+     */
+    public void arc(float centreX, float centreY, float radius, float startAngle, float radians, float lineWidth, boolean useJoin, int sides) {
+        JoinType joinType = (useJoin && isJoinNecessary(lineWidth))?JoinType.POINTY:JoinType.NONE;
+        polygonDrawer.polygon(centreX, centreY, sides, radius, radius, 0, lineWidth, joinType, startAngle, radians);
+    }
 
     //=======================================
-    //               POLYGONS
+    //           REGULAR POLYGONS
     //=======================================
 
 
@@ -418,8 +472,8 @@ public class ShapeDrawer extends AbstractShapeDrawer {
     }
 
     /**
-     * <p>Draws a regular polygon, with the number of sides specified, stretched along the x-axis by {@code scaleX}
-     * and along the y-axis by {@code scaleY}, then rotated to the given rotation.</p>
+     * <p>Calls {@link #polygon(float, float, int, float, float, float, float, JoinType,)}
+     * with start angle 0 and end angle 2*PI.</p>
      *
      * @param centreX the x-coordinate of the centre point
      * @param centreY the y-coordinate of the centre point
@@ -431,8 +485,12 @@ public class ShapeDrawer extends AbstractShapeDrawer {
      * @param joinType the type of join, see {@link JoinType}
      */
     public void polygon(float centreX, float centreY, int sides, float scaleX, float scaleY, float rotation, float lineWidth, JoinType joinType) {
-        polygonDrawer.polygon(centreX, centreY, sides,  scaleX, scaleY, rotation, lineWidth, joinType);
+        polygonDrawer.polygon(centreX, centreY, sides, scaleX, scaleY, rotation, lineWidth, joinType, 0, ShapeUtils.PI2);
     }
+
+    //=======================================
+    //           ARBITRARY POLYGONS
+    //=======================================
 
     /**
      * <p>Calls {@link #polygon(Polygon, float, JoinType)} with default line width and join type set to {@link JoinType#POINTY}.</p>

@@ -1,91 +1,133 @@
 package space.earlygrey.shapedrawer;
-
+import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.math.Vector2;
 
 class PolygonDrawer extends DrawerTemplate {
 
-    static final Vector2 centre = new Vector2();
+    static final Vector2 centre = new Vector2(), radius = new Vector2();
 
     PolygonDrawer(ShapeDrawer drawer) {
         super(drawer);
     }
 
-    void polygon(float centreX, float centreY, int sides, float radiusX, float radiusY, float rotation, float lineWidth, JoinType joinType) {
-        float angleInterval = MathUtils.PI2 / sides;
+    void polygon(float centreX, float centreY, int sides, float radiusX, float radiusY, float rotation, float lineWidth, JoinType joinType, float startAngle, float radians) {
         float halfLineWidth = 0.5f*lineWidth;
+        radians = ShapeUtils.normaliseAngleToPositive(radians);
+        if (radians==0) {
+            radians = ShapeUtils.PI2;
+            startAngle = 0;
+        }
         centre.set(centreX, centreY);
-        dir.set(1, 0);
-        C.set(radiusX, 0);
+        radius.set(radiusX, radiusY);
 
-        switch (joinType) {
-            case NONE:
-                drawPolygonNoJoin(centre, sides, lineWidth, rotation, angleInterval, radiusX, radiusY);
-                break;
-            case SMOOTH:
-                drawPolygonSmoothJoin(centre, sides, halfLineWidth, rotation, angleInterval, radiusX, radiusY);
-                break;
-            case POINTY: default:
-                drawPolygonPointyJoin(centre, sides, halfLineWidth, rotation, angleInterval, radiusX, radiusY);
-                break;
+        if (joinType==JoinType.NONE) {
+            drawPolygonNoJoin(centre, sides, lineWidth, rotation, radius, startAngle, radians);
+        } else {
+            drawPolygonWithJoin(centre, sides, halfLineWidth, rotation, radius, startAngle, radians, joinType==JoinType.SMOOTH);
         }
     }
 
-    void drawPolygonNoJoin(Vector2 centre, int sides, float lineWidth, float rotation, float angleInterval, float radiusX, float radiusY) {
-        int n = sides;
+    void drawPolygonNoJoin(Vector2 centre, int sides, float lineWidth, float rotation, Vector2 radius, float startAngle, float radians) {
+        float angleInterval = MathUtils.PI2 / sides;
+        float endAngle = startAngle + radians;
+
         float cos = (float) Math.cos(angleInterval), sin = (float) Math.sin(angleInterval);
         float cosRot = (float) Math.cos(rotation), sinRot = (float) Math.sin(rotation);
-        for (int i = 0; i < n; i++) {
-            A.set(B);
-            B.set(C);
-            dir.set(dir.x * cos - dir.y * sin, dir.x * sin + dir.y * cos);
-            //float radius = getRadiusOfEllipse(angle, a, b, a2, b2);
-            C.set(dir).scl(radiusX, radiusY);
-            float x1 = B.x*cosRot-B.y*sinRot  + centre.x, y1 = B.x*sinRot+B.y*cosRot + centre.y;
-            float x2 = C.x*cosRot-C.y*sinRot  + centre.x, y2 = C.x*sinRot+C.y*cosRot + centre.y;
-            drawer.line(x1, y1, x2, y2, lineWidth);
-        }
-    }
-    void drawPolygonPointyJoin(Vector2 centre, int sides, float halfLineWidth, float rotation, float angleInterval, float radiusX, float radiusY) {
-        int n = sides;
-        float cos = (float) Math.cos(angleInterval), sin = (float) Math.sin(angleInterval);
-        float cosRot = (float) Math.cos(rotation), sinRot = (float) Math.sin(rotation);
-        for (int i = -2; i < n; i++) {
-            A.set(B);
-            B.set(C);
-            dir.set(dir.x * cos - dir.y * sin, dir.x * sin + dir.y * cos);
-            C.set(dir).scl(radiusX, radiusY);
-            if (i>=0) {
-                vert1(E.x*cosRot-E.y*sinRot  + centre.x, E.x*sinRot+E.y*cosRot + centre.y);
-                vert2(D.x*cosRot-D.y*sinRot  + centre.x, D.x*sinRot+D.y*cosRot + centre.y);
-                Joiner.preparePointyJoin(A, B, C, D, E, halfLineWidth);
-                vert3(D.x*cosRot-D.y*sinRot  + centre.x, D.x*sinRot+D.y*cosRot + centre.y);
-                vert4(E.x*cosRot-E.y*sinRot  + centre.x, E.x*sinRot+E.y*cosRot + centre.y);
-                drawVerts();
-            } else if (i==-1) Joiner.preparePointyJoin(A, B, C, D, E, halfLineWidth);
-        }
-    }
-    void drawPolygonSmoothJoin(Vector2 centre, int sides, float halfLineWidth, float rotation, float angleInterval, float radiusX, float radiusY) {
-        int n = sides;
-        float cos = (float) Math.cos(angleInterval), sin = (float) Math.sin(angleInterval);
-        float cosRot = (float) Math.cos(rotation), sinRot = (float) Math.sin(rotation);
-        for (int i = -2; i < n; i++) {
-            if (i>=0) {
-                Joiner.prepareSmoothJoin(A, B, C, D, E, halfLineWidth, true);
-                vert1(E.x*cosRot-E.y*sinRot  + centre.x, E.x*sinRot+E.y*cosRot + centre.y);
-                vert2(D.x*cosRot-D.y*sinRot  + centre.x, D.x*sinRot+D.y*cosRot + centre.y);
-            }
-            A.set(B);
-            B.set(C);
-            dir.set(dir.x * cos - dir.y * sin, dir.x * sin + dir.y * cos);
-            C.set(dir).scl(radiusX, radiusY);
-            if (i>=0) {
-                Joiner.prepareSmoothJoin(A, B, C, D, E, halfLineWidth, false);
-                vert3(D.x*cosRot-D.y*sinRot  + centre.x, D.x*sinRot+D.y*cosRot + centre.y);
-                vert4(E.x*cosRot-E.y*sinRot  + centre.x, E.x*sinRot+E.y*cosRot + centre.y);
-                drawVerts();
-                drawSmoothJoinFill(A, B, C, D, E, centre, cosRot, sinRot, halfLineWidth);
+
+        int start = (int) Math.ceil(sides * (startAngle / ShapeUtils.PI2));
+        int end = (int) Math.floor(sides * (endAngle / ShapeUtils.PI2)) + 1;
+
+        dir.set(1, 0).rotateRad(Math.min(start * angleInterval, endAngle));
+        A.set(1, 0).rotateRad(startAngle).scl(radius);
+        B.set(dir).scl(radius);
+
+        for (int i = start; i <= end; i++) {
+            float x1 = A.x*cosRot-A.y*sinRot  + centre.x, y1 = A.x*sinRot+A.y*cosRot + centre.y;
+            float x2 = B.x*cosRot-B.y*sinRot  + centre.x, y2 = B.x*sinRot+B.y*cosRot + centre.y;
+            drawer.line(x1, y1, x2, y2, lineWidth, false);
+            if (i<end-1) {
+                A.set(B);
+                dir.set(dir.x * cos - dir.y * sin, dir.x * sin + dir.y * cos);
+                B.set(dir).scl(radius);
+            } else if (i==end-1) {
+                A.set(B);
+                B.set(1, 0).rotateRad(endAngle).scl(radius);
             }
         }
     }
+
+    void drawPolygonWithJoin(Vector2 centre, int sides, float halfLineWidth, float rotation, Vector2 radius, float startAngle, float radians, boolean smooth) {
+
+        boolean full = ShapeUtils.epsilonEquals(radians, ShapeUtils.PI2);
+
+        float angleInterval = MathUtils.PI2 / sides;
+        float endAngle = startAngle + radians;
+
+        float cos = (float) Math.cos(angleInterval), sin = (float) Math.sin(angleInterval);
+        float cosRot = (float) Math.cos(rotation), sinRot = (float) Math.sin(rotation);
+
+        int start, end;
+
+        if (full) {
+            start = 1;
+            end = sides;
+            dir.set(1, 0).rotateRad(start * angleInterval);
+            A.set(1, 0).rotateRad((start-2) * angleInterval).scl(radius);
+            C.set(dir).scl(radius);
+            B.set(1, 0).rotateRad((start-1) * angleInterval).scl(radius);
+        } else {
+            start = (int) Math.ceil(sides * (startAngle / ShapeUtils.PI2));
+            if (ShapeUtils.epsilonEquals(sides * start, startAngle)) start++;
+            end = (int) Math.floor(sides * (endAngle / ShapeUtils.PI2)) + 1;
+            end = Math.min(end, start + sides);
+            dir.set(1, 0).rotateRad(Math.min(start * angleInterval, endAngle));
+            A.set(1, 0).rotateRad((start-1) * angleInterval).scl(radius);
+            B.set(1, 0).rotateRad(startAngle).scl(radius);
+            C.set(dir).scl(radius);
+        }
+        for (int i = start; i <= end; i++) {
+
+            if (!full && i==start) {
+                Joiner.prepareRadialEndpoint(B, D, E, halfLineWidth);
+            } else {
+                if (smooth) {
+                    Joiner.prepareSmoothJoin(A, B, C, D, E, halfLineWidth, true);
+                } else {
+                    Joiner.preparePointyJoin(A, B, C, D, E, halfLineWidth);
+                }
+            }
+            vert1(E.x*cosRot-E.y*sinRot  + centre.x, E.x*sinRot+E.y*cosRot + centre.y);
+            vert2(D.x*cosRot-D.y*sinRot  + centre.x, D.x*sinRot+D.y*cosRot + centre.y);
+
+            if (full || i<end) {
+                A.set(B);
+                B.set(C);
+                dir.set(dir.x * cos - dir.y * sin, dir.x * sin + dir.y * cos);
+                C.set(dir).scl(radius);
+            } else {
+                B.set(1, 0).rotateRad(endAngle).scl(radius);
+            }
+
+            if (full || i<end) {
+                if (smooth) {
+                    Joiner.prepareSmoothJoin(A, B, C, D, E, halfLineWidth, false);
+                } else {
+                    Joiner.preparePointyJoin(A, B, C, D, E, halfLineWidth);
+                }
+            } else {
+                Joiner.prepareRadialEndpoint(B, D, E, halfLineWidth);
+            }
+
+            vert3(D.x*cosRot-D.y*sinRot  + centre.x, D.x*sinRot+D.y*cosRot + centre.y);
+            vert4(E.x*cosRot-E.y*sinRot  + centre.x, E.x*sinRot+E.y*cosRot + centre.y);
+
+            drawVerts(); //draw current AB
+
+            if (smooth && (full || i<end)) drawSmoothJoinFill(A, B, C, D, E, centre, cosRot, sinRot, halfLineWidth);
+        }
+    }
+
+
+
 }
