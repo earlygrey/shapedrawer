@@ -342,8 +342,59 @@ public class ShapeDrawer extends AbstractShapeDrawer {
     //                 ARCS
     //=======================================
 
-    public void arc(float centreX, float centreY, float radiusX, float radiusY, float startAngle, float radians, JoinType joinType) {
-        polygonDrawer.polygon(centreX, centreY, (int) (0.1f*estimateSidesRequired(radiusX, radiusY)), radiusX, radiusY, 0, defaultLineWidth, joinType, startAngle, radians);
+    /**
+     * <p>Calls {@link #arc(float, float, float, float, float, float)} with default line width.</p>
+     * @param centreX the x-coordinate of the centre point
+     * @param centreY the y-coordinate of the centre point
+     * @param radius the radius of the circle that this arc is a part of
+     * @param startAngle the angle at which the arc starts
+     * @param radians the angle subtended by the arc
+     */
+    public void arc(float centreX, float centreY, float radius, float startAngle, float radians) {
+        arc(centreX, centreY, radius, startAngle, radians, defaultLineWidth);
+    }
+
+    /**
+     * <p>Calls {@link #arc(float, float, float, float, float, float, boolean)} with useJoin set to true.</p>
+     * @param centreX the x-coordinate of the centre point
+     * @param centreY the y-coordinate of the centre point
+     * @param radius the radius of the circle that this arc is a part of
+     * @param startAngle the angle at which the arc starts
+     * @param radians the angle subtended by the arc
+     * @param lineWidth the width of the line
+     */
+    public void arc(float centreX, float centreY, float radius, float startAngle, float radians, float lineWidth) {
+        arc(centreX, centreY, radius, startAngle, radians, lineWidth, true);
+    }
+
+    /**
+     * <p>Calls {@link #arc(float, float, float, float, float, float, boolean, int)} with the number of sides estimated by {@link #estimateSidesRequired(float, float)}.</p>
+     * @param centreX the x-coordinate of the centre point
+     * @param centreY the y-coordinate of the centre point
+     * @param radius the radius of the circle that this arc is a part of
+     * @param startAngle the angle at which the arc starts
+     * @param radians the angle subtended by the arc
+     * @param lineWidth the width of the line
+     * @param useJoin whether to use a join type, either {@link JoinType#POINTY} or none. See {@link #isJoinNecessary(float)}
+     */
+    public void arc(float centreX, float centreY, float radius, float startAngle, float radians, float lineWidth, boolean useJoin) {
+        arc(centreX, centreY, radius, startAngle, radians, lineWidth, useJoin, estimateSidesRequired(radius, radius));
+    }
+
+    /**
+     * <p>Draws an arc from {@code startAngle} anti-clockwise for {@code radians}.</p>
+     * @param centreX the x-coordinate of the centre point
+     * @param centreY the y-coordinate of the centre point
+     * @param radius the radius of the circle that this arc is a part of
+     * @param startAngle the angle at which the arc starts
+     * @param radians the angle subtended by the arc
+     * @param lineWidth the width of the line
+     * @param useJoin whether to use a join type, either {@link JoinType#POINTY} or none. See {@link #isJoinNecessary(float)}
+     * @param sides the number of straight line segments to draw the arc with
+     */
+    public void arc(float centreX, float centreY, float radius, float startAngle, float radians, float lineWidth, boolean useJoin, int sides) {
+        JoinType joinType = (useJoin && isJoinNecessary(lineWidth))?JoinType.POINTY:JoinType.NONE;
+        polygonDrawer.polygon(centreX, centreY, sides, radius, radius, 0, lineWidth, joinType, startAngle, radians);
     }
 
     //=======================================
@@ -434,7 +485,7 @@ public class ShapeDrawer extends AbstractShapeDrawer {
      * @param joinType the type of join, see {@link JoinType}
      */
     public void polygon(float centreX, float centreY, int sides, float scaleX, float scaleY, float rotation, float lineWidth, JoinType joinType) {
-        polygonDrawer.polygon(centreX, centreY, sides,  scaleX, scaleY, rotation, lineWidth, joinType, 0, ShapeUtils.PI2);
+        polygonDrawer.polygon(centreX, centreY, sides, scaleX, scaleY, rotation, lineWidth, joinType, 0, ShapeUtils.PI2);
     }
 
     //=======================================
