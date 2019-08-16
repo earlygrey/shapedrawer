@@ -1,3 +1,6 @@
+[1.1.1]
+- fixed path bug when consecutive points had a coordinate in common
+
 [1.1.0]
 - Added HTML5 support.
 - Added ShapeDrawerDrawable to allow shape drawing in Scene2D UI's.
