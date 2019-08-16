@@ -49,7 +49,7 @@ class PathDrawer extends DrawerTemplate {
         path.add(userPath[start]);
         path.add(userPath[start+1]);
         for(int i = start+2; i < end; i+=2) {
-            if (!ShapeUtils.epsilonEquals(userPath[i-2], userPath[i]) && !ShapeUtils.epsilonEquals(userPath[i-1], userPath[i+1])) {
+            if (!ShapeUtils.epsilonEquals(userPath[i-2], userPath[i]) || !ShapeUtils.epsilonEquals(userPath[i-1], userPath[i+1])) {
                 path.add(userPath[i], userPath[i+1]);
             }
         }
