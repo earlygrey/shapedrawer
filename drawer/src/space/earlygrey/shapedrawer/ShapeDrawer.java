@@ -62,7 +62,7 @@ public class ShapeDrawer extends AbstractShapeDrawer {
      * <p>Calls {@link #line(float, float, float, float, float, boolean)}()} with {@code lineWidth} set to
      * the current default and {@code snap} set to true.</p>
      * @param s the starting point of the line
-     * @param e the end point of the line the
+     * @param e the end point of the line
      */
     public void line(Vector2 s, Vector2 e) {
         line(s.x, s.y, e.x, e.y, defaultLineWidth);
