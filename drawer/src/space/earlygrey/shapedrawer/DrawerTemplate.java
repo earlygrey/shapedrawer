@@ -14,10 +14,6 @@ abstract class DrawerTemplate {
         this.drawer = drawer;
     }
 
-    void drawVerts() {
-        drawer.drawVerts();
-    }
-
     void drawSmoothJoinFill(Vector2 A, Vector2 B, Vector2 C, Vector2 D, Vector2 E, float halfLineWidth) {
         boolean bendsLeft = Joiner.prepareSmoothJoin(A, B, C, D, E, halfLineWidth, false);
         vert1(bendsLeft?E:D);
@@ -25,7 +21,7 @@ abstract class DrawerTemplate {
         bendsLeft = Joiner.prepareSmoothJoin(A, B, C, D, E, halfLineWidth, true);
         vert3(bendsLeft?E:D);
         vert4(x3(), y3());
-        drawVerts();
+        drawer.pushVerts();
     }
     void drawSmoothJoinFill(Vector2 A, Vector2 B, Vector2 C, Vector2 D, Vector2 E, Vector2 offset, float cos, float sin, float halfLineWidth) {
         boolean bendsLeft = Joiner.prepareSmoothJoin(A, B, C, D, E, halfLineWidth, false);
@@ -37,7 +33,7 @@ abstract class DrawerTemplate {
         float x = V3.x*cos-V3.y*sin  + offset.x, y = V3.x*sin+V3.y*cos + offset.y;
         vert3(x, y);
         vert4(x, y);
-        drawVerts();
+        drawer.pushVerts();
     }
 
 
@@ -81,6 +77,9 @@ abstract class DrawerTemplate {
                 "("+x3()+","+y3()+")  " +
                 "("+x4()+","+y4()+")");
 
+    }
+    void printABC() {
+        System.out.println("A: "+A+", B: "+B+", C: "+C);
     }
     void draw1234() {
         float s = 3, c = drawer.getPackedColor();

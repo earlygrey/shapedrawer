@@ -29,6 +29,10 @@ class PathDrawer extends DrawerTemplate {
         tempPath.clear();
     }
 
+    void path (FloatArray userPath, float lineWidth, JoinType joinType, boolean open) {
+        path (userPath.items, 0, userPath.size, lineWidth, joinType, open);
+    }
+
     void path (float[] userPath, float lineWidth, JoinType joinType) {
         path (userPath, 0, userPath.length, lineWidth, joinType);
     }
@@ -62,7 +66,7 @@ class PathDrawer extends DrawerTemplate {
             path.clear();
             return;
         }
-
+        drawer.startCaching();
         switch(joinType) {
             case NONE:
                 drawPathNoJoin(path.items, path.size, lineWidth, open);
@@ -74,6 +78,7 @@ class PathDrawer extends DrawerTemplate {
                 drawPathPointyJoin(path.items, path.size, lineWidth, open);
                 break;
         }
+        drawer.endCaching();
         path.clear();
     }
 
@@ -108,7 +113,7 @@ class PathDrawer extends DrawerTemplate {
                     vert2(D0);
                 }
             }
-            drawVerts();
+            drawer.pushVerts();
             vert1(x4(), y4());
             vert2(x3(), y3());
         }
@@ -117,18 +122,18 @@ class PathDrawer extends DrawerTemplate {
             Joiner.prepareFlatEndpoint(B, C, D, E, halfLineWidth);
             vert1(D);
             vert2(E);
-            drawVerts();
+            drawer.pushVerts();
         } else {
             //draw last link on path
             A.set(path[0], path[1]);
             Joiner.preparePointyJoin(B, C, A, D, E, halfLineWidth);
             vert1(E);
             vert2(D);
-            drawVerts();
+            drawer.pushVerts();
             //draw connection back to first vertex
             vert3(D0);
             vert4(E0);
-            drawVerts();
+            drawer.pushVerts();
         }
     }
 
@@ -156,7 +161,7 @@ class PathDrawer extends DrawerTemplate {
                 vert2(E);
             }
 
-            drawVerts();
+            drawer.pushVerts();
             drawSmoothJoinFill(A, B, C, D, E, halfLineWidth);
 
             Joiner.prepareSmoothJoin(A, B, C, D, E, halfLineWidth, true);
@@ -174,7 +179,7 @@ class PathDrawer extends DrawerTemplate {
             Joiner.prepareFlatEndpoint(B, C, D, E, halfLineWidth);
             vert3(D);
             vert4(E);
-            drawVerts();
+            drawer.pushVerts();
         } else {
             //draw last link on path
             A.set(B);
@@ -183,7 +188,7 @@ class PathDrawer extends DrawerTemplate {
             Joiner.prepareSmoothJoin(A, B, C, D, E, halfLineWidth, false);
             vert3(E);
             vert4(D);
-            drawVerts();
+            drawer.pushVerts();
             drawSmoothJoinFill(A, B, C, D, E, halfLineWidth);
             //draw connection back to first vertex
             Joiner.prepareSmoothJoin(A, B, C, D, E, halfLineWidth, true);
@@ -191,7 +196,7 @@ class PathDrawer extends DrawerTemplate {
             vert4(D);
             vert1(D0);
             vert2(E0);
-            drawVerts();
+            drawer.pushVerts();
             A.set(path[2], path[3]);
             drawSmoothJoinFill(B, C, A, D0, E0, halfLineWidth);
         }
