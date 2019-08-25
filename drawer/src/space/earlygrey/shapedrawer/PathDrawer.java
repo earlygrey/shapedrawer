@@ -1,5 +1,6 @@
 package space.earlygrey.shapedrawer;
 
+import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.utils.Array;
 import com.badlogic.gdx.utils.FloatArray;
@@ -149,12 +150,15 @@ class PathDrawer extends DrawerTemplate {
                 //draw last link on path
                 A.set(path[0], path[1]);
                 Joiner.preparePointyJoin(B, C, A, D, E, halfLineWidth);
-                vert1(E);
-                vert2(D);
+                vert3(D);
+                vert4(E);
                 drawer.pushVerts();
+
                 //draw connection back to first vertex
-                vert3(D0);
-                vert4(E0);
+                vert1(D);
+                vert2(E);
+                vert3(E0);
+                vert4(D0);
                 drawer.pushVerts();
             } else {
                 //draw last link on path
