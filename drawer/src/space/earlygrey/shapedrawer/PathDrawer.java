@@ -111,7 +111,7 @@ class PathDrawer extends DrawerTemplate {
                     if (pointyJoin) {
                         Joiner.preparePointyJoin(vec1, A, B, D0, E0, halfLineWidth);
                     } else {
-                        Joiner.prepareSmoothJoin(vec1, A, B, D0, E0, halfLineWidth, false);
+                        Joiner.prepareSmoothJoin(vec1, A, B, D0, E0, halfLineWidth, true);
                     }
                     vert1(E0);
                     vert2(D0);
@@ -162,20 +162,21 @@ class PathDrawer extends DrawerTemplate {
                 B.set(C);
                 C.set(path[0], path[1]);
                 Joiner.prepareSmoothJoin(A, B, C, D, E, halfLineWidth, false);
-                vert3(E);
-                vert4(D);
+                vert3(D);
+                vert4(E);
                 drawer.pushVerts();
                 drawSmoothJoinFill(A, B, C, D, E, halfLineWidth);
+
                 //draw connection back to first vertex
                 Joiner.prepareSmoothJoin(A, B, C, D, E, halfLineWidth, true);
                 vert3(E);
                 vert4(D);
-                vert1(D0);
-                vert2(E0);
-                drawer.pushVerts();
                 A.set(path[2], path[3]);
-                drawSmoothJoinFill(B, C, A, D0, E0, halfLineWidth);
-
+                Joiner.prepareSmoothJoin(B, C, A, D, E, halfLineWidth, false);
+                vert1(D);
+                vert2(E);
+                drawer.pushVerts();
+                drawSmoothJoinFill(B, C, A, D, E, halfLineWidth);
             }
         }
     }
