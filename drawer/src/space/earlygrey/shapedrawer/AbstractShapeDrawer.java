@@ -33,10 +33,7 @@ public abstract class AbstractShapeDrawer {
 
     protected static final Matrix4 mat4 = new Matrix4();
 
-    protected static final int VERTEX_SIZE = 5;
-    protected static final int VERTICES_PER_PUSH = 4;
-    protected static final int PUSH_SIZE = VERTICES_PER_PUSH * VERTEX_SIZE;
-
+    protected final int VERTEX_SIZE, VERTICES_PER_PUSH, PUSH_SIZE;
 
 
     //================================================================================
@@ -49,9 +46,16 @@ public abstract class AbstractShapeDrawer {
      * @param region the texture region used for drawing. Can be changed later.
      */
     protected AbstractShapeDrawer(Batch batch, TextureRegion region) {
+        this(batch, region, 5, 4);
+    }
+
+    protected AbstractShapeDrawer(Batch batch, TextureRegion region, int vertexSize, int verticesPerPush) {
         this.batch = batch;
         setTextureRegion(region);
         setColor(Color.WHITE);
+        VERTEX_SIZE = vertexSize;
+        VERTICES_PER_PUSH = verticesPerPush;
+        PUSH_SIZE = VERTICES_PER_PUSH * VERTEX_SIZE;
     }
 
 
@@ -245,10 +249,6 @@ public abstract class AbstractShapeDrawer {
     }
 
 
-    //================================================================================
-    // DRAWING METHODS
-    //================================================================================
-
     public boolean isCachingDraws() {
         return cacheDraws;
     }
@@ -262,23 +262,33 @@ public abstract class AbstractShapeDrawer {
         if (vertexCount>0) drawVerts();
     }
 
+
+    //================================================================================
+    // DRAWING METHODS
+    //================================================================================
+
     protected void pushVerts() {
-        verts[getArrayOffset() + SpriteBatch.U1] = r.getU();
-        verts[getArrayOffset() + SpriteBatch.V1] = r.getV();
-        verts[getArrayOffset() + SpriteBatch.U2] = r.getU2();
-        verts[getArrayOffset() + SpriteBatch.V2] = r.getV();
-        verts[getArrayOffset() + SpriteBatch.U3] = r.getU2();
-        verts[getArrayOffset() + SpriteBatch.V3] = r.getV2();
-        verts[getArrayOffset() + SpriteBatch.U4] = r.getU();
-        verts[getArrayOffset() + SpriteBatch.V4] = r.getV2();
-        verts[getArrayOffset() + SpriteBatch.C1] = floatBits;
-        verts[getArrayOffset() + SpriteBatch.C2] = floatBits;
-        verts[getArrayOffset() + SpriteBatch.C3] = floatBits;
-        verts[getArrayOffset() + SpriteBatch.C4] = floatBits;
+        int i = getArrayOffset();
+        verts[i + SpriteBatch.U1] = r.getU();
+        verts[i + SpriteBatch.V1] = r.getV();
+        verts[i + SpriteBatch.U2] = r.getU2();
+        verts[i + SpriteBatch.V2] = r.getV();
+        verts[i + SpriteBatch.U3] = r.getU2();
+        verts[i + SpriteBatch.V3] = r.getV2();
+        verts[i + SpriteBatch.U4] = r.getU();
+        verts[i + SpriteBatch.V4] = r.getV2();
+        verts[i + SpriteBatch.C1] = floatBits;
+        verts[i + SpriteBatch.C2] = floatBits;
+        verts[i + SpriteBatch.C3] = floatBits;
+        verts[i + SpriteBatch.C4] = floatBits;
         vertexCount += VERTICES_PER_PUSH;
-        if (!isCachingDraws() || verts.length - PUSH_SIZE < PUSH_SIZE * vertexCount) {
+        if (!isCachingDraws() || isCacheFull()) {
             drawVerts();
         }
+    }
+
+    protected boolean isCacheFull() {
+        return verts.length - PUSH_SIZE < PUSH_SIZE * vertexCount;
     }
 
     protected void drawVerts() {
