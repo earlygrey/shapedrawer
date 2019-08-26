@@ -4,11 +4,11 @@ package space.earlygrey.shapedrawer;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.g2d.Batch;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
-import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.math.Polygon;
 import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.utils.Array;
+import com.badlogic.gdx.utils.FloatArray;
 
 /**
  * <p>Uses a Batch to draw lines, shapes and paths. Meant to be an analogue of {@link com.badlogic.gdx.graphics.glutils.ShapeRenderer}
@@ -195,27 +195,38 @@ public class ShapeDrawer extends AbstractShapeDrawer {
      * @param joinType the type of join, see {@link JoinType}
      */
     public void path(Array<Vector2> path, JoinType joinType) {
-        path(path, defaultLineWidth, joinType, true);
+        path(path, defaultLineWidth, joinType, false);
     }
 
     /**
      * <p>Calls {@link #path(Array, float, boolean)} with open set to true.</p>
      * @param path an ordered Array of Vector2s representing path points
-     * @param lineWidth the type of join, see {@link JoinType}
+     * @param lineWidth the width of each line in world units
      */
     public void path(Array<Vector2> path, float lineWidth) {
-        path(path, lineWidth, true);
+        path(path, lineWidth, false);
+    }
+
+    /**
+     *
+     * @param path an ordered Array of Vector2s representing path points
+     * @param joinType the type of join, see {@link JoinType}
+     * @param closed if true then the first and last points are connected
+     *
+     */
+    public void path(Array<Vector2> path,JoinType joinType, boolean closed) {
+        path(path, defaultLineWidth, joinType, closed);
     }
 
     /**
      * <p>Calls {@link #path(Array, float, JoinType, boolean)} with {@code joinType} set to {@link JoinType#SMOOTH}
      *  (also see {@link #isJoinNecessary(float)}).</p>
      * @param path an ordered Array of Vector2s representing path points
-     * @param lineWidth the type of join, see {@link JoinType}
-     * @param open if false then the first and last points are connected
+     * @param lineWidth the width of each line in world units
+     * @param closed if true then the first and last points are connected
      */
-    public void path(Array<Vector2> path, float lineWidth, boolean open) {
-        path(path, lineWidth, isJoinNecessary(lineWidth)?JoinType.SMOOTH:JoinType.NONE, open);
+    public void path(Array<Vector2> path, float lineWidth, boolean closed) {
+        path(path, lineWidth, isJoinNecessary(lineWidth)?JoinType.SMOOTH:JoinType.NONE, closed);
     }
 
     /**
@@ -228,14 +239,36 @@ public class ShapeDrawer extends AbstractShapeDrawer {
      * <p>If {@code path} is empty nothing will be drawn, if it contains two points {@link #line(float, float, float, float, float, boolean)}
      * will be used.</p>
      * @param path an {@code Array<Vector2>} containing the ordered points in the path
-     * @param lineWidth the width of the line in world units the width of each line
+     * @param lineWidth the width of each line in world units
      * @param joinType see {@link JoinType} the type of join, see method description
-     * @param open if false then the first and last points are connected
+     * @param closed if true then the first and last points are connected
      */
-    public void path(Array<Vector2> path, float lineWidth, JoinType joinType, boolean open) {
-        pathDrawer.path(path, lineWidth, joinType, open);
+    public void path(Array<Vector2> path, float lineWidth, JoinType joinType, boolean closed) {
+        pathDrawer.path(path, lineWidth, joinType, closed);
     }
 
+    /**
+     * <p>Draws a path by drawing a line between each point and the next. See {@link #path(Array, float, JoinType, boolean)} for details.</p>
+     * @param path an {@link FloatArray} containing the ordered points in the path
+     * @param lineWidth the width of each line in world units
+     * @param joinType see {@link JoinType} the type of join, see method description
+     * @param closed if true then the first and last points are connected
+     */
+    public void path(FloatArray path, float lineWidth, JoinType joinType, boolean closed) {
+        pathDrawer.path(path, lineWidth, joinType, closed);
+    }
+
+
+    /**
+     * <p>Draws a path by drawing a line between each point and the next. See {@link #path(Array, float, JoinType, boolean)} for details.</p>
+     * @param path an {@code float[]} containing the ordered points in the path
+     * @param lineWidth the width of each line in world units
+     * @param joinType see {@link JoinType} the type of join, see method description
+     * @param closed if true then the first and last points are connected
+     */
+    public void path(float[] path, float lineWidth, JoinType joinType, boolean closed) {
+        pathDrawer.path(path, lineWidth, joinType, closed);
+    }
 
     //=======================================
     //          CIRCLES AND ELLIPSES
