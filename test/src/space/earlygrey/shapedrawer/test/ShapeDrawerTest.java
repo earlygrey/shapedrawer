@@ -452,7 +452,7 @@ public class ShapeDrawerTest extends ApplicationAdapter {
 				drawer.line(x, y,anchor.x, anchor.y);
 				break;
 			case PATH:
-				drawer.path(path, joinType, closedPath);
+				drawer.path(path, joinType, !closedPath);
 				break;
 			case POLYGON:
 				drawer.polygon(x, y, sides, scale, 200, rotation, joinType);

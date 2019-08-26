@@ -20,33 +20,33 @@ class PathDrawer extends DrawerTemplate {
         path(userPath, lineWidth, joinType, true);
     }
 
-    <T extends Vector2> void path(Array<T> userPath, float lineWidth, JoinType joinType, boolean closed) {
+    <T extends Vector2> void path(Array<T> userPath, float lineWidth, JoinType joinType, boolean open) {
         for (int i = 0; i < userPath.size; i++) {
             Vector2 v = userPath.get(i);
             tempPath.add(v.x, v.y);
         }
 
-        path(tempPath.items, 0, tempPath.size, lineWidth, joinType, closed);
+        path(tempPath.items, 0, tempPath.size, lineWidth, joinType, open);
         tempPath.clear();
     }
 
-    void path (FloatArray userPath, float lineWidth, JoinType joinType, boolean closed) {
-        path (userPath.items, 0, userPath.size, lineWidth, joinType, closed);
+    void path (FloatArray userPath, float lineWidth, JoinType joinType, boolean open) {
+        path (userPath.items, 0, userPath.size, lineWidth, joinType, open);
     }
 
     void path (float[] userPath, float lineWidth, JoinType joinType) {
         path (userPath, 0, userPath.length, lineWidth, joinType);
     }
 
-    void path (float[] userPath, float lineWidth, JoinType joinType, boolean closed) {
-        path (userPath, 0, userPath.length, lineWidth, joinType, closed);
+    void path (float[] userPath, float lineWidth, JoinType joinType, boolean open) {
+        path (userPath, 0, userPath.length, lineWidth, joinType, open);
     }
 
     void path (float[] userPath, int start, int end, float lineWidth, JoinType joinType) {
         path(userPath, start, end, lineWidth, joinType, true);
     }
 
-    void path (float[] userPath, int start, int end, float lineWidth, JoinType joinType, boolean closed) {
+    void path (float[] userPath, int start, int end, float lineWidth, JoinType joinType, boolean open) {
 
         if (userPath.length < 4) return;
 
@@ -69,23 +69,23 @@ class PathDrawer extends DrawerTemplate {
         }
         boolean wasCaching = drawer.startCaching();
         if (joinType==JoinType.NONE) {
-            drawPathNoJoin(path.items, path.size, lineWidth, closed);
+            drawPathNoJoin(path.items, path.size, lineWidth, open);
         } else {
-            drawPathWithJoin(path.items, path.size, lineWidth, closed,joinType==JoinType.POINTY);
+            drawPathWithJoin(path.items, path.size, lineWidth, open, joinType==JoinType.POINTY);
         }
         if (!wasCaching) drawer.endCaching();
         path.clear();
     }
 
-    void drawPathNoJoin(float[] path, int size, float lineWidth, boolean closed) {
-        int n = closed?size:size-2;
+    void drawPathNoJoin(float[] path, int size, float lineWidth, boolean open) {
+        int n = open?size-2:size;
         for (int i = 0; i < n; i+=2) {
             drawer.line(path[i], path[i+1], path[(i+2)%size], path[(i+3)%size], lineWidth);
         }
     }
 
 
-    void drawPathWithJoin(float[] path, int size, float lineWidth, boolean closed, boolean pointyJoin) {
+    void drawPathWithJoin(float[] path, int size, float lineWidth, boolean open, boolean pointyJoin) {
         float halfLineWidth =  0.5f*lineWidth;
 
         for (int i = 2; i < size-2; i+=2) {
@@ -103,7 +103,11 @@ class PathDrawer extends DrawerTemplate {
             vert4(E);
 
             if (i==2) {
-                if (closed) {
+                if (open) {
+                    Joiner.prepareFlatEndpoint(path[2], path[3], path[0], path[1], D, E, halfLineWidth);
+                    vert1(E);
+                    vert2(D);
+                } else {
                     vec1.set(path[size-2], path[size-1]);
                     if (pointyJoin) {
                         Joiner.preparePointyJoin(vec1, A, B, D0, E0, halfLineWidth);
@@ -112,10 +116,6 @@ class PathDrawer extends DrawerTemplate {
                     }
                     vert1(E0);
                     vert2(D0);
-                } else {
-                    Joiner.prepareFlatEndpoint(path[2], path[3], path[0], path[1], D, E, halfLineWidth);
-                    vert1(E);
-                    vert2(D);
                 }
             }
 
@@ -139,7 +139,13 @@ class PathDrawer extends DrawerTemplate {
             vert2(x3, y3);
         }
 
-        if (closed) {
+        if (open) {
+            //draw last link on path
+            Joiner.prepareFlatEndpoint(B, C, D, E, halfLineWidth);
+            vert3(E);
+            vert4(D);
+            drawer.pushVerts();
+        } else {
             if (pointyJoin) {
                 //draw last link on path
                 A.set(path[0], path[1]);
@@ -176,12 +182,6 @@ class PathDrawer extends DrawerTemplate {
                 drawer.pushVerts();
                 drawSmoothJoinFill(B, C, A, D, E, halfLineWidth);
             }
-        } else {
-            //draw last link on path
-            Joiner.prepareFlatEndpoint(B, C, D, E, halfLineWidth);
-            vert3(E);
-            vert4(D);
-            drawer.pushVerts();
         }
     }
 
