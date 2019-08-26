@@ -60,7 +60,7 @@ public class ShapeDrawerTest extends ApplicationAdapter {
 	JoinType joinType = JoinType.POINTY;
 
 	int sides = 8;
-	boolean touched = false;
+	boolean touched = false, closedPath = false;
 
 	Table preview, srPreview;
 
@@ -104,6 +104,7 @@ public class ShapeDrawerTest extends ApplicationAdapter {
 		instructionLabel.setAlignment(Align.center);
 		final TextButton clearPathButton = new TextButton("Clear", skin);
 		final CheckBox dragPathCheckbox = new CheckBox("drag path", skin);
+		final CheckBox closedPathCheckbox = new CheckBox("closed", skin);
 
 		Table root = new Table();
 		root.setFillParent(true);
@@ -132,7 +133,7 @@ public class ShapeDrawerTest extends ApplicationAdapter {
 						joinSelectorTable.setVisible(false);
 						sidesSelectorTable.setVisible(false);
 						clearPathButton.setVisible(false);
-						//tipLabel.setText("");
+						closedPathCheckbox.setVisible(false);
 						instructionLabel.setText("drag to move endpoint");
 						dragPathCheckbox.setVisible(false);
 						drawerMethodLabel.setText("ShapeDrawer#line()");
@@ -143,7 +144,7 @@ public class ShapeDrawerTest extends ApplicationAdapter {
 						joinSelectorTable.setVisible(true);
 						sidesSelectorTable.setVisible(false);
 						clearPathButton.setVisible(true);
-						//tipLabel.setText("");
+						closedPathCheckbox.setVisible(true);
 						instructionLabel.setText("click to set a waypoint");
 						dragPathCheckbox.setVisible(true);
 						drawerMethodLabel.setText("ShapeDrawer#path()");
@@ -155,7 +156,7 @@ public class ShapeDrawerTest extends ApplicationAdapter {
 						joinSelectorTable.setVisible(true);
 						sidesSelectorTable.setVisible(true);
 						clearPathButton.setVisible(false);
-						//tipLabel.setText("");
+						closedPathCheckbox.setVisible(false);
 						instructionLabel.setText("drag to adjust\nsize and rotation");
 						dragPathCheckbox.setVisible(false);
 						drawerMethodLabel.setText("ShapeDrawer#polygon()");
@@ -166,7 +167,7 @@ public class ShapeDrawerTest extends ApplicationAdapter {
 						joinSelectorTable.setVisible(false);
 						sidesSelectorTable.setVisible(false);
 						clearPathButton.setVisible(false);
-						//tipLabel.setText("");
+						closedPathCheckbox.setVisible(false);
 						instructionLabel.setText("drag to adjust\nsize and rotation");
 						dragPathCheckbox.setVisible(false);
 						drawerMethodLabel.setText("ShapeDrawer#ellipse()");
@@ -176,6 +177,7 @@ public class ShapeDrawerTest extends ApplicationAdapter {
 						joinSelectorTable.setVisible(false);
 						sidesSelectorTable.setVisible(false);
 						clearPathButton.setVisible(false);
+						closedPathCheckbox.setVisible(false);
 						instructionLabel.setText("drag to adjust arc");
 						dragPathCheckbox.setVisible(false);
 						drawerMethodLabel.setText("ShapeDrawer#arc()");
@@ -186,8 +188,7 @@ public class ShapeDrawerTest extends ApplicationAdapter {
 						joinSelectorTable.setVisible(false);
 						sidesSelectorTable.setVisible(false);
 						clearPathButton.setVisible(false);
-						//tipLabel.setText("you can also achieve a rectangle by drawing a polygon with " +
-						//		"4 sides,\nbut if there's no rotation it uses line() and is pixel perfect.");
+						closedPathCheckbox.setVisible(false);
 						instructionLabel.setText("drag to adjust size");
 						dragPathCheckbox.setVisible(false);
 						drawerMethodLabel.setText("ShapeDrawer#rectangle()");
@@ -271,13 +272,14 @@ public class ShapeDrawerTest extends ApplicationAdapter {
 
 
 		controlsTable.add(clearPathButton).padTop(10).space(30);
+		controlsTable.add(closedPathCheckbox).padTop(10).space(30);
 		controlsTable.add(shapeSelectorTable).padTop(10).space(30);
 		controlsTable.add(joinSelectorTable).padTop(10).space(30);
 		controlsTable.add(dragPathCheckbox).padTop(10).space(30);
 		controlsTable.row();
-		controlsTable.add(widthSelectorTable).padTop(10).colspan(4);
+		controlsTable.add(widthSelectorTable).padTop(10).colspan(5);
 		controlsTable.row();
-		controlsTable.add(sidesSelectorTable).padTop(10).colspan(4);
+		controlsTable.add(sidesSelectorTable).padTop(10).colspan(5);
 
 
 		root.add(previewTable).pad(2).grow().top().padBottom(10);
@@ -334,6 +336,12 @@ public class ShapeDrawerTest extends ApplicationAdapter {
 				path.clear();
 			}
 		});
+		closedPathCheckbox.addListener(new ClickListener() {
+			@Override
+			public void clicked(InputEvent event, float x, float y) {
+				closedPath = closedPathCheckbox.isChecked();
+			}
+		});
 
 		Gdx.input.setInputProcessor(stage);
 
@@ -345,6 +353,7 @@ public class ShapeDrawerTest extends ApplicationAdapter {
 		sidesSelectorTable.setVisible(false);
 		clearPathButton.setVisible(false);
 		dragPathCheckbox.setVisible(false);
+		closedPathCheckbox.setVisible(false);
 		preview.localToStageCoordinates(v.set(preview.getWidth(), preview.getHeight()).scl(0.5f));
 
 		anchor.set(stage.getWidth(), stage.getHeight()).scl(0.5f);
@@ -407,6 +416,11 @@ public class ShapeDrawerTest extends ApplicationAdapter {
 					v2.set(p2).sub(x, y).add(srX, srY);
 					sr.rectLine(v.x, v.y, v2.x, v2.y, drawer.getDefaultLineWidth());
 				}
+				if (closedPath && path.size >= 2) {
+					v.set(path.get(path.size-1)).sub(x, y).add(srX, srY);
+					v2.set(path.first()).sub(x, y).add(srX, srY);
+					sr.rectLine(v.x, v.y, v2.x, v2.y, drawer.getDefaultLineWidth());
+				}
 				break;
 			case POLYGON:
 				sr.begin(ShapeType.Line);
@@ -438,7 +452,7 @@ public class ShapeDrawerTest extends ApplicationAdapter {
 				drawer.line(x, y,anchor.x, anchor.y);
 				break;
 			case PATH:
-				drawer.path(path, joinType);
+				drawer.path(path, joinType, closedPath);
 				break;
 			case POLYGON:
 				drawer.polygon(x, y, sides, scale, 200, rotation, joinType);
