@@ -1,4 +1,4 @@
-[1.2.1]
+[1.2.0]
 - fixed path bug when consecutive points had a coordinate in common
 - vertex information is cached in a large float[] instead of being sent every time a quad is calculated
 - changed path argument `open` to `closed`
