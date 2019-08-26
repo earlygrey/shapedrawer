@@ -1,6 +1,8 @@
 [1.2.1]
 - fixed path bug when consecutive points had a coordinate in common
 - vertex information is cached in a large float[] instead of being sent every time a quad is calculated
+- changed path argument `open` to `closed`
+- added path arguments for paths defined by float[]s and FloatArrays
 
 [1.1.0]
 - Added HTML5 support.
