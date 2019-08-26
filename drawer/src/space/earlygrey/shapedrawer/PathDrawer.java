@@ -67,13 +67,13 @@ class PathDrawer extends DrawerTemplate {
             path.clear();
             return;
         }
-        drawer.startCaching();
+        boolean wasCaching = drawer.startCaching();
         if (joinType==JoinType.NONE) {
             drawPathNoJoin(path.items, path.size, lineWidth, open);
         } else {
             drawPathWithJoin(path.items, path.size, lineWidth, open,joinType==JoinType.POINTY);
         }
-        drawer.endCaching();
+        if (!wasCaching) drawer.endCaching();
         path.clear();
     }
 

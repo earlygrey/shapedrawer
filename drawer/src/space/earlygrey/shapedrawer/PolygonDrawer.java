@@ -20,13 +20,13 @@ class PolygonDrawer extends DrawerTemplate {
         centre.set(centreX, centreY);
         radius.set(radiusX, radiusY);
 
-        drawer.startCaching();
+        boolean wasCaching = drawer.startCaching();
         if (joinType==JoinType.NONE) {
             drawPolygonNoJoin(centre, sides, lineWidth, rotation, radius, startAngle, radians);
         } else {
             drawPolygonWithJoin(centre, sides, halfLineWidth, rotation, radius, startAngle, radians, joinType==JoinType.SMOOTH);
         }
-        drawer.endCaching();
+        if (!wasCaching) drawer.endCaching();
     }
 
     void drawPolygonNoJoin(Vector2 centre, int sides, float lineWidth, float rotation, Vector2 radius, float startAngle, float radians) {

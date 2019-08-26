@@ -253,8 +253,10 @@ public abstract class AbstractShapeDrawer {
         return cacheDraws;
     }
 
-    public void startCaching() {
+    public boolean startCaching() {
+        boolean wasCaching = isCachingDraws();
         this.cacheDraws = true;
+        return wasCaching;
     }
 
     public void endCaching() {
