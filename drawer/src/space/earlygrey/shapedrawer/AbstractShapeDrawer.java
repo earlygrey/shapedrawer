@@ -2,6 +2,7 @@ package space.earlygrey.shapedrawer;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Color;
+import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.Batch;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
@@ -229,8 +230,8 @@ public abstract class AbstractShapeDrawer {
     }
 
     /**
-     * Sets the colour of the ShapeDrawer. This works just like {@link Batch#setColor(Color)} though drawing is not affected by
-     * the colour of the Batch.
+     * <p>Sets the colour of the ShapeDrawer. This works just like {@link Batch#setColor(Color)} though drawing is not affected by
+     * the colour of the Batch.</p>
      * @param floatBits the packed float value of the colour, see {@link Color#toFloatBits()}.
      * @return the previous packed float value of the ShapeDrawer's colour
      */
@@ -248,17 +249,28 @@ public abstract class AbstractShapeDrawer {
         return floatBits;
     }
 
-
+    /**
+     *
+     * @return whether drawing is currently being cached
+     */
     protected boolean isCachingDraws() {
         return cacheDraws;
     }
 
+    /**
+     * <p>Begin caching draw calls by storing vertex information in a float[] until it all gets set to the
+     * Batch with one call to {@link Batch#draw(Texture, float[], int, int)}.</p>
+     * @return whether drawing was being cached before this method was called
+     */
     protected boolean startCaching() {
         boolean wasCaching = isCachingDraws();
         this.cacheDraws = true;
         return wasCaching;
     }
 
+    /**
+     * <p>Stops caching and calls {@link Batch#draw(Texture, float[], int, int)} if anything is cached.</p>
+     */
     protected void endCaching() {
         this.cacheDraws = false;
         if (vertexCount>0) drawVerts();
@@ -269,6 +281,10 @@ public abstract class AbstractShapeDrawer {
     // DRAWING METHODS
     //================================================================================
 
+    /**
+     * <p>Adds the colour and texture coordinates to the cache and progresses the index. If drawing is
+     * not currently being cached, immediately calls {@link #drawVerts()}.</p>
+     */
     protected void pushVerts() {
         int i = getArrayOffset();
         verts[i + SpriteBatch.U1] = r.getU();
@@ -289,15 +305,24 @@ public abstract class AbstractShapeDrawer {
         }
     }
 
+    /**
+     * @return whether the cache can currently hold another set of vertex information of size {@link #PUSH_SIZE}.
+     */
     protected boolean isCacheFull() {
         return verts.length - PUSH_SIZE < PUSH_SIZE * vertexCount;
     }
 
+    /**
+     * <p>Calls {@link Batch#draw(Texture, float[], int, int)} using the currently cached vertex information.</p>
+     */
     protected void drawVerts() {
         if (vertexCount == 0) return;
         batch.draw(r.getTexture(), verts, 0, getArrayOffset());
-        //System.out.println(vertexCount);
         vertexCount = 0;
+    }
+
+    protected int getArrayOffset() {
+        return VERTEX_SIZE * vertexCount;
     }
 
     protected void x1(float x1){verts[getArrayOffset() + SpriteBatch.X1] = x1;}
@@ -316,9 +341,5 @@ public abstract class AbstractShapeDrawer {
     protected float y3() {return verts[getArrayOffset() + SpriteBatch.Y3];}
     protected float x4() {return verts[getArrayOffset() + SpriteBatch.X4];}
     protected float y4() {return verts[getArrayOffset() + SpriteBatch.Y4];}
-
-    protected int getArrayOffset() {
-        return VERTEX_SIZE * vertexCount;
-    }
 
 }
