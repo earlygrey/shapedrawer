@@ -22,7 +22,7 @@ public abstract class AbstractShapeDrawer {
     protected final Batch batch;
     protected TextureRegion r;
     protected float floatBits;
-    protected final float[] verts = new float[4000];
+    protected final float[] verts = new float[2000];
     protected int vertexCount;
 
     protected float pixelSize = 1, halfPixelSize = 0.5f * pixelSize;
@@ -249,17 +249,17 @@ public abstract class AbstractShapeDrawer {
     }
 
 
-    public boolean isCachingDraws() {
+    protected boolean isCachingDraws() {
         return cacheDraws;
     }
 
-    public boolean startCaching() {
+    protected boolean startCaching() {
         boolean wasCaching = isCachingDraws();
         this.cacheDraws = true;
         return wasCaching;
     }
 
-    public void endCaching() {
+    protected void endCaching() {
         this.cacheDraws = false;
         if (vertexCount>0) drawVerts();
     }
