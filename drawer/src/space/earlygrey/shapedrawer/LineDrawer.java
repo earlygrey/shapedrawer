@@ -7,6 +7,11 @@ class LineDrawer extends DrawerTemplate {
     }
 
     void line(float x1, float y1, float x2, float y2, float lineWidth, boolean snap) {
+        pushLine(x1, y1, x2, y2, lineWidth, snap);
+        drawer.drawVerts();
+    }
+
+    void pushLine(float x1, float y1, float x2, float y2, float lineWidth, boolean snap) {
 
         // dif=(xdif,ydif) is the vector going from (x1, y1) to the first vertex going clockwise around the border of the line.
         // l=(lx,ly) is the vector from (x1, y1) to (x2, y2)
@@ -50,7 +55,9 @@ class LineDrawer extends DrawerTemplate {
         y3(y2+ydif);
         x4(x2+xdif);
         y4(y2-ydif);
-        drawVerts();
+
+        drawer.pushVerts();
+        if (!drawer.isCachingDraws()) drawer.drawVerts();
     }
 
 

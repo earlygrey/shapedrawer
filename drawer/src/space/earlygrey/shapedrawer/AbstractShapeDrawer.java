@@ -2,12 +2,11 @@ package space.earlygrey.shapedrawer;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Color;
+import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.Batch;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
-import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.math.Matrix4;
-import com.badlogic.gdx.math.Vector2;
 
 /**
  * <p>Contains the mechanics for using the Batch and settings such as line width and pixel size.</p>
@@ -23,14 +22,19 @@ public abstract class AbstractShapeDrawer {
 
     protected final Batch batch;
     protected TextureRegion r;
-    protected final float[] verts = new float[20];
+    protected float floatBits;
+    protected final float[] verts = new float[2000];
+    protected int vertexCount;
 
     protected float pixelSize = 1, halfPixelSize = 0.5f * pixelSize;
     protected float offset = ShapeUtils.EPSILON * pixelSize;
     protected float defaultLineWidth = pixelSize;
     protected boolean defaultSnap = false;
+    protected boolean cacheDraws = false;
 
     protected static final Matrix4 mat4 = new Matrix4();
+
+    protected final int VERTEX_SIZE, VERTICES_PER_PUSH, PUSH_SIZE;
 
 
     //================================================================================
@@ -43,9 +47,16 @@ public abstract class AbstractShapeDrawer {
      * @param region the texture region used for drawing. Can be changed later.
      */
     protected AbstractShapeDrawer(Batch batch, TextureRegion region) {
+        this(batch, region, 5, 4);
+    }
+
+    protected AbstractShapeDrawer(Batch batch, TextureRegion region, int vertexSize, int verticesPerPush) {
         this.batch = batch;
         setTextureRegion(region);
         setColor(Color.WHITE);
+        VERTEX_SIZE = vertexSize;
+        VERTICES_PER_PUSH = verticesPerPush;
+        PUSH_SIZE = VERTICES_PER_PUSH * VERTEX_SIZE;
     }
 
 
@@ -205,14 +216,6 @@ public abstract class AbstractShapeDrawer {
     public TextureRegion setTextureRegion(TextureRegion region) {
         TextureRegion oldRegion = this.r;
         this.r = region;
-        verts[SpriteBatch.U1] = r.getU();
-        verts[SpriteBatch.V1] = r.getV();
-        verts[SpriteBatch.U2] = r.getU2();
-        verts[SpriteBatch.V2] = r.getV();
-        verts[SpriteBatch.U3] = r.getU2();
-        verts[SpriteBatch.V3] = r.getV2();
-        verts[SpriteBatch.U4] = r.getU();
-        verts[SpriteBatch.V4] = r.getV2();
         return oldRegion;
     }
 
@@ -227,17 +230,14 @@ public abstract class AbstractShapeDrawer {
     }
 
     /**
-     * Sets the colour of the ShapeDrawer. This works just like {@link Batch#setColor(Color)} though drawing is not affected by
-     * the colour of the Batch.
+     * <p>Sets the colour of the ShapeDrawer. This works just like {@link Batch#setColor(Color)} though drawing is not affected by
+     * the colour of the Batch.</p>
      * @param floatBits the packed float value of the colour, see {@link Color#toFloatBits()}.
      * @return the previous packed float value of the ShapeDrawer's colour
      */
     public float setColor(float floatBits) {
         float oldColor = getPackedColor();
-        verts[SpriteBatch.C1] = floatBits;
-        verts[SpriteBatch.C2] = floatBits;
-        verts[SpriteBatch.C3] = floatBits;
-        verts[SpriteBatch.C4] = floatBits;
+        this.floatBits = floatBits;
         return oldColor;
     }
 
@@ -246,45 +246,100 @@ public abstract class AbstractShapeDrawer {
      * @return the packed colour of this ShapeDrawer
      */
     public float getPackedColor() {
-        return verts[SpriteBatch.C1];
+        return floatBits;
+    }
+
+    /**
+     *
+     * @return whether drawing is currently being cached
+     */
+    protected boolean isCachingDraws() {
+        return cacheDraws;
+    }
+
+    /**
+     * <p>Begin caching draw calls by storing vertex information in a float[] until it all gets set to the
+     * Batch with one call to {@link Batch#draw(Texture, float[], int, int)}.</p>
+     * @return whether drawing was being cached before this method was called
+     */
+    protected boolean startCaching() {
+        boolean wasCaching = isCachingDraws();
+        this.cacheDraws = true;
+        return wasCaching;
+    }
+
+    /**
+     * <p>Stops caching and calls {@link Batch#draw(Texture, float[], int, int)} if anything is cached.</p>
+     */
+    protected void endCaching() {
+        this.cacheDraws = false;
+        if (vertexCount>0) drawVerts();
     }
 
 
     //================================================================================
-    // BATCH UTILITY METHODS
+    // DRAWING METHODS
     //================================================================================
 
+    /**
+     * <p>Adds the colour and texture coordinates to the cache and progresses the index. If drawing is
+     * not currently being cached, immediately calls {@link #drawVerts()}.</p>
+     */
+    protected void pushVerts() {
+        int i = getArrayOffset();
+        verts[i + SpriteBatch.U1] = r.getU();
+        verts[i + SpriteBatch.V1] = r.getV();
+        verts[i + SpriteBatch.U2] = r.getU2();
+        verts[i + SpriteBatch.V2] = r.getV();
+        verts[i + SpriteBatch.U3] = r.getU2();
+        verts[i + SpriteBatch.V3] = r.getV2();
+        verts[i + SpriteBatch.U4] = r.getU();
+        verts[i + SpriteBatch.V4] = r.getV2();
+        verts[i + SpriteBatch.C1] = floatBits;
+        verts[i + SpriteBatch.C2] = floatBits;
+        verts[i + SpriteBatch.C3] = floatBits;
+        verts[i + SpriteBatch.C4] = floatBits;
+        vertexCount += VERTICES_PER_PUSH;
+        if (!isCachingDraws() || isCacheFull()) {
+            drawVerts();
+        }
+    }
+
+    /**
+     * @return whether the cache can currently hold another set of vertex information of size {@link #PUSH_SIZE}.
+     */
+    protected boolean isCacheFull() {
+        return verts.length - PUSH_SIZE < PUSH_SIZE * vertexCount;
+    }
+
+    /**
+     * <p>Calls {@link Batch#draw(Texture, float[], int, int)} using the currently cached vertex information.</p>
+     */
     protected void drawVerts() {
-        batch.draw(r.getTexture(), verts, 0, 20);
+        if (vertexCount == 0) return;
+        batch.draw(r.getTexture(), verts, 0, getArrayOffset());
+        vertexCount = 0;
     }
 
-    protected void x1(float x1){verts[SpriteBatch.X1] = x1;}
-    protected void y1(float y1){verts[SpriteBatch.Y1] = y1;}
-    protected void x2(float x2){verts[SpriteBatch.X2] = x2;}
-    protected void y2(float y2){verts[SpriteBatch.Y2] = y2;}
-    protected void x3(float x3){verts[SpriteBatch.X3] = x3;}
-    protected void y3(float y3){verts[SpriteBatch.Y3] = y3;}
-    protected void x4(float x4){verts[SpriteBatch.X4] = x4;}
-    protected void y4(float y4){verts[SpriteBatch.Y4] = y4;}
-    protected void vert1(float x, float y) {x1(x);y1(y);}
-    protected void vert2(float x, float y) {x2(x);y2(y);}
-    protected void vert3(float x, float y) {x3(x);y3(y);}
-    protected void vert4(float x, float y) {x4(x);y4(y);}
-    protected void vert1(Vector2 V) {vert1(V.x, V.y);}
-    protected void vert2(Vector2 V) {vert2(V.x, V.y);}
-    protected void vert3(Vector2 V) {vert3(V.x, V.y);}
-    protected void vert4(Vector2 V) {vert4(V.x, V.y);}
-    protected void vert1(Vector2 V, Vector2 offset) {vert1(V.x+offset.x, V.y+offset.y);}
-    protected void vert2(Vector2 V, Vector2 offset) {vert2(V.x+offset.x, V.y+offset.y);}
-    protected void vert3(Vector2 V, Vector2 offset) {vert3(V.x+offset.x, V.y+offset.y);}
-    protected void vert4(Vector2 V, Vector2 offset) {vert4(V.x+offset.x, V.y+offset.y);}
-    protected float x1() {return verts[SpriteBatch.X1];}
-    protected float y1() {return verts[SpriteBatch.Y1];}
-    protected float x2() {return verts[SpriteBatch.X2];}
-    protected float y2() {return verts[SpriteBatch.Y2];}
-    protected float x3() {return verts[SpriteBatch.X3];}
-    protected float y3() {return verts[SpriteBatch.Y3];}
-    protected float x4() {return verts[SpriteBatch.X4];}
-    protected float y4() {return verts[SpriteBatch.Y4];}
+    protected int getArrayOffset() {
+        return VERTEX_SIZE * vertexCount;
+    }
+
+    protected void x1(float x1){verts[getArrayOffset() + SpriteBatch.X1] = x1;}
+    protected void y1(float y1){verts[getArrayOffset() + SpriteBatch.Y1] = y1;}
+    protected void x2(float x2){verts[getArrayOffset() + SpriteBatch.X2] = x2;}
+    protected void y2(float y2){verts[getArrayOffset() + SpriteBatch.Y2] = y2;}
+    protected void x3(float x3){verts[getArrayOffset() + SpriteBatch.X3] = x3;}
+    protected void y3(float y3){verts[getArrayOffset() + SpriteBatch.Y3] = y3;}
+    protected void x4(float x4){verts[getArrayOffset() + SpriteBatch.X4] = x4;}
+    protected void y4(float y4){verts[getArrayOffset() + SpriteBatch.Y4] = y4;}
+    protected float x1() {return verts[getArrayOffset() + SpriteBatch.X1];}
+    protected float y1() {return verts[getArrayOffset() + SpriteBatch.Y1];}
+    protected float x2() {return verts[getArrayOffset() + SpriteBatch.X2];}
+    protected float y2() {return verts[getArrayOffset() + SpriteBatch.Y2];}
+    protected float x3() {return verts[getArrayOffset() + SpriteBatch.X3];}
+    protected float y3() {return verts[getArrayOffset() + SpriteBatch.Y3];}
+    protected float x4() {return verts[getArrayOffset() + SpriteBatch.X4];}
+    protected float y4() {return verts[getArrayOffset() + SpriteBatch.Y4];}
 
 }

@@ -1,5 +1,4 @@
 package space.earlygrey.shapedrawer;
-import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.math.Vector2;
 
@@ -21,11 +20,13 @@ class PolygonDrawer extends DrawerTemplate {
         centre.set(centreX, centreY);
         radius.set(radiusX, radiusY);
 
+        boolean wasCaching = drawer.startCaching();
         if (joinType==JoinType.NONE) {
             drawPolygonNoJoin(centre, sides, lineWidth, rotation, radius, startAngle, radians);
         } else {
             drawPolygonWithJoin(centre, sides, halfLineWidth, rotation, radius, startAngle, radians, joinType==JoinType.SMOOTH);
         }
+        if (!wasCaching) drawer.endCaching();
     }
 
     void drawPolygonNoJoin(Vector2 centre, int sides, float lineWidth, float rotation, Vector2 radius, float startAngle, float radians) {
@@ -45,7 +46,7 @@ class PolygonDrawer extends DrawerTemplate {
         for (int i = start; i <= end; i++) {
             float x1 = A.x*cosRot-A.y*sinRot  + centre.x, y1 = A.x*sinRot+A.y*cosRot + centre.y;
             float x2 = B.x*cosRot-B.y*sinRot  + centre.x, y2 = B.x*sinRot+B.y*cosRot + centre.y;
-            drawer.line(x1, y1, x2, y2, lineWidth, false);
+            drawer.lineDrawer.pushLine(x1, y1, x2, y2, lineWidth, false);
             if (i<end-1) {
                 A.set(B);
                 dir.set(dir.x * cos - dir.y * sin, dir.x * sin + dir.y * cos);
@@ -122,7 +123,7 @@ class PolygonDrawer extends DrawerTemplate {
             vert3(D.x*cosRot-D.y*sinRot  + centre.x, D.x*sinRot+D.y*cosRot + centre.y);
             vert4(E.x*cosRot-E.y*sinRot  + centre.x, E.x*sinRot+E.y*cosRot + centre.y);
 
-            drawVerts(); //draw current AB
+            drawer.pushVerts(); //push current AB
 
             if (smooth && (full || i<end)) drawSmoothJoinFill(A, B, C, D, E, centre, cosRot, sinRot, halfLineWidth);
         }

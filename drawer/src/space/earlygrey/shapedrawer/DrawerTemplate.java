@@ -14,10 +14,6 @@ abstract class DrawerTemplate {
         this.drawer = drawer;
     }
 
-    void drawVerts() {
-        drawer.drawVerts();
-    }
-
     void drawSmoothJoinFill(Vector2 A, Vector2 B, Vector2 C, Vector2 D, Vector2 E, float halfLineWidth) {
         boolean bendsLeft = Joiner.prepareSmoothJoin(A, B, C, D, E, halfLineWidth, false);
         vert1(bendsLeft?E:D);
@@ -25,8 +21,9 @@ abstract class DrawerTemplate {
         bendsLeft = Joiner.prepareSmoothJoin(A, B, C, D, E, halfLineWidth, true);
         vert3(bendsLeft?E:D);
         vert4(x3(), y3());
-        drawVerts();
+        drawer.pushVerts();
     }
+
     void drawSmoothJoinFill(Vector2 A, Vector2 B, Vector2 C, Vector2 D, Vector2 E, Vector2 offset, float cos, float sin, float halfLineWidth) {
         boolean bendsLeft = Joiner.prepareSmoothJoin(A, B, C, D, E, halfLineWidth, false);
         Vector2 V1 = bendsLeft?E:D, V2 = bendsLeft?D:E;
@@ -37,7 +34,7 @@ abstract class DrawerTemplate {
         float x = V3.x*cos-V3.y*sin  + offset.x, y = V3.x*sin+V3.y*cos + offset.y;
         vert3(x, y);
         vert4(x, y);
-        drawVerts();
+        drawer.pushVerts();
     }
 
 
@@ -82,17 +79,34 @@ abstract class DrawerTemplate {
                 "("+x4()+","+y4()+")");
 
     }
+    void printABC() {
+        System.out.println("A: "+A+", B: "+B+", C: "+C);
+    }
+
+    void drawPoint(Vector2 point, Color color) {
+        drawPoint(point.x, point.y, color);
+    }
+    void drawPoint(Vector2 point, Color color, float r) {
+        drawPoint(point, color.toFloatBits(), r);
+    }
+    void drawPoint(Vector2 point, float color, float r) {
+        drawPoint(point.x, point.y, color, r);
+    }
+    void drawPoint(float x, float y, Color color) {
+        drawPoint(x, y, color.toFloatBits(), 3);
+    }
+    void drawPoint(float x, float y, float color, float r) {
+        Color c = drawer.getBatch().getColor();
+        drawer.getBatch().setPackedColor(color);
+        drawer.getBatch().draw(drawer.getRegion(), x-r, y-r, 2*r, 2*r);
+        drawer.getBatch().setColor(c);
+    }
+
     void draw1234() {
-        float s = 3, c = drawer.getPackedColor();
-        drawer.getBatch().setColor(Color.GREEN);
-        drawer.getBatch().draw(drawer.getRegion(), x1()-s, y1()-s, 2*s, 2*s);
-        drawer.getBatch().setColor(Color.ORANGE);
-        drawer.getBatch().draw(drawer.getRegion(), x2()-s, y2()-s, 2*s, 2*s);
-        drawer.getBatch().setColor(Color.YELLOW);
-        drawer.getBatch().draw(drawer.getRegion(), x3()-s, y3()-s, 2*s, 2*s);
-        drawer.getBatch().setColor(Color.PURPLE);
-        drawer.getBatch().draw(drawer.getRegion(), x4()-s, y4()-s, 2*s, 2*s);
-        drawer.setColor(c);
+        drawPoint(x1(), y1(), Color.GREEN);
+        drawPoint(x2(), y2(), Color.ORANGE);
+        drawPoint(x3(), y3(), Color.YELLOW);
+        drawPoint(x4(), y4(), Color.PURPLE);
     }
 
     void drawABC() {
@@ -100,24 +114,14 @@ abstract class DrawerTemplate {
     }
 
     void drawABC(Vector2 offset) {
-        float s1 = 4, s2 = 3, s3 = 2, c = drawer.getPackedColor();
-        drawer.getBatch().setColor(Color.GREEN);
-        drawer.getBatch().draw(drawer.getRegion(), A.x-s1+offset.x, A.y-s1+offset.y, 2*s1, 2*s1);
-        drawer.getBatch().setColor(Color.ORANGE);
-        drawer.getBatch().draw(drawer.getRegion(), B.x-s2+offset.x, B.y-s2+offset.y, 2*s2, 2*s2);
-        drawer.getBatch().setColor(Color.YELLOW);
-        drawer.getBatch().draw(drawer.getRegion(), C.x-s3+offset.x, C.y-s3+offset.y, 2*s3, 2*s3);
-        drawer.setColor(c);
+        drawPoint(A, Color.GREEN);
+        drawPoint(B, Color.ORANGE);
+        drawPoint(C, Color.YELLOW);
+
     }
-
-
     void drawDE(boolean scheme1) {
-        float s = 2, c = drawer.getPackedColor();
-        drawer.getBatch().setColor(scheme1?Color.YELLOW:Color.CHARTREUSE);
-        drawer.getBatch().draw(drawer.getRegion(), D.x-s, D.y-s, 2*s, 2*s);
-        drawer.getBatch().setColor(scheme1?Color.PINK:Color.TAN);
-        drawer.getBatch().draw(drawer.getRegion(), E.x-s, E.y-s, 2*s, 2*s);
-        drawer.setColor(c);
+        drawPoint(D, scheme1?Color.YELLOW:Color.CHARTREUSE);
+        drawPoint(E, scheme1?Color.PINK:Color.TAN);
     }
     void drawDE() {
         drawDE(true);
