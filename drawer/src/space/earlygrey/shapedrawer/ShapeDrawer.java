@@ -232,7 +232,7 @@ public class ShapeDrawer extends AbstractShapeDrawer {
     /**
      * <p>Draws a path by drawing a line between each point and the next.</p>
      * <p>The points at which two lines connect can be mitered to give a smooth join, see {@link JoinType} for the types of mitre.
-     * Note that this may cause strange looking joints when the angle between connected lines approaches &pi;, as the miter
+     * Note that this may cause strange looking joins when the angle between connected lines approaches &pi;, as the miter
      * can get arbitratily long. For thin lines where the mitre cannot be seen, you can set {@code joinType} to {@link JoinType#NONE}.</p>
      * <p>Only a subset of the path containing unique consecutive points (up to some small error) will be considerered.
      * For example, the paths [(0,0), (1.0001,1), (1,1), (2,2)] and [(0,0), (1,1), (2,2)] will be drawn identically. </p>
@@ -289,13 +289,14 @@ public class ShapeDrawer extends AbstractShapeDrawer {
      * @param centreX the x-coordinate of the centre point
      * @param centreY the y-coordinate of the centre point
      * @param radius the radius
+     * @param joinType the type of join, see {@link JoinType}
      */
-    public void circle(float centreX, float centreY, float radius, JoinType jointType) {
-        circle(centreX, centreY, radius, defaultLineWidth, jointType);
+    public void circle(float centreX, float centreY, float radius, JoinType joinType) {
+        circle(centreX, centreY, radius, defaultLineWidth, joinType);
     }
 
     /**
-     * <p>Calls {@link #circle(float, float, float, JoinType)} with jointType set to {@link JoinType#SMOOTH}.</p>
+     * <p>Calls {@link #circle(float, float, float, JoinType)} with joinType set to {@link JoinType#SMOOTH}.</p>
      * @param centreX the x-coordinate of the centre point
      * @param centreY the y-coordinate of the centre point
      * @param radius the radius
@@ -415,7 +416,7 @@ public class ShapeDrawer extends AbstractShapeDrawer {
     }
 
     /**
-     * <p>Draws an arc from {@code startAngle} anti-clockwise for {@code radians}.</p>
+     * <p>Draws an arc from {@code startAngle} anti-clockwise that subtends the specified angle.</p>
      * @param centreX the x-coordinate of the centre point
      * @param centreY the y-coordinate of the centre point
      * @param radius the radius of the circle that this arc is a part of
@@ -505,8 +506,7 @@ public class ShapeDrawer extends AbstractShapeDrawer {
     }
 
     /**
-     * <p>Calls {@link #polygon(float, float, int, float, float, float, float, JoinType,)}
-     * with start angle 0 and end angle 2*PI.</p>
+     * <p>Draws the regular polygon speficied by drawing lines between the vertices.</p>
      *
      * @param centreX the x-coordinate of the centre point
      * @param centreY the y-coordinate of the centre point
@@ -675,7 +675,7 @@ public class ShapeDrawer extends AbstractShapeDrawer {
     }
 
     /**
-     * Draws a rectangle. See {@link JoinType} for joint types.
+     * Draws a rectangle. See {@link JoinType} for join types.
      * @param x the x-coordinate of the bottom left corner of the rectangle
      * @param y the y-coordinate of the bottom left corner of the rectangle
      * @param width the width of the rectangle
