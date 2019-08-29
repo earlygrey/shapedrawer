@@ -29,7 +29,7 @@ allprojects {
 And  in your core project add the dependency:
 ```
 dependencies {
-        implementation 'space.earlygrey:shapedrawer:1.1.0'
+        implementation 'space.earlygrey:shapedrawer:1.2.0'
 }
 ```
 
@@ -43,7 +43,7 @@ project(":html") {
 
     dependencies {
         ...
-        implementation 'space.earlygrey:shapedrawer:1.1.0:sources'
+        implementation 'space.earlygrey:shapedrawer:1.2.0:sources'
     }
 }
 ```
