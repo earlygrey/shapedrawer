@@ -20,8 +20,7 @@ abstract class DrawerTemplate {
         vert2(bendsLeft?D:E);
         bendsLeft = Joiner.prepareSmoothJoin(A, B, C, D, E, halfLineWidth, true);
         vert3(bendsLeft?E:D);
-        vert4(x3(), y3());
-        drawer.pushVerts();
+        drawer.pushTriangle();
     }
 
     void drawSmoothJoinFill(Vector2 A, Vector2 B, Vector2 C, Vector2 D, Vector2 E, Vector2 offset, float cos, float sin, float halfLineWidth) {
@@ -33,8 +32,7 @@ abstract class DrawerTemplate {
         Vector2 V3 = bendsLeft?E:D;
         float x = V3.x*cos-V3.y*sin  + offset.x, y = V3.x*sin+V3.y*cos + offset.y;
         vert3(x, y);
-        vert4(x, y);
-        drawer.pushVerts();
+        drawer.pushTriangle();
     }
 
 

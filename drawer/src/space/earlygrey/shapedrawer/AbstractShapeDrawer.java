@@ -20,8 +20,8 @@ public abstract class AbstractShapeDrawer {
     // MEMBERS
     //================================================================================
 
-    protected final Batch batch;
-    protected TextureRegion r;
+    private final Batch batch;
+    TextureRegion r;
     protected float floatBits;
     protected final float[] verts = new float[2000];
     protected int vertexCount;
@@ -303,6 +303,12 @@ public abstract class AbstractShapeDrawer {
         if (!isCachingDraws() || isCacheFull()) {
             drawVerts();
         }
+    }
+
+    protected void pushTriangle() {
+        x4(x3());
+        y4(y3());
+        pushVerts();
     }
 
     /**
