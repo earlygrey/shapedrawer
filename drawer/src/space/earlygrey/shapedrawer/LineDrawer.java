@@ -56,7 +56,7 @@ class LineDrawer extends DrawerTemplate {
         x4(x2+xdif);
         y4(y2-ydif);
 
-        drawer.pushVerts();
+        drawer.pushQuad();
         if (!drawer.isCachingDraws()) drawer.drawVerts();
     }
 

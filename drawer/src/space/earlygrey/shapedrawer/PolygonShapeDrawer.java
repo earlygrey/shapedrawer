@@ -21,7 +21,7 @@ public class PolygonShapeDrawer extends ShapeDrawer {
     }
 
     @Override
-    protected void pushVerts() {
+    protected void pushQuad() {
         int vertexOffset = vertexCount;
 
         triangles[triangleOffset++] = (short) (vertexOffset + 0);
@@ -31,7 +31,7 @@ public class PolygonShapeDrawer extends ShapeDrawer {
         triangles[triangleOffset++] = (short) (vertexOffset + 2);
         triangles[triangleOffset++] = (short) (vertexOffset + 3);
 
-        super.pushVerts();
+        super.pushQuad();
     }
 
     @Override

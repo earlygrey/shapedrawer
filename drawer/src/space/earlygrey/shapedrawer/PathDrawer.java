@@ -1,6 +1,5 @@
 package space.earlygrey.shapedrawer;
 
-import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.utils.Array;
 import com.badlogic.gdx.utils.FloatArray;
@@ -133,7 +132,7 @@ class PathDrawer extends DrawerTemplate {
                 y4 = E.y;
             }
 
-            drawer.pushVerts();
+            drawer.pushQuad();
             if (!pointyJoin) drawSmoothJoinFill(A, B, C, D, E, halfLineWidth);
             vert1(x4, y4);
             vert2(x3, y3);
@@ -144,7 +143,7 @@ class PathDrawer extends DrawerTemplate {
             Joiner.prepareFlatEndpoint(B, C, D, E, halfLineWidth);
             vert3(E);
             vert4(D);
-            drawer.pushVerts();
+            drawer.pushQuad();
         } else {
             if (pointyJoin) {
                 //draw last link on path
@@ -152,14 +151,14 @@ class PathDrawer extends DrawerTemplate {
                 Joiner.preparePointyJoin(B, C, A, D, E, halfLineWidth);
                 vert3(D);
                 vert4(E);
-                drawer.pushVerts();
+                drawer.pushQuad();
 
                 //draw connection back to first vertex
                 vert1(D);
                 vert2(E);
                 vert3(E0);
                 vert4(D0);
-                drawer.pushVerts();
+                drawer.pushQuad();
             } else {
                 //draw last link on path
                 A.set(B);
@@ -168,7 +167,7 @@ class PathDrawer extends DrawerTemplate {
                 Joiner.prepareSmoothJoin(A, B, C, D, E, halfLineWidth, false);
                 vert3(D);
                 vert4(E);
-                drawer.pushVerts();
+                drawer.pushQuad();
                 drawSmoothJoinFill(A, B, C, D, E, halfLineWidth);
 
                 //draw connection back to first vertex
@@ -179,7 +178,7 @@ class PathDrawer extends DrawerTemplate {
                 Joiner.prepareSmoothJoin(B, C, A, D, E, halfLineWidth, false);
                 vert1(D);
                 vert2(E);
-                drawer.pushVerts();
+                drawer.pushQuad();
                 drawSmoothJoinFill(B, C, A, D, E, halfLineWidth);
             }
         }

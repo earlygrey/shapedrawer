@@ -285,7 +285,7 @@ public abstract class AbstractShapeDrawer {
      * <p>Adds the colour and texture coordinates to the cache and progresses the index. If drawing is
      * not currently being cached, immediately calls {@link #drawVerts()}.</p>
      */
-    protected void pushVerts() {
+    protected void pushQuad() {
         int i = getArrayOffset();
         verts[i + SpriteBatch.U1] = r.getU();
         verts[i + SpriteBatch.V1] = r.getV();
@@ -308,7 +308,7 @@ public abstract class AbstractShapeDrawer {
     protected void pushTriangle() {
         x4(x3());
         y4(y3());
-        pushVerts();
+        pushQuad();
     }
 
     /**
