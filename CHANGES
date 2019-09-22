@@ -1,3 +1,6 @@
+[1.3.0]
+- added PolygonShapeDrawer, which can draw filled shapes for regular polygons (which includes circles and ellipses) and rectangles
+
 [1.2.0]
 - fixed path bug when consecutive points had a coordinate in common
 - vertex information is cached in a large float[] instead of being sent every time a quad is calculated
