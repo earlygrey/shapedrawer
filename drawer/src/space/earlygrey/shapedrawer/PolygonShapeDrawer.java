@@ -6,19 +6,53 @@ import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.math.Rectangle;
 
+/**
+ * <p>Uses a PolygonBatch to draw lines, shapes (filled or outlined) and paths. Meant to be an analogue of {@link com.badlogic.gdx.graphics.glutils.ShapeRenderer}
+ * but uses a Batch instead of an {@link com.badlogic.gdx.graphics.glutils.ImmediateModeRenderer}, so that it can be used
+ * in between {@link PolygonBatch#begin()} and {@link PolygonBatch#end()}.</p>
+ * <p>Line mitering can be performed when drawing Polygons and Paths, see {@link JoinType} for options.</p>
+ * <p>Also includes an option to snap lines to the centre of pixels, see {@link #line(float, float, float, float, float, boolean)}
+ * for more information.</p>
+ * <p>Uses the projection matrix of the supplied Batch so there is no need to set one as with {@link com.badlogic.gdx.graphics.glutils.ShapeRenderer}.</p>
+ * <p>The difference between this and {@link space.earlygrey.shapedrawer.ShapeDrawer} is that this can draw filled
+ * shapes and requires a {@link PolygonBatch}, a {@link space.earlygrey.shapedrawer.ShapeDrawer} cannot draw
+ * filled shapes but just requires a {@link com.badlogic.gdx.graphics.g2d.Batch}.</p>
+ *
+ * @author earlygrey
+ */
+
 public class PolygonShapeDrawer extends ShapeDrawer {
+
+    //================================================================================
+    // MEMBERS
+    //================================================================================
 
     protected final FilledPolygonDrawer filledPolygonDrawer;
 
-    short[] triangles = new short[3000];
+    short[] triangles;
     int triangleOffset = 0;
     final int TRIANGLE_PUSH_SIZE = 3 * VERTEX_SIZE;
 
+    //================================================================================
+    // CONSTRUCTOR
+    //================================================================================
+
     public PolygonShapeDrawer(PolygonBatch batch, TextureRegion region) {
         super(batch, region);
+        // every 4 vertices pushed needs at most 6 triangle indices (6/4 = 1.5)
+        int trianglesLength = (int) Math.ceil((verts.length / VERTEX_SIZE) * 1.5);
+        triangles = new short[trianglesLength];
         filledPolygonDrawer = new FilledPolygonDrawer(this);
     }
 
+
+    //================================================================================
+    // CONSTRUCTOR
+    //================================================================================
+
+    /*
+        Note that the constructor ensures that the Batch is a PolygonBatch.
+     */
     @Override
     public PolygonBatch getBatch() {
         return (PolygonBatch) super.getBatch();
@@ -69,6 +103,10 @@ public class PolygonShapeDrawer extends ShapeDrawer {
         triangleOffset = 0;
     }
 
+
+    //================================================================================
+    // DRAWING METHODS
+    //================================================================================
 
     //=======================================
     //          CIRCLES AND ELLIPSES

@@ -11,13 +11,14 @@ import com.badlogic.gdx.utils.Array;
 import com.badlogic.gdx.utils.FloatArray;
 
 /**
- * <p>Uses a Batch to draw lines, shapes and paths. Meant to be an analogue of {@link com.badlogic.gdx.graphics.glutils.ShapeRenderer}
+ * <p>Uses a Batch to draw lines, outlined shapes and paths. Meant to be an analogue of {@link com.badlogic.gdx.graphics.glutils.ShapeRenderer}
  * but uses a Batch instead of an {@link com.badlogic.gdx.graphics.glutils.ImmediateModeRenderer}, so that it can be used
  * in between {@link Batch#begin()} and {@link Batch#end()}.</p>
  * <p>Line mitering can be performed when drawing Polygons and Paths, see {@link JoinType} for options.</p>
  * <p>Also includes an option to snap lines to the centre of pixels, see {@link #line(float, float, float, float, float, boolean)}
  * for more information.</p>
  * <p>Uses the projection matrix of the supplied Batch so there is no need to set one as with {@link com.badlogic.gdx.graphics.glutils.ShapeRenderer}.</p>
+ * <p>Note this cannot draw filled shapes - for that you can use a {@link space.earlygrey.shapedrawer.PolygonShapeDrawer}.</p>
  *
  * @author earlygrey
  */
