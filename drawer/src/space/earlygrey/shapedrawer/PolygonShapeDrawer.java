@@ -67,7 +67,117 @@ public class PolygonShapeDrawer extends ShapeDrawer {
         triangleOffset = 0;
     }
 
-    public void ellipseFilled(float centreX, float centreY, float radiusX, float radiusY, float rotation) {
-        filledPolygonDrawer.polygon(centreX, centreY, 80, radiusX, radiusY, rotation, 0, ShapeUtils.PI2);
+
+    //=======================================
+    //          CIRCLES AND ELLIPSES
+    //=======================================
+
+    /**
+     * <p>Calls {@link #filledEllipse(float, float, float, float, float)} with rotation set to 0
+     * and radiusX and radiusY set to {@code radius}.</p>
+     * @param centreX the x-coordinate of the centre point
+     * @param centreY the y-coordinate of the centre point
+     * @param radius the radius
+     */
+    public void filledCircle(float centreX, float centreY, float radius) {
+        filledEllipse(centreX, centreY, radius, radius, 0);
+    }
+
+    /**
+     * <p>Calls {@link #filledEllipse(float, float, float, float, float)} with rotation set to 0 and default line width.</p>
+     * @param centreX the x-coordinate of the centre point
+     * @param centreY the y-coordinate of the centre point
+     * @param radiusX the radius along the x-axis
+     * @param radiusY the radius along the y-axis
+     */
+    public void filledEllipse(float centreX, float centreY, float radiusX, float radiusY) {
+        filledEllipse(centreX, centreY, radiusX, radiusY, 0);
+    }
+
+    /**
+     * <p>Draws an ellipse as a stretched regular polygon, estimating the number of sides required
+     * (see {@link #estimateSidesRequired(float, float)}) to appear smooth enough based on the
+     * pixel size set. Calls {@link #polygon(float, float, int, float, float, float, JoinType)}.</p>
+     * @param centreX the x-coordinate of the centre point
+     * @param centreY the y-coordinate of the centre point
+     * @param radiusX the radius along the x-axis
+     * @param radiusY the radius along the y-axis
+     * @param rotation the anticlockwise rotation in radians
+     */
+    public void filledEllipse(float centreX, float centreY, float radiusX, float radiusY, float rotation) {
+        filledPolygonDrawer.polygon(centreX, centreY, estimateSidesRequired(radiusX, radiusY), radiusX, radiusY, rotation, 0, ShapeUtils.PI2);
+    }
+
+    //=======================================
+    //                 ARCS
+    //=======================================
+
+    /**
+     * <p>Calls {@link #sector(float, float, float, float, float, int)} with the number of sides estimated by {@link #estimateSidesRequired(float, float)}.</p>
+     * @param centreX the x-coordinate of the centre point
+     * @param centreY the y-coordinate of the centre point
+     * @param radius the radius of the circle that this arc is a part of
+     * @param startAngle the angle at which the arc starts
+     * @param radians the angle subtended by the arc
+     */
+    public void sector(float centreX, float centreY, float radius, float startAngle, float radians) {
+        sector(centreX, centreY, radius, startAngle, radians, estimateSidesRequired(radius, radius));
+    }
+
+    /**
+     * <p>Draws a sector from {@code startAngle} anti-clockwise that subtends the specified angle.</p>
+     * @param centreX the x-coordinate of the centre point
+     * @param centreY the y-coordinate of the centre point
+     * @param radius the radius of the circle that this arc is a part of
+     * @param startAngle the angle at which the arc starts
+     * @param radians the angle subtended by the arc
+     * @param sides the number of straight line segments to draw the arc with
+     */
+    public void sector(float centreX, float centreY, float radius, float startAngle, float radians, int sides) {
+        filledPolygonDrawer.polygon(centreX, centreY, sides, radius, radius, 0, startAngle, radians);
+    }
+
+    //=======================================
+    //           REGULAR POLYGONS
+    //=======================================
+
+
+    /**
+     * <p>Calls {@link #filledPolygon(float, float, int, float, float)} with scaleX and scaleY set to
+     * {@code scale}, rotation set to 0, and with the current default line width.</p>
+     * @param centreX the x-coordinate of the centre point
+     * @param centreY the y-coordinate of the centre point
+     * @param sides the number of sides
+     * @param scale the scale
+     */
+    public void filledPolygon(float centreX, float centreY, int sides, float scale) {
+        filledPolygon(centreX, centreY, sides, scale, scale, 0);
+    }
+
+    /**
+     * <p>Calls {@link #filledPolygon(float, float, int, float, float, float)} with scaleX and scaleY set to
+     * {@code scale} and with the current default line width.</p>
+     * @param centreX the x-coordinate of the centre point
+     * @param centreY the y-coordinate of the centre point
+     * @param sides the number of sides
+     * @param radius the radius
+     * @param rotation the anticlockwise rotation in radians
+     */
+    public void filledPolygon(float centreX, float centreY, int sides, float radius, float rotation) {
+        filledPolygon(centreX, centreY, sides, radius, radius, rotation);
+    }
+
+    /**
+     * <p>Draws the regular polygon speficied by drawing lines between the vertices.</p>
+     *
+     * @param centreX the x-coordinate of the centre point
+     * @param centreY the y-coordinate of the centre point
+     * @param sides the number of sides
+     * @param scaleX the scale along the x-axis
+     * @param scaleY the scale along the y-axis
+     * @param rotation the rotation in radians after scaling
+     */
+    public void filledPolygon(float centreX, float centreY, int sides, float scaleX, float scaleY, float rotation) {
+        filledPolygonDrawer.polygon(centreX, centreY, sides, scaleX, scaleY, rotation, 0, ShapeUtils.PI2);
     }
 }
