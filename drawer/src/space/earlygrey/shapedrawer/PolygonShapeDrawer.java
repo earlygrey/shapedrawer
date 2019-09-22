@@ -6,6 +6,8 @@ import com.badlogic.gdx.graphics.g2d.TextureRegion;
 
 public class PolygonShapeDrawer extends ShapeDrawer {
 
+    protected final FilledPolygonDrawer filledPolygonDrawer;
+
     short[] triangles = new short[3000];
     int triangleOffset = 0;
     final int TRIANGLE_PUSH_SIZE;
@@ -62,5 +64,9 @@ public class PolygonShapeDrawer extends ShapeDrawer {
         getBatch().draw(r.getTexture(), verts, 0, getArrayOffset(), triangles, 0, triangleOffset);
         vertexCount = 0;
         triangleOffset = 0;
+    }
+
+    public void ellipseFilled(float centreX, float centreY, float radiusX, float radiusY, float rotation) {
+        filledPolygonDrawer.polygon(centreX, centreY, 80, radiusX, radiusY, rotation, 0, ShapeUtils.PI2);
     }
 }
