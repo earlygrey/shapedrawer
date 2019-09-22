@@ -24,10 +24,6 @@ import com.badlogic.gdx.utils.FloatArray;
 
 public class ShapeDrawer extends AbstractShapeDrawer {
 
-    /*
-     * Note that I plan on extending this class at some stage to either use PolygonSpriteBatch or a custom Batch.
-     */
-
     //================================================================================
     // MEMBERS
     //================================================================================

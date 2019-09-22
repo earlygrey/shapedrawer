@@ -10,11 +10,11 @@ public class PolygonShapeDrawer extends ShapeDrawer {
 
     short[] triangles = new short[3000];
     int triangleOffset = 0;
-    final int TRIANGLE_PUSH_SIZE;
+    final int TRIANGLE_PUSH_SIZE = 3 * VERTEX_SIZE;
 
     public PolygonShapeDrawer(PolygonBatch batch, TextureRegion region) {
         super(batch, region);
-        TRIANGLE_PUSH_SIZE = 3 * VERTEX_SIZE;
+        filledPolygonDrawer = new FilledPolygonDrawer(this);
     }
 
     @Override
@@ -52,6 +52,7 @@ public class PolygonShapeDrawer extends ShapeDrawer {
         verts[i + SpriteBatch.C1] = floatBits;
         verts[i + SpriteBatch.C2] = floatBits;
         verts[i + SpriteBatch.C3] = floatBits;
+
         vertexCount += TRIANGLE_PUSH_SIZE;
         if (!isCachingDraws() || isCacheFull()) {
             drawVerts();

@@ -34,7 +34,7 @@ public abstract class AbstractShapeDrawer {
 
     protected static final Matrix4 mat4 = new Matrix4();
 
-    protected final int VERTEX_SIZE, VERTICES_PER_PUSH, PUSH_SIZE;
+    final int VERTEX_SIZE = 5, QUAD_PUSH_SIZE = 4 * VERTEX_SIZE;
 
 
     //================================================================================
@@ -46,17 +46,11 @@ public abstract class AbstractShapeDrawer {
      * @param batch the batch used for drawing. Cannot be changed.
      * @param region the texture region used for drawing. Can be changed later.
      */
-    protected AbstractShapeDrawer(Batch batch, TextureRegion region) {
-        this(batch, region, 5, 4);
-    }
 
-    protected AbstractShapeDrawer(Batch batch, TextureRegion region, int vertexSize, int verticesPerPush) {
+    protected AbstractShapeDrawer(Batch batch, TextureRegion region) {
         this.batch = batch;
         setTextureRegion(region);
         setColor(Color.WHITE);
-        VERTEX_SIZE = vertexSize;
-        VERTICES_PER_PUSH = verticesPerPush;
-        PUSH_SIZE = VERTICES_PER_PUSH * VERTEX_SIZE;
     }
 
 
@@ -282,7 +276,7 @@ public abstract class AbstractShapeDrawer {
     //================================================================================
 
     /**
-     * <p>Adds the colour and texture coordinates to the cache and progresses the index. If drawing is
+     * <p>Adds the colour and texture coordinates of four vertices to the cache and progresses the index. If drawing is
      * not currently being cached, immediately calls {@link #drawVerts()}.</p>
      */
     protected void pushQuad() {
@@ -299,7 +293,7 @@ public abstract class AbstractShapeDrawer {
         verts[i + SpriteBatch.C2] = floatBits;
         verts[i + SpriteBatch.C3] = floatBits;
         verts[i + SpriteBatch.C4] = floatBits;
-        vertexCount += VERTICES_PER_PUSH;
+        vertexCount += 4;
         if (!isCachingDraws() || isCacheFull()) {
             drawVerts();
         }
@@ -312,10 +306,10 @@ public abstract class AbstractShapeDrawer {
     }
 
     /**
-     * @return whether the cache can currently hold another set of vertex information of size {@link #PUSH_SIZE}.
+     * @return whether the cache can currently hold another set of vertex information of size {@link #QUAD_PUSH_SIZE}.
      */
     protected boolean isCacheFull() {
-        return verts.length - PUSH_SIZE < PUSH_SIZE * vertexCount;
+        return verts.length - QUAD_PUSH_SIZE < QUAD_PUSH_SIZE * vertexCount;
     }
 
     /**
