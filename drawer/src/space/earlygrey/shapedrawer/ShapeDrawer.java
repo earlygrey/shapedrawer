@@ -355,7 +355,7 @@ public class ShapeDrawer extends AbstractShapeDrawer {
     /**
      * <p>Draws an ellipse as a stretched regular polygon, estimating the number of sides required
      * (see {@link #estimateSidesRequired(float, float)}) to appear smooth enough based on the
-     * pixel size set. Calls {@link #polygon(float, float, int, float, float, float, JoinType)}.</p>
+     * pixel size that has been set. Calls {@link #polygon(float, float, int, float, float, float, JoinType)}.</p>
      * @param centreX the x-coordinate of the centre point
      * @param centreY the y-coordinate of the centre point
      * @param radiusX the radius along the x-axis
@@ -502,7 +502,7 @@ public class ShapeDrawer extends AbstractShapeDrawer {
     }
 
     /**
-     * <p>Draws the regular polygon speficied by drawing lines between the vertices.</p>
+     * <p>Draws the regular polygon specified by drawing lines between the vertices.</p>
      *
      * @param centreX the x-coordinate of the centre point
      * @param centreY the y-coordinate of the centre point

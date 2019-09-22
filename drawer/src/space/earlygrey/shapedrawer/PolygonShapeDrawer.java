@@ -75,7 +75,7 @@ public class PolygonShapeDrawer extends ShapeDrawer {
     //=======================================
 
     /**
-     * <p>Calls {@link #filledEllipse(float, float, float, float, float)} with rotation set to 0
+     * <p>Draws a filled circle by calling {@link #filledEllipse(float, float, float, float, float)} with rotation set to 0
      * and radiusX and radiusY set to {@code radius}.</p>
      * @param centreX the x-coordinate of the centre point
      * @param centreY the y-coordinate of the centre point
@@ -86,7 +86,7 @@ public class PolygonShapeDrawer extends ShapeDrawer {
     }
 
     /**
-     * <p>Calls {@link #filledEllipse(float, float, float, float, float)} with rotation set to 0 and default line width.</p>
+     * <p>Draws a filled ellipse by calling {@link #filledEllipse(float, float, float, float, float)} with rotation set to 0.</p>
      * @param centreX the x-coordinate of the centre point
      * @param centreY the y-coordinate of the centre point
      * @param radiusX the radius along the x-axis
@@ -99,7 +99,7 @@ public class PolygonShapeDrawer extends ShapeDrawer {
     /**
      * <p>Draws an ellipse as a stretched regular polygon, estimating the number of sides required
      * (see {@link #estimateSidesRequired(float, float)}) to appear smooth enough based on the
-     * pixel size set. Calls {@link #polygon(float, float, int, float, float, float, JoinType)}.</p>
+     * pixel size that has been set. Calls {@link #polygon(float, float, int, float, float, float, JoinType)}.</p>
      * @param centreX the x-coordinate of the centre point
      * @param centreY the y-coordinate of the centre point
      * @param radiusX the radius along the x-axis
@@ -111,11 +111,11 @@ public class PolygonShapeDrawer extends ShapeDrawer {
     }
 
     //=======================================
-    //                 ARCS
+    //          SECTORS (PIE SLICES)
     //=======================================
 
     /**
-     * <p>Calls {@link #sector(float, float, float, float, float, int)} with the number of sides estimated by {@link #estimateSidesRequired(float, float)}.</p>
+     * <p>Draws a sector (pie slice) by calling {@link #sector(float, float, float, float, float, int)} with the number of sides estimated by {@link #estimateSidesRequired(float, float)}.</p>
      * @param centreX the x-coordinate of the centre point
      * @param centreY the y-coordinate of the centre point
      * @param radius the radius of the circle that this arc is a part of
@@ -127,7 +127,7 @@ public class PolygonShapeDrawer extends ShapeDrawer {
     }
 
     /**
-     * <p>Draws a sector from {@code startAngle} anti-clockwise that subtends the specified angle.</p>
+     * <p>Draws a sector (pie slice) by from {@code startAngle} anti-clockwise that subtends the specified angle.</p>
      * @param centreX the x-coordinate of the centre point
      * @param centreY the y-coordinate of the centre point
      * @param radius the radius of the circle that this arc is a part of
@@ -146,7 +146,7 @@ public class PolygonShapeDrawer extends ShapeDrawer {
 
     /**
      * <p>Calls {@link #filledPolygon(float, float, int, float, float)} with scaleX and scaleY set to
-     * {@code scale}, rotation set to 0, and with the current default line width.</p>
+     * {@code scale} and the rotation set to 0.</p>
      * @param centreX the x-coordinate of the centre point
      * @param centreY the y-coordinate of the centre point
      * @param sides the number of sides
@@ -158,7 +158,7 @@ public class PolygonShapeDrawer extends ShapeDrawer {
 
     /**
      * <p>Calls {@link #filledPolygon(float, float, int, float, float, float)} with scaleX and scaleY set to
-     * {@code scale} and with the current default line width.</p>
+     * {@code scale}.</p>
      * @param centreX the x-coordinate of the centre point
      * @param centreY the y-coordinate of the centre point
      * @param sides the number of sides
@@ -170,7 +170,7 @@ public class PolygonShapeDrawer extends ShapeDrawer {
     }
 
     /**
-     * <p>Draws the regular polygon speficied by drawing lines between the vertices.</p>
+     * <p>Draws a filled regular polygon.</p>
      *
      * @param centreX the x-coordinate of the centre point
      * @param centreY the y-coordinate of the centre point
