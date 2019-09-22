@@ -1,8 +1,10 @@
 package space.earlygrey.shapedrawer;
 
+import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.g2d.PolygonBatch;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
+import com.badlogic.gdx.math.Rectangle;
 
 public class PolygonShapeDrawer extends ShapeDrawer {
 
@@ -179,5 +181,66 @@ public class PolygonShapeDrawer extends ShapeDrawer {
      */
     public void filledPolygon(float centreX, float centreY, int sides, float scaleX, float scaleY, float rotation) {
         filledPolygonDrawer.polygon(centreX, centreY, sides, scaleX, scaleY, rotation, 0, ShapeUtils.PI2);
+    }
+
+
+    //=======================================
+    //              RECTANGLES
+    //=======================================
+
+    /**
+     * <p>Calls {@link #filledRectangle(float, float, float, float)}.</p>
+     * @param rect a {@link Rectangle} object
+     */
+    public void filledRectangle(Rectangle rect) {
+        rectangle(rect.x, rect.y, rect.width, rect.height);
+    }
+
+    /**
+     * <p>Calls {@link #filledRectangle(Rectangle, Color)}.
+     * See {@link #filledRectangle(float, float, float, float, Color)} for more information.</p>
+     * @param rect a {@link Rectangle} object
+     * @param color temporarily changes the ShapeDrawer's colour
+     */
+    public void filledRectangle(Rectangle rect, Color color) {
+        filledRectangle(rect.x, rect.y, rect.width, rect.height, color);
+    }
+
+
+    /**
+     * <p>Calls {@link #filledRectangle(float, float, float, float, float)} with rotation set to 0.</p>
+     * @param x the x-coordinate of the bottom left corner of the rectangle
+     * @param y the y-coordinate of the bottom left corner of the rectangle
+     * @param width the width of the rectangle
+     * @param height the height of the rectangle
+     */
+    public void filledRectangle(float x, float y, float width, float height) {
+        filledRectangle(x, y, width, height, 0);
+    }
+
+    /**
+     * <p>Sets this drawer's colour, calls {@link #filledRectangle(float, float, float, float)}, then resets the colour.</p>
+     * @param x the x-coordinate of the bottom left corner of the rectangle
+     * @param y the y-coordinate of the bottom left corner of the rectangle
+     * @param width the width of the rectangle
+     * @param height the height of the rectangle
+     * @param color temporarily changes the ShapeDrawer's colour
+     */
+    public void filledRectangle(float x, float y, float width, float height, Color color) {
+        float oldColor = setColor(color);
+        filledRectangle(x, y, width, height);
+        setColor(oldColor);
+    }
+
+    /**
+     * Draws a filled rectangle.
+     * @param x the x-coordinate of the bottom left corner of the rectangle
+     * @param y the y-coordinate of the bottom left corner of the rectangle
+     * @param width the width of the rectangle
+     * @param height the height of the rectangle
+     * @param rotation the anticlockwise rotation in radians
+     */
+    public void filledRectangle(float x, float y, float width, float height, float rotation) {
+        filledPolygonDrawer.rectangle(x, y, width, height, rotation);
     }
 }

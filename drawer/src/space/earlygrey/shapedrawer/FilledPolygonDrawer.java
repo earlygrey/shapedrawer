@@ -53,4 +53,20 @@ public class FilledPolygonDrawer extends DrawerTemplate {
     }
 
 
+    void rectangle(float x, float y, float width, float height, float rotation) {
+        float cos = (float) Math.cos(rotation), sin = (float) Math.sin(rotation);
+        float halfWidth = 0.5f*width, halfHeight = 0.5f * height;
+        float centreX = x + halfWidth, centreY = y + halfHeight;
+        x1(halfWidth*cos - halfHeight*sin + centreX);
+        y1(halfWidth*sin + halfHeight*cos + centreY);
+        x2(-halfWidth*cos - halfHeight*sin + centreX);
+        y2(-halfWidth*sin + halfHeight*cos + centreY);
+        x3(-halfWidth*cos - (-halfHeight*sin) + centreX);
+        y3(-halfWidth*sin + (-halfHeight*cos) + centreY);
+        x4(halfWidth*cos - (-halfHeight*sin) + centreX);
+        y4(halfWidth*sin + (-halfHeight*cos) + centreY);
+        drawer.pushQuad();
+    }
+
+
 }
