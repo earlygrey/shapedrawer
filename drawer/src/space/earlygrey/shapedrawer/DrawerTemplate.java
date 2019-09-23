@@ -3,10 +3,17 @@ package space.earlygrey.shapedrawer;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.math.Vector2;
 
+/**
+ * <p>Template for the classes that take care of drawing individual shape types.
+ * Contains utility methods for pushing vertex information to the drawer.</p>
+ *
+ * @author earlygrey
+ */
+
 abstract class DrawerTemplate {
 
     static final Vector2 A = new Vector2(), B = new Vector2(), C = new Vector2(), D = new Vector2(), E = new Vector2(), dir = new Vector2();
-    static final Vector2 vec1 = new Vector2(), vec2 = new Vector2(), vec3 = new Vector2();
+    static final Vector2 vec1 = new Vector2();
 
     final ShapeDrawer drawer;
 
@@ -14,14 +21,21 @@ abstract class DrawerTemplate {
         this.drawer = drawer;
     }
 
+    /**
+     * <p>Draws a trangle that fills the gap at joints when {@link JoinType#SMOOTH} join type is used.</p>
+     * @param A the point before the join
+     * @param B the point at the join
+     * @param C the point after the join
+     * @param D
+     * @param E
+     */
     void drawSmoothJoinFill(Vector2 A, Vector2 B, Vector2 C, Vector2 D, Vector2 E, float halfLineWidth) {
         boolean bendsLeft = Joiner.prepareSmoothJoin(A, B, C, D, E, halfLineWidth, false);
         vert1(bendsLeft?E:D);
         vert2(bendsLeft?D:E);
         bendsLeft = Joiner.prepareSmoothJoin(A, B, C, D, E, halfLineWidth, true);
         vert3(bendsLeft?E:D);
-        vert4(x3(), y3());
-        drawer.pushVerts();
+        drawer.pushTriangle();
     }
 
     void drawSmoothJoinFill(Vector2 A, Vector2 B, Vector2 C, Vector2 D, Vector2 E, Vector2 offset, float cos, float sin, float halfLineWidth) {
@@ -33,8 +47,7 @@ abstract class DrawerTemplate {
         Vector2 V3 = bendsLeft?E:D;
         float x = V3.x*cos-V3.y*sin  + offset.x, y = V3.x*sin+V3.y*cos + offset.y;
         vert3(x, y);
-        vert4(x, y);
-        drawer.pushVerts();
+        drawer.pushTriangle();
     }
 
 

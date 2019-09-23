@@ -123,7 +123,7 @@ class PolygonDrawer extends DrawerTemplate {
             vert3(D.x*cosRot-D.y*sinRot  + centre.x, D.x*sinRot+D.y*cosRot + centre.y);
             vert4(E.x*cosRot-E.y*sinRot  + centre.x, E.x*sinRot+E.y*cosRot + centre.y);
 
-            drawer.pushVerts(); //push current AB
+            drawer.pushQuad(); //push current AB
 
             if (smooth && (full || i<end)) drawSmoothJoinFill(A, B, C, D, E, centre, cosRot, sinRot, halfLineWidth);
         }

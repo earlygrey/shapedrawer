@@ -11,22 +11,19 @@ import com.badlogic.gdx.utils.Array;
 import com.badlogic.gdx.utils.FloatArray;
 
 /**
- * <p>Uses a Batch to draw lines, shapes and paths. Meant to be an analogue of {@link com.badlogic.gdx.graphics.glutils.ShapeRenderer}
+ * <p>Uses a Batch to draw lines, outlined shapes and paths. Meant to be an analogue of {@link com.badlogic.gdx.graphics.glutils.ShapeRenderer}
  * but uses a Batch instead of an {@link com.badlogic.gdx.graphics.glutils.ImmediateModeRenderer}, so that it can be used
  * in between {@link Batch#begin()} and {@link Batch#end()}.</p>
  * <p>Line mitering can be performed when drawing Polygons and Paths, see {@link JoinType} for options.</p>
  * <p>Also includes an option to snap lines to the centre of pixels, see {@link #line(float, float, float, float, float, boolean)}
  * for more information.</p>
  * <p>Uses the projection matrix of the supplied Batch so there is no need to set one as with {@link com.badlogic.gdx.graphics.glutils.ShapeRenderer}.</p>
+ * <p>Note this cannot draw filled shapes - for that you can use a {@link space.earlygrey.shapedrawer.PolygonShapeDrawer}.</p>
  *
  * @author earlygrey
  */
 
 public class ShapeDrawer extends AbstractShapeDrawer {
-
-    /*
-     * Note that I plan on extending this class at some stage to either use PolygonSpriteBatch or a custom Batch.
-     */
 
     //================================================================================
     // MEMBERS
@@ -359,7 +356,7 @@ public class ShapeDrawer extends AbstractShapeDrawer {
     /**
      * <p>Draws an ellipse as a stretched regular polygon, estimating the number of sides required
      * (see {@link #estimateSidesRequired(float, float)}) to appear smooth enough based on the
-     * pixel size set. Calls {@link #polygon(float, float, int, float, float, float, JoinType)}.</p>
+     * pixel size that has been set. Calls {@link #polygon(float, float, int, float, float, float, JoinType)}.</p>
      * @param centreX the x-coordinate of the centre point
      * @param centreY the y-coordinate of the centre point
      * @param radiusX the radius along the x-axis
@@ -506,7 +503,7 @@ public class ShapeDrawer extends AbstractShapeDrawer {
     }
 
     /**
-     * <p>Draws the regular polygon speficied by drawing lines between the vertices.</p>
+     * <p>Draws the regular polygon specified by drawing lines between the vertices.</p>
      *
      * @param centreX the x-coordinate of the centre point
      * @param centreY the y-coordinate of the centre point
@@ -534,6 +531,14 @@ public class ShapeDrawer extends AbstractShapeDrawer {
     }
 
     /**
+     * <p>Calls {@link #polygon(Polygon, float, JoinType)} with default line width and join type set to {@link JoinType#POINTY}.</p>
+     * @param vertices consecutive ordered pairs of the x-y coordinates of the vertices of the polygon
+     */
+    public void polygon(float[] vertices) {
+        polygon(vertices, defaultLineWidth, isJoinNecessary(defaultLineWidth)?JoinType.POINTY:JoinType.NONE);
+    }
+
+    /**
      * <p>Calls {@link #polygon(Polygon, float, JoinType)} with join type set to {@link JoinType#POINTY}.</p>
      * @param polygon the polygon
      * @param lineWidth the line width
@@ -558,8 +563,17 @@ public class ShapeDrawer extends AbstractShapeDrawer {
      * @param joinType the type of join, see {@link JoinType}
      */
     public void polygon(Polygon polygon, float lineWidth, JoinType joinType) {
-        float[] vxs = polygon.getTransformedVertices();
-        pathDrawer.path(vxs, 0, vxs.length, lineWidth, joinType, false);
+        polygon(polygon.getTransformedVertices(), lineWidth, joinType);
+    }
+
+    /**
+     * <p>Draws the boundary of the polygon with the given line width and join type.</p>
+     * @param vertices consecutive ordered pairs of the x-y coordinates of the vertices of the polygon
+     * @param lineWidth the line width
+     * @param joinType the type of join, see {@link JoinType}
+     */
+    public void polygon(float[] vertices, float lineWidth, JoinType joinType) {
+        pathDrawer.path(vertices, 0, vertices.length, lineWidth, joinType, false);
     }
 
 

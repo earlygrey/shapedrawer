@@ -1,5 +1,11 @@
 package space.earlygrey.shapedrawer;
 
+/**
+ * <p>Contains functions for calculating vertex data for drawing individual lines.</p>
+ *
+ * @author earlygrey
+ */
+
 class LineDrawer extends DrawerTemplate {
 
     LineDrawer(ShapeDrawer drawer) {
@@ -56,7 +62,7 @@ class LineDrawer extends DrawerTemplate {
         x4(x2+xdif);
         y4(y2-ydif);
 
-        drawer.pushVerts();
+        drawer.pushQuad();
         if (!drawer.isCachingDraws()) drawer.drawVerts();
     }
 
