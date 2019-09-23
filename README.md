@@ -82,7 +82,7 @@ If you want to draw filled shapes you'll need a PolygonBatch, and then instead o
 PolygonShapeDrawer drawer = new PolygonShapeDrawer(polygonBatch, region);
 ```
 
-PolygonShapeDrawer extends ShapeDrawer, so if you're already using a PolygonBatch this is recommended anyway!
+PolygonShapeDrawer extends ShapeDrawer so you still have access to all the methods provided by the latter.
 
 ---
 
