@@ -531,6 +531,14 @@ public class ShapeDrawer extends AbstractShapeDrawer {
     }
 
     /**
+     * <p>Calls {@link #polygon(Polygon, float, JoinType)} with default line width and join type set to {@link JoinType#POINTY}.</p>
+     * @param vertices consecutive ordered pairs of the x-y coordinates of the vertices of the polygon
+     */
+    public void polygon(float[] vertices) {
+        polygon(vertices, defaultLineWidth, isJoinNecessary(defaultLineWidth)?JoinType.POINTY:JoinType.NONE);
+    }
+
+    /**
      * <p>Calls {@link #polygon(Polygon, float, JoinType)} with join type set to {@link JoinType#POINTY}.</p>
      * @param polygon the polygon
      * @param lineWidth the line width
@@ -555,8 +563,17 @@ public class ShapeDrawer extends AbstractShapeDrawer {
      * @param joinType the type of join, see {@link JoinType}
      */
     public void polygon(Polygon polygon, float lineWidth, JoinType joinType) {
-        float[] vxs = polygon.getTransformedVertices();
-        pathDrawer.path(vxs, 0, vxs.length, lineWidth, joinType, false);
+        polygon(polygon.getTransformedVertices(), lineWidth, joinType);
+    }
+
+    /**
+     * <p>Draws the boundary of the polygon with the given line width and join type.</p>
+     * @param vertices consecutive ordered pairs of the x-y coordinates of the vertices of the polygon
+     * @param lineWidth the line width
+     * @param joinType the type of join, see {@link JoinType}
+     */
+    public void polygon(float[] vertices, float lineWidth, JoinType joinType) {
+        pathDrawer.path(vertices, 0, vertices.length, lineWidth, joinType, false);
     }
 
 
