@@ -1,8 +1,12 @@
 package space.earlygrey.shapedrawer;
 
+import com.badlogic.gdx.math.EarClippingTriangulator;
 import com.badlogic.gdx.math.MathUtils;
+import com.badlogic.gdx.utils.ShortArray;
 
 public class FilledPolygonDrawer extends DrawerTemplate {
+
+    static final EarClippingTriangulator triangulator = new EarClippingTriangulator();
 
     FilledPolygonDrawer(ShapeDrawer drawer) {
         super(drawer);
@@ -51,6 +55,30 @@ public class FilledPolygonDrawer extends DrawerTemplate {
 
         if (!wasCaching) drawer.endCaching();
     }
+
+    void polygon(float[] vertices) {
+        ShortArray triangles = triangulator.computeTriangles(vertices);
+        polygon(vertices, triangles);
+    }
+
+    void polygon(float[] vertices, ShortArray triangles) {
+        for (int i = 0; i < triangles.size; i+=3) {
+            vert1(vertices[2*triangles.get(i)], vertices[2*triangles.get(i)+1]);
+            vert2(vertices[2*triangles.get(i+1)], vertices[2*triangles.get(i+1)+1]);
+            vert3(vertices[2*triangles.get(i+2)], vertices[2*triangles.get(i+2)+1]);
+            drawer.pushTriangle();
+        }
+    }
+
+    void polygon(float[] vertices, short[] triangles) {
+        for (int i = 0; i < triangles.length; i+=3) {
+            vert1(vertices[2*triangles[i]], vertices[2*triangles[i]+1]);
+            vert2(vertices[2*triangles[i+1]], vertices[2*triangles[i+1]+1]);
+            vert3(vertices[2*triangles[i+2]], vertices[2*triangles[i+2]+1]);
+            drawer.pushTriangle();
+        }
+    }
+
 
 
     void rectangle(float x, float y, float width, float height, float rotation) {

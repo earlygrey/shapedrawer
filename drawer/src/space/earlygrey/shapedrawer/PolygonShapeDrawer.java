@@ -4,7 +4,9 @@ import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.g2d.PolygonBatch;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
+import com.badlogic.gdx.math.Polygon;
 import com.badlogic.gdx.math.Rectangle;
+import com.badlogic.gdx.utils.ShortArray;
 
 /**
  * <p>Uses a PolygonBatch to draw lines, shapes (filled or outlined) and paths. Meant to be an analogue of {@link com.badlogic.gdx.graphics.glutils.ShapeRenderer}
@@ -220,6 +222,37 @@ public class PolygonShapeDrawer extends ShapeDrawer {
     public void filledPolygon(float centreX, float centreY, int sides, float scaleX, float scaleY, float rotation) {
         filledPolygonDrawer.polygon(centreX, centreY, sides, scaleX, scaleY, rotation, 0, ShapeUtils.PI2);
     }
+
+
+
+    //=======================================
+    //           ARBITRARY POLYGONS
+    //=======================================
+
+    public void filledPolygon(Polygon polygon) {
+        filledPolygon(polygon.getTransformedVertices());
+    }
+
+    public void filledPolygon(float[] vertices) {
+        filledPolygonDrawer.polygon(vertices);
+    }
+
+    public void filledPolygon(Polygon polygon, short[] triangles) {
+        filledPolygon(polygon.getTransformedVertices(), triangles);
+    }
+
+    public void filledPolygon(float[] vertices, short[] triangles) {
+        filledPolygonDrawer.polygon(vertices, triangles);
+    }
+    public void filledPolygon(Polygon polygon, ShortArray triangles) {
+        filledPolygon(polygon.getTransformedVertices(), triangles);
+    }
+
+    public void filledPolygon(float[] vertices, ShortArray triangles) {
+        filledPolygonDrawer.polygon(vertices, triangles);
+    }
+
+
 
 
     //=======================================
