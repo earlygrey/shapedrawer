@@ -4,6 +4,12 @@ import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.utils.Array;
 import com.badlogic.gdx.utils.FloatArray;
 
+/**
+ * <p>Contains functions for calculating the vertex data for lines in a path with various joins.</p>
+ *
+ * @author earlygrey
+ */
+
 class PathDrawer extends DrawerTemplate {
 
     FloatArray path = new FloatArray();

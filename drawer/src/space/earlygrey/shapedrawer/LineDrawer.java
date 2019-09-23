@@ -1,5 +1,11 @@
 package space.earlygrey.shapedrawer;
 
+/**
+ * <p>Contains functions for calculating vertex data for drawing individual lines.</p>
+ *
+ * @author earlygrey
+ */
+
 class LineDrawer extends DrawerTemplate {
 
     LineDrawer(ShapeDrawer drawer) {

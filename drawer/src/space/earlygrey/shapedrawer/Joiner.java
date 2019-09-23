@@ -3,6 +3,12 @@ package space.earlygrey.shapedrawer;
 import com.badlogic.gdx.math.Vector;
 import com.badlogic.gdx.math.Vector2;
 
+/**
+ * <p>Static methods for calculating the vertices of the lines for various join types.</p>
+ *
+ * @author earlygrey
+ */
+
 class Joiner {
 
     static final Vector2 AB = new Vector2(), BC = new Vector2(), v = new Vector2();

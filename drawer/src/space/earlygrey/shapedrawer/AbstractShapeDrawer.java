@@ -300,6 +300,10 @@ public abstract class AbstractShapeDrawer {
         }
     }
 
+    /**
+     <p>Adds the colour and texture coordinates of three vertices to the cache and progresses the index. If drawing is
+     * not currently being cached, immediately calls {@link #drawVerts()}.</p>
+     */
     protected void pushTriangle() {
         x4(x3());
         y4(y3());

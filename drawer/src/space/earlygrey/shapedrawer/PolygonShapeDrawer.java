@@ -97,6 +97,10 @@ public class PolygonShapeDrawer extends ShapeDrawer {
         }
     }
 
+    /**
+     * <p>Calls {@link PolygonBatch#draw(com.badlogic.gdx.graphics.Texture, float[], int, int, short[], int, int)}
+     * using the currently cached vertex and triangle information.</p>
+     */
     @Override
     protected void drawVerts() {
         if (vertexCount == 0) return;
@@ -309,7 +313,7 @@ public class PolygonShapeDrawer extends ShapeDrawer {
     }
 
     /**
-     * <p>Calls {@link #filledRectangle(Rectangle, Color)}.
+     * <p>Calls {@link #filledRectangle(float, float, float, float, Color)}.
      * See {@link #filledRectangle(float, float, float, float, Color)} for more information.</p>
      * @param rect a {@link Rectangle} object
      * @param color temporarily changes the ShapeDrawer's colour
