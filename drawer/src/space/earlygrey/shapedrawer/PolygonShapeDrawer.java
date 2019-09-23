@@ -229,30 +229,71 @@ public class PolygonShapeDrawer extends ShapeDrawer {
     //           ARBITRARY POLYGONS
     //=======================================
 
+    /**
+     * <p>Draws a filled polygon.</p>
+     * <p>Note: this triangulates the polygon every time it is called - it is greatly recommended to cache
+     * the triangles and use {@link #filledPolygon(Polygon, short[])} or {@link #filledPolygon(Polygon, ShortArray)} instead.
+     * You can use something like {@link com.badlogic.gdx.math.EarClippingTriangulator#computeTriangles(float[])} to calculate the triangles.</p>
+     * @param polygon the polygon to draw
+     */
     public void filledPolygon(Polygon polygon) {
         filledPolygon(polygon.getTransformedVertices());
     }
 
+    /**
+     * <p>Draws a filled polygon using the specified vertices.</p>
+     * <p>Note: this triangulates the polygon every time it is called - it is greatly recommended to cache
+     * the triangles and use {@link #filledPolygon(float[], short[])} or {@link #filledPolygon(float[], ShortArray)} instead.
+     * You can use something like {@link com.badlogic.gdx.math.EarClippingTriangulator#computeTriangles(float[])} to calculate the triangles.</p>
+     * @param vertices consecutive ordered pairs of the x-y coordinates of the vertices of the polygon
+     */
     public void filledPolygon(float[] vertices) {
         filledPolygonDrawer.polygon(vertices);
     }
 
+    /**
+     * <p>Draws a filled polygon using the specified vertices.</p>
+     * @param polygon the polygon to draw
+     * @param triangles ordered triples of the indices of the float[] defining the polygon vertices corresponding to triangles.
+     *                  You can use something like {@link com.badlogic.gdx.math.EarClippingTriangulator#computeTriangles(float[])} to
+     *                  calculate them.
+     */
     public void filledPolygon(Polygon polygon, short[] triangles) {
         filledPolygon(polygon.getTransformedVertices(), triangles);
     }
 
+    /**
+     * <p>Draws a filled polygon using the specified vertices.</p>
+     * @param vertices consecutive ordered pairs of the x-y coordinates of the vertices of the polygon
+     * @param triangles ordered triples of the indices of the float[] defining the polygon vertices corresponding to triangles.
+     *                  You can use something like {@link com.badlogic.gdx.math.EarClippingTriangulator#computeTriangles(float[])} to
+     *                  calculate them.
+     */
     public void filledPolygon(float[] vertices, short[] triangles) {
         filledPolygonDrawer.polygon(vertices, triangles);
     }
+
+    /**
+     * <p>Draws a filled polygon using the specified vertices.</p>
+     * @param polygon the polygon to draw
+     * @param triangles ordered triples of the indices of the float[] defining the polygon vertices corresponding to triangles.
+     *                  You can use something like {@link com.badlogic.gdx.math.EarClippingTriangulator#computeTriangles(float[])} to
+     *                  calculate them.
+     */
     public void filledPolygon(Polygon polygon, ShortArray triangles) {
         filledPolygon(polygon.getTransformedVertices(), triangles);
     }
 
+    /**
+     * <p>Draws a filled polygon using the specified vertices.</p>
+     * @param vertices consecutive ordered pairs of the x-y coordinates of the vertices of the polygon
+     * @param triangles ordered triples of the indices of the float[] defining the polygon vertices corresponding to triangles.
+     *                  You can use something like {@link com.badlogic.gdx.math.EarClippingTriangulator#computeTriangles(float[])} to
+     *                  calculate them.
+     */
     public void filledPolygon(float[] vertices, ShortArray triangles) {
         filledPolygonDrawer.polygon(vertices, triangles);
     }
-
-
 
 
     //=======================================
