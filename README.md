@@ -10,7 +10,7 @@ Draws simple shapes like libgdx's [ShapeRenderer](https://libgdx.badlogicgames.c
 
 Comes with overloaded methods to draw lines, paths, ellipses, regular polygons and rectangles.
 
-Just needs to be provided with a Batch (SpriteBatch or PolygonSpriteBatch will work) and a TextureRegion.
+Just needs to be provided with a Batch (eg a SpriteBatch) or if you additionally want filled shapes a PolygonBatch (eg a PolygonSpriteBatch), as well as a TextureRegion.
 
 ---
 
@@ -29,7 +29,7 @@ allprojects {
 And  in your core project add the dependency:
 ```
 dependencies {
-        implementation 'space.earlygrey:shapedrawer:1.2.0'
+        implementation 'space.earlygrey:shapedrawer:1.3.0'
 }
 ```
 
@@ -43,7 +43,7 @@ project(":html") {
 
     dependencies {
         ...
-        implementation 'space.earlygrey:shapedrawer:1.2.0:sources'
+        implementation 'space.earlygrey:shapedrawer:1.3.0:sources'
     }
 }
 ```
@@ -75,6 +75,14 @@ batch.end();
 ```
 
 That's it!
+
+If you want to draw filled shapes you'll need a PolygonBatch, and then instead of creating a ShapeDrawer, create a PolygonShapeDrawer:
+
+```java
+PolygonShapeDrawer drawer = new PolygonShapeDrawer(polygonBatch, region);
+```
+
+PolygonShapeDrawer extends ShapeDrawer, so if you're already using a PolygonBatch this is recommended anyway!
 
 ---
 
