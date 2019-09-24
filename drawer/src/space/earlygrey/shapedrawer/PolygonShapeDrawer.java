@@ -36,7 +36,7 @@ public class PolygonShapeDrawer extends ShapeDrawer {
 
     short[] triangles;
     int triangleOffset = 0;
-    final int TRIANGLE_PUSH_SIZE = 3 * VERTEX_SIZE;
+    static final int TRIANGLE_PUSH_SIZE = 3 * VERTEX_SIZE;
 
     //================================================================================
     // CONSTRUCTOR
