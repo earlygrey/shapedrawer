@@ -4,7 +4,7 @@ import com.badlogic.gdx.math.EarClippingTriangulator;
 import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.utils.ShortArray;
 
-public class FilledPolygonDrawer extends DrawerTemplate<PolygonShapeDrawer> {
+class FilledPolygonDrawer extends DrawerTemplate<PolygonShapeDrawer> {
 
     static final EarClippingTriangulator triangulator = new EarClippingTriangulator();
 
@@ -13,8 +13,6 @@ public class FilledPolygonDrawer extends DrawerTemplate<PolygonShapeDrawer> {
     }
 
     void polygon(float centreX, float centreY, int sides, float radiusX, float radiusY, float rotation, float startAngle, float radians) {
-
-
 
         radians = ShapeUtils.normaliseAngleToPositive(radians);
         if (radians==0) {
@@ -65,27 +63,19 @@ public class FilledPolygonDrawer extends DrawerTemplate<PolygonShapeDrawer> {
     }
 
     void polygon(float[] vertices, ShortArray triangles) {
-        boolean wasCaching = drawer.startCaching();
-        for (int i = 0; i < triangles.size; i+=3) {
-            vert1(vertices[2*triangles.get(i)], vertices[2*triangles.get(i)+1]);
-            vert2(vertices[2*triangles.get(i+1)], vertices[2*triangles.get(i+1)+1]);
-            vert3(vertices[2*triangles.get(i+2)], vertices[2*triangles.get(i+2)+1]);
-            drawer.pushTriangle();
-        }
-        if (!wasCaching) drawer.endCaching();
+        polygon(vertices, triangles.items, triangles.size);
     }
 
     void polygon(float[] vertices, short[] triangles) {
-        boolean wasCaching = drawer.startCaching();
-        for (int i = 0; i < triangles.length; i+=3) {
-            vert1(vertices[2*triangles[i]], vertices[2*triangles[i]+1]);
-            vert2(vertices[2*triangles[i+1]], vertices[2*triangles[i+1]+1]);
-            vert3(vertices[2*triangles[i+2]], vertices[2*triangles[i+2]+1]);
-            drawer.pushTriangle();
-        }
-        if (!wasCaching) drawer.endCaching();
+        polygon(vertices, triangles, triangles.length);
     }
 
+    void polygon(float[] vertices, short[] triangles, int trianglesCount) {
+        int n = vertices.length / 2;
+        drawer.ensureSpace(n);
+        drawer.pushVertexData(vertices, triangles, trianglesCount);
+        drawer.pushToBatch();
+    }
 
     void rectangle(float x, float y, float width, float height, float rotation) {
         drawer.ensureSpaceForQuad();

@@ -2,11 +2,14 @@ package space.earlygrey.shapedrawer;
 
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.g2d.PolygonBatch;
+import com.badlogic.gdx.graphics.g2d.PolygonRegion;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.math.Polygon;
 import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.utils.ShortArray;
+
+import java.util.Arrays;
 
 /**
  * <p>Uses a PolygonBatch to draw lines, shapes (filled or outlined) and paths. Meant to be an analogue of {@link com.badlogic.gdx.graphics.glutils.ShapeRenderer}
@@ -62,36 +65,67 @@ public class PolygonShapeDrawer extends ShapeDrawer {
 
     @Override
     void pushQuad() {
-        int vertexOffset = vertexCount;
-
-        triangles[triangleOffset++] = (short) (vertexOffset + 0);
-        triangles[triangleOffset++] = (short) (vertexOffset + 1);
-        triangles[triangleOffset++] = (short) (vertexOffset + 2);
-        triangles[triangleOffset++] = (short) (vertexOffset + 0);
-        triangles[triangleOffset++] = (short) (vertexOffset + 2);
-        triangles[triangleOffset++] = (short) (vertexOffset + 3);
-
+        triangles[triangleOffset++] = (short) (vertexCount + 0);
+        triangles[triangleOffset++] = (short) (vertexCount + 1);
+        triangles[triangleOffset++] = (short) (vertexCount + 2);
+        triangles[triangleOffset++] = (short) (vertexCount + 0);
+        triangles[triangleOffset++] = (short) (vertexCount + 2);
+        triangles[triangleOffset++] = (short) (vertexCount + 3);
         super.pushQuad();
     }
 
 
     @Override
     void pushTriangle() {
-        int vertexOffset = vertexCount;
-        triangles[triangleOffset++] = (short) (vertexOffset + 0);
-        triangles[triangleOffset++] = (short) (vertexOffset + 1);
-        triangles[triangleOffset++] = (short) (vertexOffset + 2);
+        triangles[triangleOffset++] = (short) (vertexCount + 0);
+        triangles[triangleOffset++] = (short) (vertexCount + 1);
+        triangles[triangleOffset++] = (short) (vertexCount + 2);
         int i = getArrayOffset();
-        verts[i + SpriteBatch.U1] = r.getU();
+       /* verts[i + SpriteBatch.U1] = r.getU();
         verts[i + SpriteBatch.V1] = r.getV();
         verts[i + SpriteBatch.U2] = r.getU2();
         verts[i + SpriteBatch.V2] = r.getV();
         verts[i + SpriteBatch.U3] = r.getU2();
-        verts[i + SpriteBatch.V3] = r.getV2();
+        verts[i + SpriteBatch.V3] = r.getV2();*/
         verts[i + SpriteBatch.C1] = floatBits;
         verts[i + SpriteBatch.C2] = floatBits;
         verts[i + SpriteBatch.C3] = floatBits;
         vertexCount += TRIANGLE_PUSH_SIZE;
+    }
+
+    protected void pushVertexData(float[] vertices, short[] triangles, int trianglesCount)  {
+
+        /*float minX = Float.MAX_VALUE, maxX = -Float.MAX_VALUE;
+        float minY = Float.MAX_VALUE, maxY = -Float.MAX_VALUE;
+
+        for (int j = 0; j < vertices.length; j+=2) {
+            float x = vertices[j], y = vertices[j+1];
+            minX = x<minX?x:minX;
+            maxX = x>maxX?x:maxX;
+            minY = y<minY?y:minY;
+            maxY = y>maxY?y:maxY;
+        }
+
+        float w = maxX-minX, h = maxY-minY;*/
+
+        int i = getArrayOffset();
+
+        for (int j = 0; j < vertices.length; j+=2) {
+            float x = vertices[j], y = vertices[j+1];
+            verts[i + SpriteBatch.X1] = x;
+            verts[i + SpriteBatch.Y1] = y;
+            verts[i + SpriteBatch.C1] = floatBits;
+            /*verts[i + SpriteBatch.U1] = r.getU();
+            verts[i + SpriteBatch.V1] = r.getV();*/
+
+            i += VERTEX_SIZE;
+        }
+
+        for (int j = 0, n = trianglesCount; j < n; j++) {
+            this.triangles[triangleOffset++] = (short) (vertexCount + triangles[j]);
+        }
+
+        vertexCount += vertices.length / 2;
     }
 
     @Override
@@ -104,7 +138,7 @@ public class PolygonShapeDrawer extends ShapeDrawer {
      * using the currently cached vertex and triangle information.</p>
      */
     @Override
-    protected void pushToBatch() {
+    void pushToBatch() {
         if (vertexCount == 0) return;
         getBatch().draw(r.getTexture(), verts, 0, getArrayOffset(), triangles, 0, triangleOffset);
         vertexCount = 0;
@@ -165,8 +199,8 @@ public class PolygonShapeDrawer extends ShapeDrawer {
      * @param centreX the x-coordinate of the centre point
      * @param centreY the y-coordinate of the centre point
      * @param radius the radius of the circle that this arc is a part of
-     * @param startAngle the angle at which the arc starts
-     * @param radians the angle subtended by the arc
+     * @param startAngle the angle in radians at which the arc starts
+     * @param radians the angle in radians subtended by the arc
      */
     public void sector(float centreX, float centreY, float radius, float startAngle, float radians) {
         sector(centreX, centreY, radius, startAngle, radians, estimateSidesRequired(radius, radius));
@@ -177,8 +211,8 @@ public class PolygonShapeDrawer extends ShapeDrawer {
      * @param centreX the x-coordinate of the centre point
      * @param centreY the y-coordinate of the centre point
      * @param radius the radius of the circle that this arc is a part of
-     * @param startAngle the angle at which the arc starts
-     * @param radians the angle subtended by the arc
+     * @param startAngle the angle in radians at which the arc starts
+     * @param radians the angle in radians subtended by the arc
      * @param sides the number of straight line segments to draw the arc with
      */
     public void sector(float centreX, float centreY, float radius, float startAngle, float radians, int sides) {
