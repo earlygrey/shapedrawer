@@ -61,7 +61,7 @@ public class PolygonShapeDrawer extends ShapeDrawer {
     }
 
     @Override
-    protected void pushQuad() {
+    void pushQuad() {
         int vertexOffset = vertexCount;
 
         triangles[triangleOffset++] = (short) (vertexOffset + 0);
@@ -74,8 +74,9 @@ public class PolygonShapeDrawer extends ShapeDrawer {
         super.pushQuad();
     }
 
+
     @Override
-    protected void pushTriangle() {
+    void pushTriangle() {
         int vertexOffset = vertexCount;
         triangles[triangleOffset++] = (short) (vertexOffset + 0);
         triangles[triangleOffset++] = (short) (vertexOffset + 1);
@@ -90,11 +91,12 @@ public class PolygonShapeDrawer extends ShapeDrawer {
         verts[i + SpriteBatch.C1] = floatBits;
         verts[i + SpriteBatch.C2] = floatBits;
         verts[i + SpriteBatch.C3] = floatBits;
-
         vertexCount += TRIANGLE_PUSH_SIZE;
-        if (!isCachingDraws() || isCacheFull()) {
-            drawVerts();
-        }
+    }
+
+    @Override
+    void ensureSpaceForTriangle() {
+        ensureSpace(3);
     }
 
     /**
@@ -102,7 +104,7 @@ public class PolygonShapeDrawer extends ShapeDrawer {
      * using the currently cached vertex and triangle information.</p>
      */
     @Override
-    protected void drawVerts() {
+    protected void pushToBatch() {
         if (vertexCount == 0) return;
         getBatch().draw(r.getTexture(), verts, 0, getArrayOffset(), triangles, 0, triangleOffset);
         vertexCount = 0;

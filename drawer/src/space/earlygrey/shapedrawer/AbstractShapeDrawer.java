@@ -22,15 +22,16 @@ public abstract class AbstractShapeDrawer {
 
     private final Batch batch;
     TextureRegion r;
-    protected float floatBits;
-    protected final float[] verts = new float[2000];
-    protected int vertexCount;
+    float floatBits;
+    final int VERTEX_CACHE_SIZE = 2000;
+    final float[] verts = new float[VERTEX_CACHE_SIZE];
+    int vertexCount;
 
-    protected float pixelSize = 1, halfPixelSize = 0.5f * pixelSize;
-    protected float offset = ShapeUtils.EPSILON * pixelSize;
-    protected float defaultLineWidth = pixelSize;
-    protected boolean defaultSnap = false;
-    protected boolean cacheDraws = false;
+    float pixelSize = 1, halfPixelSize = 0.5f * pixelSize;
+    float offset = ShapeUtils.EPSILON * pixelSize;
+    float defaultLineWidth = pixelSize;
+    boolean defaultSnap = false;
+    boolean cacheDraws = false;
 
     protected static final Matrix4 mat4 = new Matrix4();
 
@@ -48,7 +49,7 @@ public abstract class AbstractShapeDrawer {
      * @param region the texture region used for drawing. Can be changed later.
      */
 
-    protected AbstractShapeDrawer(Batch batch, TextureRegion region) {
+    AbstractShapeDrawer(Batch batch, TextureRegion region) {
         this.batch = batch;
         setTextureRegion(region);
         setColor(Color.WHITE);
@@ -248,7 +249,7 @@ public abstract class AbstractShapeDrawer {
      *
      * @return whether drawing is currently being cached
      */
-    protected boolean isCachingDraws() {
+    boolean isCachingDraws() {
         return cacheDraws;
     }
 
@@ -257,7 +258,7 @@ public abstract class AbstractShapeDrawer {
      * Batch with one call to {@link Batch#draw(Texture, float[], int, int)}.</p>
      * @return whether drawing was being cached before this method was called
      */
-    protected boolean startCaching() {
+    boolean startCaching() {
         boolean wasCaching = isCachingDraws();
         this.cacheDraws = true;
         return wasCaching;
@@ -266,9 +267,9 @@ public abstract class AbstractShapeDrawer {
     /**
      * <p>Stops caching and calls {@link Batch#draw(Texture, float[], int, int)} if anything is cached.</p>
      */
-    protected void endCaching() {
+    void endCaching() {
         this.cacheDraws = false;
-        if (vertexCount>0) drawVerts();
+        if (vertexCount>0) pushToBatch();
     }
 
 
@@ -278,9 +279,10 @@ public abstract class AbstractShapeDrawer {
 
     /**
      * <p>Adds the colour and texture coordinates of four vertices to the cache and progresses the index. If drawing is
-     * not currently being cached, immediately calls {@link #drawVerts()}.</p>
+     * not currently being cached, immediately calls {@link #pushToBatch()}.</p>
+     * @return whether the vertex data was pushed to the Batch
      */
-    protected void pushQuad() {
+    void pushQuad() {
         int i = getArrayOffset();
         verts[i + SpriteBatch.U1] = r.getU();
         verts[i + SpriteBatch.V1] = r.getV();
@@ -295,38 +297,43 @@ public abstract class AbstractShapeDrawer {
         verts[i + SpriteBatch.C3] = floatBits;
         verts[i + SpriteBatch.C4] = floatBits;
         vertexCount += 4;
-        if (!isCachingDraws() || isCacheFull()) {
-            drawVerts();
-        }
     }
 
     /**
      <p>Adds the colour and texture coordinates of three vertices to the cache and progresses the index. If drawing is
-     * not currently being cached, immediately calls {@link #drawVerts()}.</p>
+     * not currently being cached, immediately calls {@link #pushToBatch()}.</p>
+     * @return whether the vertex data was pushed to the Batch
      */
-    protected void pushTriangle() {
+    void pushTriangle() {
         x4(x3());
         y4(y3());
         pushQuad();
     }
 
-    /**
-     * @return whether the cache can currently hold another set of vertex information of size {@link #QUAD_PUSH_SIZE}.
-     */
-    protected boolean isCacheFull() {
-        return verts.length - QUAD_PUSH_SIZE < QUAD_PUSH_SIZE * vertexCount;
+    void ensureSpaceForTriangle() {
+        ensureSpace(4);
+    }
+    void ensureSpaceForQuad() {
+        ensureSpace(4);
+    }
+    void ensureSpace(int vertices) {
+        if (verticesRemaining() < vertices) pushToBatch();
+    }
+
+    int verticesRemaining() {
+        return (verts.length - QUAD_PUSH_SIZE * vertexCount) / VERTEX_SIZE;
     }
 
     /**
      * <p>Calls {@link Batch#draw(Texture, float[], int, int)} using the currently cached vertex information.</p>
      */
-    protected void drawVerts() {
+    void pushToBatch() {
         if (vertexCount == 0) return;
         batch.draw(r.getTexture(), verts, 0, getArrayOffset());
         vertexCount = 0;
     }
 
-    protected int getArrayOffset() {
+    int getArrayOffset() {
         return VERTEX_SIZE * vertexCount;
     }
 

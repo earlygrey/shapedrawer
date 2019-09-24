@@ -10,14 +10,14 @@ import com.badlogic.gdx.math.Vector2;
  * @author earlygrey
  */
 
-abstract class DrawerTemplate {
+abstract class DrawerTemplate<T extends AbstractShapeDrawer> {
 
     static final Vector2 A = new Vector2(), B = new Vector2(), C = new Vector2(), D = new Vector2(), E = new Vector2(), dir = new Vector2();
     static final Vector2 vec1 = new Vector2();
 
-    final ShapeDrawer drawer;
+    final T drawer;
 
-    DrawerTemplate(ShapeDrawer drawer) {
+    DrawerTemplate(T drawer) {
         this.drawer = drawer;
     }
 
@@ -30,6 +30,7 @@ abstract class DrawerTemplate {
      * @param E
      */
     void drawSmoothJoinFill(Vector2 A, Vector2 B, Vector2 C, Vector2 D, Vector2 E, float halfLineWidth) {
+        drawer.ensureSpaceForTriangle();
         boolean bendsLeft = Joiner.prepareSmoothJoin(A, B, C, D, E, halfLineWidth, false);
         vert1(bendsLeft?E:D);
         vert2(bendsLeft?D:E);
@@ -39,6 +40,7 @@ abstract class DrawerTemplate {
     }
 
     void drawSmoothJoinFill(Vector2 A, Vector2 B, Vector2 C, Vector2 D, Vector2 E, Vector2 offset, float cos, float sin, float halfLineWidth) {
+        drawer.ensureSpaceForTriangle();
         boolean bendsLeft = Joiner.prepareSmoothJoin(A, B, C, D, E, halfLineWidth, false);
         Vector2 V1 = bendsLeft?E:D, V2 = bendsLeft?D:E;
         vert1(V1.x*cos-V1.y*sin  + offset.x, V1.x*sin+V1.y*cos + offset.y);

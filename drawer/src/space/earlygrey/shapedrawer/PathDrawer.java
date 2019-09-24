@@ -10,7 +10,7 @@ import com.badlogic.gdx.utils.FloatArray;
  * @author earlygrey
  */
 
-class PathDrawer extends DrawerTemplate {
+class PathDrawer extends DrawerTemplate<ShapeDrawer> {
 
     FloatArray path = new FloatArray();
     FloatArray tempPath = new FloatArray();
@@ -93,6 +93,8 @@ class PathDrawer extends DrawerTemplate {
     void drawPathWithJoin(float[] path, int size, float lineWidth, boolean open, boolean pointyJoin) {
         float halfLineWidth =  0.5f*lineWidth;
 
+        drawer.ensureSpaceForQuad();
+
         for (int i = 2; i < size-2; i+=2) {
 
             A.set(path[i-2], path[i-1]);
@@ -140,6 +142,7 @@ class PathDrawer extends DrawerTemplate {
 
             drawer.pushQuad();
             if (!pointyJoin) drawSmoothJoinFill(A, B, C, D, E, halfLineWidth);
+            drawer.ensureSpaceForQuad();
             vert1(x4, y4);
             vert2(x3, y3);
         }
@@ -160,6 +163,7 @@ class PathDrawer extends DrawerTemplate {
                 drawer.pushQuad();
 
                 //draw connection back to first vertex
+                drawer.ensureSpaceForQuad();
                 vert1(D);
                 vert2(E);
                 vert3(E0);
@@ -177,6 +181,7 @@ class PathDrawer extends DrawerTemplate {
                 drawSmoothJoinFill(A, B, C, D, E, halfLineWidth);
 
                 //draw connection back to first vertex
+                drawer.ensureSpaceForQuad();
                 Joiner.prepareSmoothJoin(A, B, C, D, E, halfLineWidth, true);
                 vert3(E);
                 vert4(D);

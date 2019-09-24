@@ -2,7 +2,7 @@ package space.earlygrey.shapedrawer;
 import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.math.Vector2;
 
-class PolygonDrawer extends DrawerTemplate {
+class PolygonDrawer extends DrawerTemplate<ShapeDrawer> {
 
     static final Vector2 centre = new Vector2(), radius = new Vector2();
 
@@ -88,6 +88,8 @@ class PolygonDrawer extends DrawerTemplate {
             C.set(dir).scl(radius);
         }
         for (int i = start; i <= end; i++) {
+
+            drawer.ensureSpaceForQuad();
 
             if (!full && i==start) {
                 Joiner.prepareRadialEndpoint(B, D, E, halfLineWidth);

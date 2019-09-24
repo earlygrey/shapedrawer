@@ -4,15 +4,17 @@ import com.badlogic.gdx.math.EarClippingTriangulator;
 import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.utils.ShortArray;
 
-public class FilledPolygonDrawer extends DrawerTemplate {
+public class FilledPolygonDrawer extends DrawerTemplate<PolygonShapeDrawer> {
 
     static final EarClippingTriangulator triangulator = new EarClippingTriangulator();
 
-    FilledPolygonDrawer(ShapeDrawer drawer) {
+    FilledPolygonDrawer(PolygonShapeDrawer drawer) {
         super(drawer);
     }
 
     void polygon(float centreX, float centreY, int sides, float radiusX, float radiusY, float rotation, float startAngle, float radians) {
+
+
 
         radians = ShapeUtils.normaliseAngleToPositive(radians);
         if (radians==0) {
@@ -36,6 +38,7 @@ public class FilledPolygonDrawer extends DrawerTemplate {
         B.set(dir).scl(radiusX, radiusY);
 
         for (int i = start; i <= end; i++) {
+            drawer.ensureSpaceForTriangle();
             x1(A.x*cosRot-A.y*sinRot  + centreX);
             y1(A.x*sinRot+A.y*cosRot + centreY);
             x2(B.x*cosRot-B.y*sinRot  + centreX);
@@ -62,26 +65,30 @@ public class FilledPolygonDrawer extends DrawerTemplate {
     }
 
     void polygon(float[] vertices, ShortArray triangles) {
+        boolean wasCaching = drawer.startCaching();
         for (int i = 0; i < triangles.size; i+=3) {
             vert1(vertices[2*triangles.get(i)], vertices[2*triangles.get(i)+1]);
             vert2(vertices[2*triangles.get(i+1)], vertices[2*triangles.get(i+1)+1]);
             vert3(vertices[2*triangles.get(i+2)], vertices[2*triangles.get(i+2)+1]);
             drawer.pushTriangle();
         }
+        if (!wasCaching) drawer.endCaching();
     }
 
     void polygon(float[] vertices, short[] triangles) {
+        boolean wasCaching = drawer.startCaching();
         for (int i = 0; i < triangles.length; i+=3) {
             vert1(vertices[2*triangles[i]], vertices[2*triangles[i]+1]);
             vert2(vertices[2*triangles[i+1]], vertices[2*triangles[i+1]+1]);
             vert3(vertices[2*triangles[i+2]], vertices[2*triangles[i+2]+1]);
             drawer.pushTriangle();
         }
+        if (!wasCaching) drawer.endCaching();
     }
 
 
-
     void rectangle(float x, float y, float width, float height, float rotation) {
+        drawer.ensureSpaceForQuad();
         float cos = (float) Math.cos(rotation), sin = (float) Math.sin(rotation);
         float halfWidth = 0.5f*width, halfHeight = 0.5f * height;
         float centreX = x + halfWidth, centreY = y + halfHeight;
