@@ -378,8 +378,8 @@ public class ShapeDrawer extends AbstractShapeDrawer {
      * @param centreX the x-coordinate of the centre point
      * @param centreY the y-coordinate of the centre point
      * @param radius the radius of the circle that this arc is a part of
-     * @param startAngle the angle at which the arc starts
-     * @param radians the angle subtended by the arc
+     * @param startAngle the angle in radians at which the arc starts
+     * @param radians the angle in radians subtended by the arc
      */
     public void arc(float centreX, float centreY, float radius, float startAngle, float radians) {
         arc(centreX, centreY, radius, startAngle, radians, defaultLineWidth);
@@ -390,8 +390,8 @@ public class ShapeDrawer extends AbstractShapeDrawer {
      * @param centreX the x-coordinate of the centre point
      * @param centreY the y-coordinate of the centre point
      * @param radius the radius of the circle that this arc is a part of
-     * @param startAngle the angle at which the arc starts
-     * @param radians the angle subtended by the arc
+     * @param startAngle the angle in radians at which the arc starts
+     * @param radians the angle in radians subtended by the arc
      * @param lineWidth the width of the line
      */
     public void arc(float centreX, float centreY, float radius, float startAngle, float radians, float lineWidth) {
@@ -403,8 +403,8 @@ public class ShapeDrawer extends AbstractShapeDrawer {
      * @param centreX the x-coordinate of the centre point
      * @param centreY the y-coordinate of the centre point
      * @param radius the radius of the circle that this arc is a part of
-     * @param startAngle the angle at which the arc starts
-     * @param radians the angle subtended by the arc
+     * @param startAngle the angle in radians at which the arc starts
+     * @param radians the angle in radians subtended by the arc
      * @param lineWidth the width of the line
      * @param useJoin whether to use a join type, either {@link JoinType#POINTY} or none. See {@link #isJoinNecessary(float)}
      */
@@ -417,8 +417,8 @@ public class ShapeDrawer extends AbstractShapeDrawer {
      * @param centreX the x-coordinate of the centre point
      * @param centreY the y-coordinate of the centre point
      * @param radius the radius of the circle that this arc is a part of
-     * @param startAngle the angle at which the arc starts
-     * @param radians the angle subtended by the arc
+     * @param startAngle the angle in radians at which the arc starts
+     * @param radians the angle in radians subtended by the arc
      * @param lineWidth the width of the line
      * @param useJoin whether to use a join type, either {@link JoinType#POINTY} or none. See {@link #isJoinNecessary(float)}
      * @param sides the number of straight line segments to draw the arc with
