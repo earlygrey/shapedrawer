@@ -2,31 +2,30 @@ package space.earlygrey.shapedrawer;
 import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.math.Vector2;
 
-class PolygonDrawer extends DrawerTemplate<ShapeDrawer> {
+class PolygonDrawer extends DrawerTemplate<BatchManager> {
 
     static final Vector2 centre = new Vector2(), radius = new Vector2();
 
-    PolygonDrawer(ShapeDrawer drawer) {
-        super(drawer);
+    PolygonDrawer(BatchManager batchManager, AbstractShapeDrawer drawer) {
+        super(batchManager, drawer);
     }
 
     void polygon(float centreX, float centreY, int sides, float radiusX, float radiusY, float rotation, float lineWidth, JoinType joinType, float startAngle, float radians) {
+        if (radians==0) return;
+        radians = Math.min(radians, ShapeUtils.PI2);
+
         float halfLineWidth = 0.5f*lineWidth;
-        radians = ShapeUtils.normaliseAngleToPositive(radians);
-        if (radians==0) {
-            radians = ShapeUtils.PI2;
-            startAngle = 0;
-        }
+
         centre.set(centreX, centreY);
         radius.set(radiusX, radiusY);
 
-        boolean wasCaching = drawer.startCaching();
+        boolean wasCaching = batchManager.startCaching();
         if (joinType==JoinType.NONE) {
             drawPolygonNoJoin(centre, sides, lineWidth, rotation, radius, startAngle, radians);
         } else {
             drawPolygonWithJoin(centre, sides, halfLineWidth, rotation, radius, startAngle, radians, joinType==JoinType.SMOOTH);
         }
-        if (!wasCaching) drawer.endCaching();
+        if (!wasCaching) batchManager.endCaching();
     }
 
     void drawPolygonNoJoin(Vector2 centre, int sides, float lineWidth, float rotation, Vector2 radius, float startAngle, float radians) {
@@ -79,7 +78,7 @@ class PolygonDrawer extends DrawerTemplate<ShapeDrawer> {
             B.set(1, 0).rotateRad((start-1) * angleInterval).scl(radius);
         } else {
             start = (int) Math.ceil(sides * (startAngle / ShapeUtils.PI2));
-            if (ShapeUtils.epsilonEquals(sides * start, startAngle)) start++;
+            if (ShapeUtils.epsilonEquals(start * angleInterval, startAngle)) start++;
             end = (int) Math.floor(sides * (endAngle / ShapeUtils.PI2)) + 1;
             end = Math.min(end, start + sides);
             dir.set(1, 0).rotateRad(Math.min(start * angleInterval, endAngle));
@@ -89,7 +88,7 @@ class PolygonDrawer extends DrawerTemplate<ShapeDrawer> {
         }
         for (int i = start; i <= end; i++) {
 
-            drawer.ensureSpaceForQuad();
+            batchManager.ensureSpaceForQuad();
 
             if (!full && i==start) {
                 Joiner.prepareRadialEndpoint(B, D, E, halfLineWidth);
@@ -125,12 +124,11 @@ class PolygonDrawer extends DrawerTemplate<ShapeDrawer> {
             vert3(D.x*cosRot-D.y*sinRot  + centre.x, D.x*sinRot+D.y*cosRot + centre.y);
             vert4(E.x*cosRot-E.y*sinRot  + centre.x, E.x*sinRot+E.y*cosRot + centre.y);
 
-            drawer.pushQuad(); //push current AB
+            batchManager.pushQuad(); //push current AB
 
             if (smooth && (full || i<end)) drawSmoothJoinFill(A, B, C, D, E, centre, cosRot, sinRot, halfLineWidth);
         }
     }
-
 
 
 }
