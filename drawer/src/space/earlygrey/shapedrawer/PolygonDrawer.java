@@ -11,12 +11,11 @@ class PolygonDrawer extends DrawerTemplate {
     }
 
     void polygon(float centreX, float centreY, int sides, float radiusX, float radiusY, float rotation, float lineWidth, JoinType joinType, float startAngle, float radians) {
+        if (radians==0) return;
+        radians = Math.min(radians, ShapeUtils.PI2);
+
         float halfLineWidth = 0.5f*lineWidth;
-        radians = ShapeUtils.normaliseAngleToPositive(radians);
-        if (radians==0) {
-            radians = ShapeUtils.PI2;
-            startAngle = 0;
-        }
+
         centre.set(centreX, centreY);
         radius.set(radiusX, radiusY);
 
