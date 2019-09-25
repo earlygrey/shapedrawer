@@ -23,8 +23,8 @@ public abstract class AbstractShapeDrawer {
     private final Batch batch;
     TextureRegion r;
     float floatBits;
-    final int VERTEX_CACHE_SIZE = 2000;
-    final float[] verts = new float[VERTEX_CACHE_SIZE];
+    static final int VERTEX_CACHE_SIZE = 2000;
+    final float[] verts;
     int vertexCount;
 
     float pixelSize = 1, halfPixelSize = 0.5f * pixelSize;
@@ -51,6 +51,7 @@ public abstract class AbstractShapeDrawer {
 
     AbstractShapeDrawer(Batch batch, TextureRegion region) {
         this.batch = batch;
+        verts = new float[VERTEX_CACHE_SIZE];
         setTextureRegion(region);
         setColor(Color.WHITE);
     }
@@ -281,21 +282,19 @@ public abstract class AbstractShapeDrawer {
     // DRAWING METHODS
     //================================================================================
 
+    void pushVertex() {
+        int i = getVerticesArrayIndex();
+        verts[i + SpriteBatch.C1] = floatBits;
+        vertexCount++;
+    }
+
     /**
      * <p>Adds the colour and texture coordinates of four vertices to the cache and progresses the index. If drawing is
      * not currently being cached, immediately calls {@link #pushToBatch()}.</p>
      * @return whether the vertex data was pushed to the Batch
      */
     void pushQuad() {
-        int i = getArrayOffset();
-        /*verts[i + SpriteBatch.U1] = r.getU();
-        verts[i + SpriteBatch.V1] = r.getV();
-        verts[i + SpriteBatch.U2] = r.getU2();
-        verts[i + SpriteBatch.V2] = r.getV();
-        verts[i + SpriteBatch.U3] = r.getU2();
-        verts[i + SpriteBatch.V3] = r.getV2();
-        verts[i + SpriteBatch.U4] = r.getU();
-        verts[i + SpriteBatch.V4] = r.getV2();*/
+        int i = getVerticesArrayIndex();
         verts[i + SpriteBatch.C1] = floatBits;
         verts[i + SpriteBatch.C2] = floatBits;
         verts[i + SpriteBatch.C3] = floatBits;
@@ -333,29 +332,29 @@ public abstract class AbstractShapeDrawer {
      */
     void pushToBatch() {
         if (vertexCount == 0) return;
-        batch.draw(r.getTexture(), verts, 0, getArrayOffset());
+        batch.draw(r.getTexture(), verts, 0, getVerticesArrayIndex());
         vertexCount = 0;
     }
 
-    int getArrayOffset() {
+    int getVerticesArrayIndex() {
         return VERTEX_SIZE * vertexCount;
     }
 
-    protected void x1(float x1){verts[getArrayOffset() + SpriteBatch.X1] = x1;}
-    protected void y1(float y1){verts[getArrayOffset() + SpriteBatch.Y1] = y1;}
-    protected void x2(float x2){verts[getArrayOffset() + SpriteBatch.X2] = x2;}
-    protected void y2(float y2){verts[getArrayOffset() + SpriteBatch.Y2] = y2;}
-    protected void x3(float x3){verts[getArrayOffset() + SpriteBatch.X3] = x3;}
-    protected void y3(float y3){verts[getArrayOffset() + SpriteBatch.Y3] = y3;}
-    protected void x4(float x4){verts[getArrayOffset() + SpriteBatch.X4] = x4;}
-    protected void y4(float y4){verts[getArrayOffset() + SpriteBatch.Y4] = y4;}
-    protected float x1() {return verts[getArrayOffset() + SpriteBatch.X1];}
-    protected float y1() {return verts[getArrayOffset() + SpriteBatch.Y1];}
-    protected float x2() {return verts[getArrayOffset() + SpriteBatch.X2];}
-    protected float y2() {return verts[getArrayOffset() + SpriteBatch.Y2];}
-    protected float x3() {return verts[getArrayOffset() + SpriteBatch.X3];}
-    protected float y3() {return verts[getArrayOffset() + SpriteBatch.Y3];}
-    protected float x4() {return verts[getArrayOffset() + SpriteBatch.X4];}
-    protected float y4() {return verts[getArrayOffset() + SpriteBatch.Y4];}
+    protected void x1(float x1){verts[getVerticesArrayIndex() + SpriteBatch.X1] = x1;}
+    protected void y1(float y1){verts[getVerticesArrayIndex() + SpriteBatch.Y1] = y1;}
+    protected void x2(float x2){verts[getVerticesArrayIndex() + SpriteBatch.X2] = x2;}
+    protected void y2(float y2){verts[getVerticesArrayIndex() + SpriteBatch.Y2] = y2;}
+    protected void x3(float x3){verts[getVerticesArrayIndex() + SpriteBatch.X3] = x3;}
+    protected void y3(float y3){verts[getVerticesArrayIndex() + SpriteBatch.Y3] = y3;}
+    protected void x4(float x4){verts[getVerticesArrayIndex() + SpriteBatch.X4] = x4;}
+    protected void y4(float y4){verts[getVerticesArrayIndex() + SpriteBatch.Y4] = y4;}
+    protected float x1() {return verts[getVerticesArrayIndex() + SpriteBatch.X1];}
+    protected float y1() {return verts[getVerticesArrayIndex() + SpriteBatch.Y1];}
+    protected float x2() {return verts[getVerticesArrayIndex() + SpriteBatch.X2];}
+    protected float y2() {return verts[getVerticesArrayIndex() + SpriteBatch.Y2];}
+    protected float x3() {return verts[getVerticesArrayIndex() + SpriteBatch.X3];}
+    protected float y3() {return verts[getVerticesArrayIndex() + SpriteBatch.Y3];}
+    protected float x4() {return verts[getVerticesArrayIndex() + SpriteBatch.X4];}
+    protected float y4() {return verts[getVerticesArrayIndex() + SpriteBatch.Y4];}
 
 }

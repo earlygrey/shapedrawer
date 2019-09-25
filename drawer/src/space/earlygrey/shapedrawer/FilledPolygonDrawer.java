@@ -13,12 +13,8 @@ class FilledPolygonDrawer extends DrawerTemplate<PolygonShapeDrawer> {
     }
 
     void polygon(float centreX, float centreY, int sides, float radiusX, float radiusY, float rotation, float startAngle, float radians) {
-
-        radians = ShapeUtils.normaliseAngleToPositive(radians);
-        if (radians==0) {
-            radians = ShapeUtils.PI2;
-            startAngle = 0;
-        }
+        if (radians==0) return;
+        radians = Math.min(radians, ShapeUtils.PI2);
 
         boolean wasCaching = drawer.startCaching();
 
@@ -31,28 +27,42 @@ class FilledPolygonDrawer extends DrawerTemplate<PolygonShapeDrawer> {
         int start = (int) Math.ceil(sides * (startAngle / ShapeUtils.PI2));
         int end = (int) Math.floor(sides * (endAngle / ShapeUtils.PI2)) + 1;
 
-        dir.set(1, 0).rotateRad(Math.min(start * angleInterval, endAngle));
-        A.set(1, 0).rotateRad(startAngle).scl(radiusX, radiusY);
-        B.set(dir).scl(radiusX, radiusY);
+        if (ShapeUtils.epsilonEquals(start * angleInterval, startAngle)) start++;
 
-        for (int i = start; i <= end; i++) {
-            drawer.ensureSpaceForTriangle();
+        int n = end-start;
+        drawer.ensureSpace(n + 2);
+        int vertexOffset = drawer.getVerticesArrayIndex();
+
+        //centre point - triangle index 0
+        x1(centreX);
+        y1(centreY);
+        drawer.pushVertex();
+
+        //first perimeter vertex (at start angle) - triangle index 1
+        A.set(1, 0).rotateRad(startAngle).scl(radiusX, radiusY);
+        x1(A.x*cosRot-A.y*sinRot  + centreX);
+        y1(A.x*sinRot+A.y*cosRot + centreY);
+        drawer.pushVertex();
+        drawer.pushTriangleIndices((short) vertexOffset, (short) (vertexOffset+1), (short) (vertexOffset+2));
+
+        //evenly spaced perimeter vertices
+        dir.set(1, 0).rotateRad(Math.min(start * angleInterval, endAngle));
+        A.set(dir).scl(radiusX, radiusY);
+        for (int i = 0; i < n-1; i++) {
             x1(A.x*cosRot-A.y*sinRot  + centreX);
             y1(A.x*sinRot+A.y*cosRot + centreY);
-            x2(B.x*cosRot-B.y*sinRot  + centreX);
-            y2(B.x*sinRot+B.y*cosRot + centreY);
-            x3(centreX);
-            y3(centreY);
-            drawer.pushTriangle();
-            if (i<end-1) {
-                A.set(B);
-                dir.set(dir.x * cos - dir.y * sin, dir.x * sin + dir.y * cos);
-                B.set(dir).scl(radiusX, radiusY);
-            } else if (i==end-1) {
-                A.set(B);
-                B.set(1, 0).rotateRad(endAngle).scl(radiusX, radiusY);
-            }
+            drawer.pushVertex();
+            dir.set(dir.x * cos - dir.y * sin, dir.x * sin + dir.y * cos);
+            A.set(dir).scl(radiusX, radiusY);
+
+            drawer.pushTriangleIndices((short) vertexOffset, (short) (vertexOffset+i+2), (short) (vertexOffset+i+3));
         }
+
+        //last perimeter vertex (at end angle) - triangle index n+1 (already included in loop)
+        A.set(1, 0).rotateRad(endAngle).scl(radiusX, radiusY);
+        x1(A.x*cosRot-A.y*sinRot  + centreX);
+        y1(A.x*sinRot+A.y*cosRot + centreY);
+        drawer.pushVertex();
 
         if (!wasCaching) drawer.endCaching();
     }
@@ -72,6 +82,9 @@ class FilledPolygonDrawer extends DrawerTemplate<PolygonShapeDrawer> {
 
     void polygon(float[] vertices, short[] triangles, int trianglesCount) {
         int n = vertices.length / 2;
+        /*if (n * ShapeDrawer.VERTEX_SIZE < ShapeDrawer.VERTEX_CACHE_SIZE) {
+            throw new IllegalStateException("Cannot draw a polygon with more than " + (ShapeDrawer.VERTEX_CACHE_SIZE*ShapeDrawer.VERTEX_SIZE) + " vertices.");
+        }*/
         drawer.ensureSpace(n);
         drawer.pushVertexData(vertices, triangles, trianglesCount);
         drawer.pushToBatch();
