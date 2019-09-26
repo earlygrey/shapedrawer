@@ -249,4 +249,16 @@ public abstract class AbstractShapeDrawer {
         return batchManager.getPackedColor();
     }
 
+    /**
+     * <p>Sets the packed colour using {@link Color#toFloatBits(float, float, float, float)}.</p>
+     * @param r
+     * @param g
+     * @param b
+     * @param a
+     * @return the packed colour of this ShapeDrawer
+     */
+    public float setColor (float r, float g, float b, float a) {
+        return setColor(Color.toFloatBits(r, g, b, a));
+    }
+
 }
