@@ -10,7 +10,7 @@ Draws simple shapes like libgdx's [ShapeRenderer](https://libgdx.badlogicgames.c
 
 Comes with overloaded methods to draw lines, paths, ellipses, regular polygons and rectangles.
 
-Just needs to be provided with a Batch (eg a SpriteBatch) or if you additionally want filled shapes a PolygonBatch (eg a PolygonSpriteBatch), as well as a TextureRegion.
+Just needs to be provided with a Batch and a TextureRegion. However, note that if you want to draw filled shapes, it is more efficient to use a batch that implements [PolygonBatch](https://libgdx.badlogicgames.com/ci/nightlies/docs/api/com/badlogic/gdx/graphics/g2d/PolygonBatch.html) (eg a [PolygonSpriteBatch](https://libgdx.badlogicgames.com/ci/nightlies/docs/api/com/badlogic/gdx/graphics/g2d/PolygonSpriteBatch.html)) instead of a Batch that does not (eg a [SpriteBatch](https://libgdx.badlogicgames.com/ci/nightlies/docs/api/com/badlogic/gdx/graphics/g2d/SpriteBatch.html)).
 
 ---
 
@@ -29,7 +29,7 @@ allprojects {
 And  in your core project add the dependency:
 ```
 dependencies {
-        implementation 'space.earlygrey:shapedrawer:1.3.0'
+        implementation 'space.earlygrey:shapedrawer:2.0.0'
 }
 ```
 
@@ -43,7 +43,7 @@ project(":html") {
 
     dependencies {
         ...
-        implementation 'space.earlygrey:shapedrawer:1.3.0:sources'
+        implementation 'space.earlygrey:shapedrawer:2.0.0:sources'
     }
 }
 ```
@@ -75,14 +75,6 @@ batch.end();
 ```
 
 That's it!
-
-If you want to draw filled shapes you'll need a PolygonBatch, and then instead of creating a ShapeDrawer, create a PolygonShapeDrawer:
-
-```java
-PolygonShapeDrawer drawer = new PolygonShapeDrawer(polygonBatch, region);
-```
-
-PolygonShapeDrawer extends ShapeDrawer so you still have access to all the methods provided by the latter.
 
 ---
 
