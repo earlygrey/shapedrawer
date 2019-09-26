@@ -10,15 +10,15 @@ import com.badlogic.gdx.utils.FloatArray;
  * @author earlygrey
  */
 
-class PathDrawer extends DrawerTemplate {
+class PathDrawer extends DrawerTemplate<BatchManager> {
 
     FloatArray path = new FloatArray();
     FloatArray tempPath = new FloatArray();
 
     static final Vector2 D0 = new Vector2(), E0 = new Vector2();
 
-    PathDrawer(ShapeDrawer drawer) {
-        super(drawer);
+    PathDrawer(BatchManager batchManager, AbstractShapeDrawer drawer) {
+        super(batchManager, drawer);
     }
 
     <T extends Vector2> void path(Array<T> userPath, float lineWidth, JoinType joinType) {
@@ -68,30 +68,32 @@ class PathDrawer extends DrawerTemplate {
             return;
         }
         if (path.size == 4) {
-            drawer.line(path.items[0], path.items[1], path.items[2], path.items[3], lineWidth);
+            drawer.lineDrawer.line(path.items[0], path.items[1], path.items[2], path.items[3], lineWidth, false);
             path.clear();
             return;
         }
-        boolean wasCaching = drawer.startCaching();
+        boolean wasCaching = batchManager.startCaching();
         if (joinType==JoinType.NONE) {
             drawPathNoJoin(path.items, path.size, lineWidth, open);
         } else {
             drawPathWithJoin(path.items, path.size, lineWidth, open, joinType==JoinType.POINTY);
         }
-        if (!wasCaching) drawer.endCaching();
+        if (!wasCaching) batchManager.endCaching();
         path.clear();
     }
 
     void drawPathNoJoin(float[] path, int size, float lineWidth, boolean open) {
         int n = open?size-2:size;
         for (int i = 0; i < n; i+=2) {
-            drawer.line(path[i], path[i+1], path[(i+2)%size], path[(i+3)%size], lineWidth);
+            drawer.lineDrawer.line(path[i], path[i+1], path[(i+2)%size], path[(i+3)%size], lineWidth, false);
         }
     }
 
 
     void drawPathWithJoin(float[] path, int size, float lineWidth, boolean open, boolean pointyJoin) {
         float halfLineWidth =  0.5f*lineWidth;
+
+        batchManager.ensureSpaceForQuad();
 
         for (int i = 2; i < size-2; i+=2) {
 
@@ -138,8 +140,9 @@ class PathDrawer extends DrawerTemplate {
                 y4 = E.y;
             }
 
-            drawer.pushQuad();
+            batchManager.pushQuad();
             if (!pointyJoin) drawSmoothJoinFill(A, B, C, D, E, halfLineWidth);
+            batchManager.ensureSpaceForQuad();
             vert1(x4, y4);
             vert2(x3, y3);
         }
@@ -149,7 +152,7 @@ class PathDrawer extends DrawerTemplate {
             Joiner.prepareFlatEndpoint(B, C, D, E, halfLineWidth);
             vert3(E);
             vert4(D);
-            drawer.pushQuad();
+            batchManager.pushQuad();
         } else {
             if (pointyJoin) {
                 //draw last link on path
@@ -157,14 +160,15 @@ class PathDrawer extends DrawerTemplate {
                 Joiner.preparePointyJoin(B, C, A, D, E, halfLineWidth);
                 vert3(D);
                 vert4(E);
-                drawer.pushQuad();
+                batchManager.pushQuad();
 
                 //draw connection back to first vertex
+                batchManager.ensureSpaceForQuad();
                 vert1(D);
                 vert2(E);
                 vert3(E0);
                 vert4(D0);
-                drawer.pushQuad();
+                batchManager.pushQuad();
             } else {
                 //draw last link on path
                 A.set(B);
@@ -173,10 +177,11 @@ class PathDrawer extends DrawerTemplate {
                 Joiner.prepareSmoothJoin(A, B, C, D, E, halfLineWidth, false);
                 vert3(D);
                 vert4(E);
-                drawer.pushQuad();
+                batchManager.pushQuad();
                 drawSmoothJoinFill(A, B, C, D, E, halfLineWidth);
 
                 //draw connection back to first vertex
+                batchManager.ensureSpaceForQuad();
                 Joiner.prepareSmoothJoin(A, B, C, D, E, halfLineWidth, true);
                 vert3(E);
                 vert4(D);
@@ -184,7 +189,7 @@ class PathDrawer extends DrawerTemplate {
                 Joiner.prepareSmoothJoin(B, C, A, D, E, halfLineWidth, false);
                 vert1(D);
                 vert2(E);
-                drawer.pushQuad();
+                batchManager.pushQuad();
                 drawSmoothJoinFill(B, C, A, D, E, halfLineWidth);
             }
         }

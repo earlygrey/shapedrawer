@@ -10,15 +10,17 @@ import com.badlogic.gdx.math.Vector2;
  * @author earlygrey
  */
 
-abstract class DrawerTemplate {
+abstract class DrawerTemplate<T extends BatchManager> {
 
     static final Vector2 A = new Vector2(), B = new Vector2(), C = new Vector2(), D = new Vector2(), E = new Vector2(), dir = new Vector2();
     static final Vector2 vec1 = new Vector2();
 
-    final ShapeDrawer drawer;
+    final AbstractShapeDrawer drawer;
+    final T batchManager;
 
-    DrawerTemplate(ShapeDrawer drawer) {
+    DrawerTemplate(T batchManager, AbstractShapeDrawer drawer) {
         this.drawer = drawer;
+        this.batchManager = batchManager;
     }
 
     /**
@@ -30,15 +32,17 @@ abstract class DrawerTemplate {
      * @param E
      */
     void drawSmoothJoinFill(Vector2 A, Vector2 B, Vector2 C, Vector2 D, Vector2 E, float halfLineWidth) {
+        batchManager.ensureSpaceForTriangle();
         boolean bendsLeft = Joiner.prepareSmoothJoin(A, B, C, D, E, halfLineWidth, false);
         vert1(bendsLeft?E:D);
         vert2(bendsLeft?D:E);
         bendsLeft = Joiner.prepareSmoothJoin(A, B, C, D, E, halfLineWidth, true);
         vert3(bendsLeft?E:D);
-        drawer.pushTriangle();
+        batchManager.pushTriangle();
     }
 
     void drawSmoothJoinFill(Vector2 A, Vector2 B, Vector2 C, Vector2 D, Vector2 E, Vector2 offset, float cos, float sin, float halfLineWidth) {
+        batchManager.ensureSpaceForTriangle();
         boolean bendsLeft = Joiner.prepareSmoothJoin(A, B, C, D, E, halfLineWidth, false);
         Vector2 V1 = bendsLeft?E:D, V2 = bendsLeft?D:E;
         vert1(V1.x*cos-V1.y*sin  + offset.x, V1.x*sin+V1.y*cos + offset.y);
@@ -47,19 +51,19 @@ abstract class DrawerTemplate {
         Vector2 V3 = bendsLeft?E:D;
         float x = V3.x*cos-V3.y*sin  + offset.x, y = V3.x*sin+V3.y*cos + offset.y;
         vert3(x, y);
-        drawer.pushTriangle();
+        batchManager.pushTriangle();
     }
 
 
     //VERTEX SETTING UTILITY FUNCTIONS
-    void x1(float x1){drawer.x1(x1);}
-    void y1(float y1){drawer.y1(y1);}
-    void x2(float x2){drawer.x2(x2);}
-    void y2(float y2){drawer.y2(y2);}
-    void x3(float x3){drawer.x3(x3);}
-    void y3(float y3){drawer.y3(y3);}
-    void x4(float x4){drawer.x4(x4);}
-    void y4(float y4){drawer.y4(y4);}
+    void x1(float x1){batchManager.x1(x1);}
+    void y1(float y1){batchManager.y1(y1);}
+    void x2(float x2){batchManager.x2(x2);}
+    void y2(float y2){batchManager.y2(y2);}
+    void x3(float x3){batchManager.x3(x3);}
+    void y3(float y3){batchManager.y3(y3);}
+    void x4(float x4){batchManager.x4(x4);}
+    void y4(float y4){batchManager.y4(y4);}
     void vert1(float x, float y) {x1(x);y1(y);}
     void vert2(float x, float y) {x2(x);y2(y);}
     void vert3(float x, float y) {x3(x);y3(y);}
@@ -72,14 +76,14 @@ abstract class DrawerTemplate {
     void vert2(Vector2 V, Vector2 offset) {vert2(V.x+offset.x, V.y+offset.y);}
     void vert3(Vector2 V, Vector2 offset) {vert3(V.x+offset.x, V.y+offset.y);}
     void vert4(Vector2 V, Vector2 offset) {vert4(V.x+offset.x, V.y+offset.y);}
-    float x1() {return drawer.x1();}
-    float y1() {return drawer.y1();}
-    float x2() {return drawer.x2();}
-    float y2() {return drawer.y2();}
-    float x3() {return drawer.x3();}
-    float y3() {return drawer.y3();}
-    float x4() {return drawer.x4();}
-    float y4() {return drawer.y4();}
+    float x1() {return batchManager.x1();}
+    float y1() {return batchManager.y1();}
+    float x2() {return batchManager.x2();}
+    float y2() {return batchManager.y2();}
+    float x3() {return batchManager.x3();}
+    float y3() {return batchManager.y3();}
+    float x4() {return batchManager.x4();}
+    float y4() {return batchManager.y4();}
 
 
 
@@ -109,10 +113,10 @@ abstract class DrawerTemplate {
         drawPoint(x, y, color.toFloatBits(), 3);
     }
     void drawPoint(float x, float y, float color, float r) {
-        Color c = drawer.getBatch().getColor();
-        drawer.getBatch().setPackedColor(color);
-        drawer.getBatch().draw(drawer.getRegion(), x-r, y-r, 2*r, 2*r);
-        drawer.getBatch().setColor(c);
+        Color c = batchManager.getBatch().getColor();
+        batchManager.getBatch().setPackedColor(color);
+        batchManager.getBatch().draw(batchManager.getRegion(), x-r, y-r, 2*r, 2*r);
+        batchManager.getBatch().setColor(c);
     }
 
     void draw1234() {
