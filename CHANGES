@@ -1,3 +1,6 @@
+[2.1.0-SNAPSHOT]
+- added setColor(r,g,b,a) method
+
 [2.0.0]
 - removed PolygonShapeDrawer class, ShapeDrawer can draw filled shapes but does so in a way depending on the type of batch provided. This is a breaking change from the previous version
 - large internal refactor, reduced visibility of some internal methods (from protected to package-private)
