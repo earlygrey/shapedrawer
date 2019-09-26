@@ -1,4 +1,4 @@
-[2.0.0-SNAPSHOT]
+[2.0.0]
 - removed PolygonShapeDrawer class, ShapeDrawer can draw filled shapes but does so in a way depending on the type of batch provided. This is a breaking change from the previous version
 - large internal refactor, reduced visibility of some internal methods (from protected to package-private)
 - fixed bug with arc() where certain angles would produce artifacts
