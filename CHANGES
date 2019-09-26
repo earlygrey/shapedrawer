@@ -1,3 +1,7 @@
+[1.4.0]
+- removed PolygonShapeDrawer class, ShapeDrawer can draw filled shapes but does so in a way depending on the type of batch provided. This is a breaking change from the previous version
+- fixed bug with arc() where certain angles would produce artifacts
+
 [1.3.0]
 - added PolygonShapeDrawer, which can draw filled shapes for regular polygons (which includes circles and ellipses) and rectangles
 
