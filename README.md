@@ -16,20 +16,24 @@ Just needs to be provided with a Batch and a TextureRegion. However, note that i
 
 ## Including in Project
 
-To use this in your gradle project, add the following to your root build.gradle file:
+To use this in your gradle project, add the version number and jitpack repository information to your root build.gradle file:
  
-```
+```groovy
 allprojects {
-	repositories {
-		...
-		maven { url 'https://jitpack.io' }
-	}
+    ext {
+    	...
+        shapedrawerVersion = '2.0.0'
+    }
+    repositories {
+	...
+	maven { url 'https://jitpack.io' }
+    }
 }
 ```
 And  in your core project add the dependency:
-```
+```groovy
 dependencies {
-        implementation 'space.earlygrey:shapedrawer:2.0.0'
+    implementation "space.earlygrey:shapedrawer:shapedrawerVersion"
 }
 ```
 
@@ -43,7 +47,7 @@ project(":html") {
 
     dependencies {
         ...
-        implementation 'space.earlygrey:shapedrawer:2.0.0:sources'
+        implementation "space.earlygrey:shapedrawer:shapedrawerVersion:sources"
     }
 }
 ```
@@ -53,7 +57,7 @@ And add the following line to the GdxDefinition.gwt.xml file in the HTML project
 <inherits name="space.earlygrey.shapedrawer"/>
 ```
 
-See the [jitpack website](https://jitpack.io/#earlygrey/shapedrawer/-SNAPSHOT) for more info.
+See the [jitpack website](https://jitpack.io/#space.earlygrey/shapedrawer) for more info.
 
 
 ## Usage
