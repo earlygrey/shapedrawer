@@ -4,6 +4,13 @@ import com.badlogic.gdx.math.EarClippingTriangulator;
 import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.utils.ShortArray;
 
+/**
+ * <p>Contains functions for calculating the vertex data for filled polygons.
+ * Separate subclasses that use either a PolygonBatch or jsut a Batch.</p>
+ *
+ * @author earlygrey
+ */
+
 abstract class FilledPolygonDrawer<T extends BatchManager> extends DrawerTemplate<T> {
 
     static final EarClippingTriangulator triangulator = new EarClippingTriangulator();
@@ -73,7 +80,8 @@ abstract class FilledPolygonDrawer<T extends BatchManager> extends DrawerTemplat
 
             int n = end-start;
             if (n<2) {
-                //no "regular" segments, will never enter loop
+                // there are no "regular" segments, will never enter loop,
+                // so just push the one triangle from start angle to end angle
                 batchManager.ensureSpaceForTriangle();
                 A.set(1, 0).rotateRad(startAngle).scl(radiusX, radiusY);
                 B.set(1, 0).rotateRad(endAngle).scl(radiusX, radiusY);
@@ -102,6 +110,7 @@ abstract class FilledPolygonDrawer<T extends BatchManager> extends DrawerTemplat
                 }
 
                 if (i%2==0) {
+                    //skip every second triangle so that we can draw it as a quad with the next triangle
                     batchManager.ensureSpaceForQuad();
                     vert1(centreX, centreY);
                     x2(A.x*cosRot-A.y*sinRot  + centreX);
@@ -180,7 +189,7 @@ abstract class FilledPolygonDrawer<T extends BatchManager> extends DrawerTemplat
             batchManager.pushVertex();
             batchManager.pushTriangleIndices((short) vertexOffset, (short) (vertexOffset+1), (short) (vertexOffset+2));
 
-            //evenly spaced perimeter vertices
+            //loop through evenly spaced perimeter vertices
             dir.set(1, 0).rotateRad(Math.min(start * angleInterval, endAngle));
             A.set(dir).scl(radiusX, radiusY);
             for (int i = 0; i < n-1; i++) {
@@ -205,9 +214,6 @@ abstract class FilledPolygonDrawer<T extends BatchManager> extends DrawerTemplat
         @Override
         void polygon(float[] vertices, short[] triangles, int trianglesCount) {
             int n = vertices.length / 2;
-        /*if (n * ShapeDrawer.VERTEX_SIZE < ShapeDrawer.VERTEX_CACHE_SIZE) {
-            throw new IllegalStateException("Cannot draw a polygon with more than " + (ShapeDrawer.VERTEX_CACHE_SIZE*ShapeDrawer.VERTEX_SIZE) + " vertices.");
-        }*/
             batchManager.ensureSpace(n);
             batchManager.pushVertexData(vertices, triangles, trianglesCount);
             batchManager.pushToBatch();

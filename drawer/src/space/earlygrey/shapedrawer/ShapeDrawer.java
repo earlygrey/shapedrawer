@@ -19,7 +19,9 @@ import com.badlogic.gdx.utils.ShortArray;
  * <p>Also includes an option to snap lines to the centre of pixels, see {@link #line(float, float, float, float, float, boolean)}
  * for more information.</p>
  * <p>Uses the projection matrix of the supplied Batch so there is no need to set one as with {@link com.badlogic.gdx.graphics.glutils.ShapeRenderer}.</p>
- * <p>Note this cannot draw filled shapes - for that you can use a {@link space.earlygrey.shapedrawer.PolygonShapeDrawer}.</p>
+ * <p>Note that the way filled shapes are drawn depends on whether you provide a batch implementing {@link com.badlogic.gdx.graphics.g2d.PolygonBatch}
+ * (eg a {@link com.badlogic.gdx.graphics.g2d.PolygonSpriteBatch}) or not (eg a {@link com.badlogic.gdx.graphics.g2d.SpriteBatch}).
+ * Filled polygon drawing is more efficient with a PolygonBatch, and if possible this is recommended.</p>
  *
  * @author earlygrey
  */

@@ -8,6 +8,12 @@ import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.math.Matrix4;
 
+/**
+ * <p>Managers the vertex data and when it it sent to the batch.</p>
+ *
+ * @author earlygrey
+ */
+
 class BatchManager {
 
     //================================================================================

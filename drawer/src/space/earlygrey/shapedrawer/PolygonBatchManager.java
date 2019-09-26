@@ -4,7 +4,7 @@ import com.badlogic.gdx.graphics.g2d.PolygonBatch;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 
-public class PolygonBatchManager extends BatchManager {
+class PolygonBatchManager extends BatchManager {
 
     protected short[] triangles;
     protected int triangleCount = 0;
@@ -54,6 +54,12 @@ public class PolygonBatchManager extends BatchManager {
 
         int v = getVerticesArrayIndex();
 
+        int t = getTrianglesArrayOffset();
+        for (int j = 0, n = trianglesArrayCount; j < n; j++) {
+            this.triangles[t+j] = (short) (vertexCount + triangles[j]);
+        }
+        triangleCount += trianglesArrayCount / 3;
+
         for (int j = 0; j < vertices.length; j+=2) {
             float x = vertices[j], y = vertices[j+1];
             verts[v + SpriteBatch.X1] = x;
@@ -61,13 +67,6 @@ public class PolygonBatchManager extends BatchManager {
             verts[v + SpriteBatch.C1] = floatBits;
             v += VERTEX_SIZE;
         }
-
-        int t = getTrianglesArrayOffset();
-        for (int j = 0, n = trianglesArrayCount; j < n; j++) {
-            this.triangles[t+j] = (short) (vertexCount + triangles[j]);
-        }
-        this.triangleCount += trianglesArrayCount / 3;
-
         vertexCount += vertices.length / 2;
     }
 
