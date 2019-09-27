@@ -33,7 +33,7 @@ allprojects {
 And  in your core project add the dependency:
 ```groovy
 dependencies {
-    implementation "space.earlygrey:shapedrawer:shapedrawerVersion"
+    implementation "space.earlygrey:shapedrawer:$shapedrawerVersion"
 }
 ```
 
@@ -47,7 +47,7 @@ project(":html") {
 
     dependencies {
         ...
-        implementation "space.earlygrey:shapedrawer:shapedrawerVersion:sources"
+        implementation "space.earlygrey:shapedrawer:$shapedrawerVersion:sources"
     }
 }
 ```
