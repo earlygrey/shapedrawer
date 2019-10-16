@@ -31,10 +31,6 @@ public abstract class AbstractShapeDrawer {
 
     protected static final Matrix4 mat4 = new Matrix4();
 
-    // These are named just for clarity
-    static final int VERTEX_SIZE = 5, QUAD_PUSH_SIZE = 4 * VERTEX_SIZE;
-
-
     protected final LineDrawer lineDrawer;
     protected final PathDrawer pathDrawer;
     protected final PolygonDrawer polygonDrawer;
