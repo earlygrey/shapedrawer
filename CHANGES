@@ -1,3 +1,7 @@
+[2.0.2]
+- fixed bug where triangles short[] array was not big enough
+- fixed bug where vertices array was nto big enough for very large shapes, it now resizes if needed
+
 [2.0.1]
 - added setColor(r,g,b,a) method
 - fixed texture coordinate bug where sometimes incorrect region of texture was used for drawing
