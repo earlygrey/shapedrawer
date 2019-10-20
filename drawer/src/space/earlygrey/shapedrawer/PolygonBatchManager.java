@@ -11,8 +11,10 @@ class PolygonBatchManager extends BatchManager {
 
     PolygonBatchManager(PolygonBatch batch, TextureRegion region) {
         super(batch, region);
-        // every 4 vertices pushed needs at most 6 triangle indices (6/4 = 1.5)
-        int trianglesLength = (int) Math.ceil((verts.length / VERTEX_SIZE) * 1.5);
+        //need at least (3 * vxs) triangles
+        //n quads arranged in a loop, each sharing 2 vxs with the next requires 2n vertices
+        // and 2n triangles (so 2n*3 indices)
+        int trianglesLength = (int) Math.ceil((verts.length / VERTEX_SIZE) * 3);
         triangles = new short[trianglesLength];
     }
 
