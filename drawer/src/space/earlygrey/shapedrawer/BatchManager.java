@@ -23,8 +23,7 @@ class BatchManager {
     protected final Batch batch;
     protected TextureRegion r;
     protected float floatBits;
-    static final int VERTEX_CACHE_SIZE = 2000;
-    protected final float[] verts;
+    protected float[] verts;
     protected int vertexCount;
 
     protected float pixelSize = 1, halfPixelSize = 0.5f * pixelSize;
@@ -34,11 +33,12 @@ class BatchManager {
     protected static final Matrix4 mat4 = new Matrix4();
 
     // These are named just for clarity
+    static final int DEFAULT_VERTEX_CACHE_SIZE = 2000;
     static final int VERTEX_SIZE = 5, QUAD_PUSH_SIZE = 4 * VERTEX_SIZE;
 
     BatchManager (Batch batch, TextureRegion region) {
         this.batch = batch;
-        verts = new float[VERTEX_CACHE_SIZE];
+        verts = new float[DEFAULT_VERTEX_CACHE_SIZE];
         setTextureRegion(region);
         setColor(Color.WHITE);
     }
@@ -182,7 +182,21 @@ class BatchManager {
         ensureSpace(4);
     }
     void ensureSpace(int vertices) {
-        if (verticesRemaining() < vertices) pushToBatch();
+        if (vertices * VERTEX_SIZE > verts.length) {
+            increaseCacheSize(vertices * VERTEX_SIZE);
+        } else if (verticesRemaining() < vertices) {
+            pushToBatch();
+        }
+
+    }
+
+    void increaseCacheSize(int minSize) {
+        pushToBatch();
+        int newSize = verts.length;
+        while (minSize > newSize) {
+            newSize *= 2;
+        }
+        verts = new float[newSize];
     }
 
     int verticesRemaining() {
