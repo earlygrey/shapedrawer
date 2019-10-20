@@ -89,6 +89,13 @@ class PolygonBatchManager extends BatchManager {
         triangleCount = 0;
     }
 
+    @Override
+    void increaseCacheSize(int minSize) {
+        super.increaseCacheSize(minSize);
+        int trianglesLength = (int) Math.ceil((verts.length / VERTEX_SIZE) * 3);
+        triangles = new short[trianglesLength];
+    }
+
     int getTrianglesArrayOffset() {
         return 3* triangleCount;
     }
