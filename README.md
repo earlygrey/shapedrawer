@@ -22,7 +22,7 @@ To use this in your gradle project, add the version number and jitpack repositor
 allprojects {
     ext {
     	...
-        shapedrawerVersion = '2.0.1'
+        shapedrawerVersion = '2.0.2'
     }
     repositories {
 	...
