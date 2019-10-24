@@ -12,6 +12,8 @@ Comes with overloaded methods to draw lines, paths, ellipses, regular polygons a
 
 Just needs to be provided with a Batch and a TextureRegion. However, note that if you want to draw filled shapes, it is more efficient to use a batch that implements [PolygonBatch](https://libgdx.badlogicgames.com/ci/nightlies/docs/api/com/badlogic/gdx/graphics/g2d/PolygonBatch.html) (eg a [PolygonSpriteBatch](https://libgdx.badlogicgames.com/ci/nightlies/docs/api/com/badlogic/gdx/graphics/g2d/PolygonSpriteBatch.html)) instead of a Batch that does not (eg a [SpriteBatch](https://libgdx.badlogicgames.com/ci/nightlies/docs/api/com/badlogic/gdx/graphics/g2d/SpriteBatch.html)).
 
+![Gif didn't load - see wiki for images!](https://media.giphy.com/media/MBwnPWOrbIxQ2kTQja/giphy.gif)
+
 ---
 
 ## Including in Project
