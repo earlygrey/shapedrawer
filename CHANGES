@@ -1,3 +1,6 @@
+[2.0.3]
+- fixed bug where filledRectangle() didn't push to the batch, so subsequent drawer calls could produce incorrect results
+
 [2.0.2]
 - fixed bug where triangles short[] array was not big enough
 - fixed bug where vertices array was nto big enough for very large shapes, it now resizes if needed
