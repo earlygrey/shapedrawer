@@ -50,6 +50,7 @@ abstract class FilledPolygonDrawer<T extends BatchManager> extends DrawerTemplat
         x4(halfWidth * cos - (-halfHeight * sin) + centreX);
         y4(halfWidth * sin + (-halfHeight * cos) + centreY);
         batchManager.pushQuad();
+        batchManager.pushToBatch();
     }
 
     static class BatchFilledPolygonDrawer extends FilledPolygonDrawer<BatchManager> {
