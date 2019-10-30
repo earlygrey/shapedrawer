@@ -1,3 +1,6 @@
+[2.1.0]
+- added line to build.gradle to set src/ directory to act as a resources directory, for better GWT dependency management
+
 [2.0.3]
 - fixed bug where filledRectangle() didn't push to the batch, so subsequent drawer calls could produce incorrect results
 
