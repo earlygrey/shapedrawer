@@ -161,7 +161,27 @@ public class ShapeDrawer extends AbstractShapeDrawer {
      * @param snap whether to snap the start and end coordinates to the centre of the pixel
      */
     public void line(float x1, float y1, float x2, float y2, float lineWidth, boolean snap) {
-        lineDrawer.line(x1, y1, x2, y2, lineWidth, snap);
+        line(x1, y1, x2, y2, lineWidth, snap, batchManager.floatBits, batchManager.floatBits);
+    }
+
+    public void line(Vector2 s, Vector2 e, Color color1, Color color2) {
+        line(s.x, s.y, e.x, e.y, color1, color2);
+    }
+
+    public void line(float x1, float y1, float x2, float y2, Color color1, Color color2) {
+        line(x1, y1, x2, y2, getDefaultLineWidth(), isDefaultSnap(), color1, color2);
+    }
+
+    public void line(float x1, float y1, float x2, float y2, float lineWidth, Color color1, Color color2) {
+        line(x1, y1, x2, y2, lineWidth, isDefaultSnap(), color1, color2);
+    }
+
+    public void line(float x1, float y1, float x2, float y2, float lineWidth, boolean snap, Color color1, Color color2) {
+        line(x1, y1, x2, y2, lineWidth, snap, color1.toFloatBits(), color2.toFloatBits());
+    }
+
+    public void line(float x1, float y1, float x2, float y2, float lineWidth, boolean snap, float color1, float color2) {
+        lineDrawer.line(x1, y1, x2, y2, lineWidth, snap, color1, color2);
     }
 
     //=======================================

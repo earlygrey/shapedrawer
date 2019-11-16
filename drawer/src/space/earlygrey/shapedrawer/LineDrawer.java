@@ -15,7 +15,10 @@ class LineDrawer extends DrawerTemplate<BatchManager> {
     }
 
     void line(float x1, float y1, float x2, float y2, float lineWidth, boolean snap) {
-        pushLine(x1, y1, x2, y2, lineWidth, snap);
+        line(x1, y1, x2, y2, lineWidth, snap, batchManager.floatBits, batchManager.floatBits);
+    }
+    void line(float x1, float y1, float x2, float y2, float lineWidth, boolean snap, float c1, float c2) {
+        pushLine(x1, y1, x2, y2, lineWidth, snap, c1, c2);
         batchManager.pushToBatch();
     }
 
