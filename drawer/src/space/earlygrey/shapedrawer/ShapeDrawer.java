@@ -905,10 +905,12 @@ public class ShapeDrawer extends AbstractShapeDrawer {
         if (joinType==JoinType.POINTY && rotation==0) {
             float halfWidth = 0.5f*lineWidth;
             float X = x+width, Y = y+height;
-            lineDrawer.line(x+halfWidth, y, X-halfWidth, y, lineWidth, false);//bottom
-            lineDrawer.line(x+halfWidth, Y, X-halfWidth, Y, lineWidth, false);//top
-            lineDrawer.line(x, y-halfWidth, x, Y+halfWidth, lineWidth, false);//left
-            lineDrawer.line(X, y-halfWidth, X, Y+halfWidth, lineWidth, false);//right
+            boolean caching = batchManager.isCachingDraws();
+            lineDrawer.pushLine(x+halfWidth, y, X-halfWidth, y, lineWidth, false);//bottom
+            lineDrawer.pushLine(x+halfWidth, Y, X-halfWidth, Y, lineWidth, false);//top
+            lineDrawer.pushLine(x, y-halfWidth, x, Y+halfWidth, lineWidth, false);//left
+            lineDrawer.pushLine(X, y-halfWidth, X, Y+halfWidth, lineWidth, false);//right
+            if (!caching) batchManager.pushToBatch();
         } else {
             polygon(x + 0.5f*width, y + 0.5f*height, 4, lineWidth, rotation + ShapeUtils.PI_4, width, height, joinType);
         }
