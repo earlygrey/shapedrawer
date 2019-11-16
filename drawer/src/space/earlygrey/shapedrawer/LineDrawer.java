@@ -1,5 +1,7 @@
 package space.earlygrey.shapedrawer;
 
+import com.badlogic.gdx.graphics.Color;
+
 /**
  * <p>Contains functions for calculating vertex data for drawing individual lines.</p>
  *
@@ -18,6 +20,10 @@ class LineDrawer extends DrawerTemplate<BatchManager> {
     }
 
     void pushLine(float x1, float y1, float x2, float y2, float lineWidth, boolean snap) {
+        pushLine(x1, y1, x2, y2, lineWidth, snap, batchManager.floatBits, batchManager.floatBits);
+    }
+
+    void pushLine(float x1, float y1, float x2, float y2, float lineWidth, boolean snap, float c1, float c2) {
 
         batchManager.ensureSpaceForQuad();
 
@@ -63,6 +69,11 @@ class LineDrawer extends DrawerTemplate<BatchManager> {
         y3(y2+ydif);
         x4(x2+xdif);
         y4(y2-ydif);
+
+        color1(c1);
+        color2(c1);
+        color3(c2);
+        color4(c2);
 
         batchManager.pushQuad();
         if (!batchManager.isCachingDraws()) batchManager.pushToBatch();

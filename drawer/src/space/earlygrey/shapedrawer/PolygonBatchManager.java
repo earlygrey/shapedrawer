@@ -37,10 +37,6 @@ class PolygonBatchManager extends BatchManager {
     @Override
     void pushTriangle() {
         pushTriangleIndices((short) vertexCount, (short) (vertexCount+1), (short) (vertexCount+2));
-        int v = getVerticesArrayIndex();
-        verts[v + SpriteBatch.C1] = floatBits;
-        verts[v + SpriteBatch.C2] = floatBits;
-        verts[v + SpriteBatch.C3] = floatBits;
         vertexCount += 3;
     }
 
@@ -52,7 +48,7 @@ class PolygonBatchManager extends BatchManager {
         triangleCount++;
     }
 
-    protected void pushVertexData(float[] vertices, short[] triangles, int trianglesArrayCount)  {
+    protected void pushVertexData(float[] vertices, short[] triangles, int trianglesArrayCount, float color)  {
 
         int v = getVerticesArrayIndex();
 
@@ -66,7 +62,7 @@ class PolygonBatchManager extends BatchManager {
             float x = vertices[j], y = vertices[j+1];
             verts[v + SpriteBatch.X1] = x;
             verts[v + SpriteBatch.Y1] = y;
-            verts[v + SpriteBatch.C1] = floatBits;
+            verts[v + SpriteBatch.C1] = color;
             v += VERTEX_SIZE;
         }
         vertexCount += vertices.length / 2;

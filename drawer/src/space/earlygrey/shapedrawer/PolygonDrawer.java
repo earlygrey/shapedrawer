@@ -59,6 +59,8 @@ class PolygonDrawer extends DrawerTemplate<BatchManager> {
 
     void drawPolygonWithJoin(Vector2 centre, int sides, float halfLineWidth, float rotation, Vector2 radius, float startAngle, float radians, boolean smooth) {
 
+        float c = batchManager.floatBits;
+
         boolean full = ShapeUtils.epsilonEquals(radians, ShapeUtils.PI2);
 
         float angleInterval = MathUtils.PI2 / sides;
@@ -124,6 +126,7 @@ class PolygonDrawer extends DrawerTemplate<BatchManager> {
             vert3(D.x*cosRot-D.y*sinRot  + centre.x, D.x*sinRot+D.y*cosRot + centre.y);
             vert4(E.x*cosRot-E.y*sinRot  + centre.x, E.x*sinRot+E.y*cosRot + centre.y);
 
+            color(c,c,c,c);
             batchManager.pushQuad(); //push current AB
 
             if (smooth && (full || i<end)) drawSmoothJoinFill(A, B, C, D, E, centre, cosRot, sinRot, halfLineWidth);

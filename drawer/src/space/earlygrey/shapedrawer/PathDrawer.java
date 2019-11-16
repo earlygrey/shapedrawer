@@ -93,6 +93,8 @@ class PathDrawer extends DrawerTemplate<BatchManager> {
     void drawPathWithJoin(float[] path, int size, float lineWidth, boolean open, boolean pointyJoin) {
         float halfLineWidth =  0.5f*lineWidth;
 
+        float c = batchManager.floatBits;
+
         batchManager.ensureSpaceForQuad();
 
         for (int i = 2; i < size-2; i+=2) {
@@ -139,7 +141,7 @@ class PathDrawer extends DrawerTemplate<BatchManager> {
                 x4 = E.x;
                 y4 = E.y;
             }
-
+            color(c,c,c,c);
             batchManager.pushQuad();
             if (!pointyJoin) drawSmoothJoinFill(A, B, C, D, E, halfLineWidth);
             batchManager.ensureSpaceForQuad();
@@ -152,6 +154,7 @@ class PathDrawer extends DrawerTemplate<BatchManager> {
             Joiner.prepareFlatEndpoint(B, C, D, E, halfLineWidth);
             vert3(E);
             vert4(D);
+            color(c,c,c,c);
             batchManager.pushQuad();
         } else {
             if (pointyJoin) {
@@ -160,6 +163,7 @@ class PathDrawer extends DrawerTemplate<BatchManager> {
                 Joiner.preparePointyJoin(B, C, A, D, E, halfLineWidth);
                 vert3(D);
                 vert4(E);
+                color(c,c,c,c);
                 batchManager.pushQuad();
 
                 //draw connection back to first vertex
@@ -168,6 +172,7 @@ class PathDrawer extends DrawerTemplate<BatchManager> {
                 vert2(E);
                 vert3(E0);
                 vert4(D0);
+                color(c,c,c,c);
                 batchManager.pushQuad();
             } else {
                 //draw last link on path
@@ -177,6 +182,7 @@ class PathDrawer extends DrawerTemplate<BatchManager> {
                 Joiner.prepareSmoothJoin(A, B, C, D, E, halfLineWidth, false);
                 vert3(D);
                 vert4(E);
+                color(c,c,c,c);
                 batchManager.pushQuad();
                 drawSmoothJoinFill(A, B, C, D, E, halfLineWidth);
 
@@ -189,6 +195,7 @@ class PathDrawer extends DrawerTemplate<BatchManager> {
                 Joiner.prepareSmoothJoin(B, C, A, D, E, halfLineWidth, false);
                 vert1(D);
                 vert2(E);
+                color(c,c,c,c);
                 batchManager.pushQuad();
                 drawSmoothJoinFill(B, C, A, D, E, halfLineWidth);
             }
