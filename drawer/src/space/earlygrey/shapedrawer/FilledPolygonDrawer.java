@@ -50,6 +50,8 @@ abstract class FilledPolygonDrawer<T extends BatchManager> extends DrawerTemplat
         y3(-halfWidth * sin + (-halfHeight * cos) + centreY);
         x4(halfWidth * cos - (-halfHeight * sin) + centreX);
         y4(halfWidth * sin + (-halfHeight * cos) + centreY);
+        float c = batchManager.floatBits;
+        color(c,c,c,c);
         batchManager.pushQuad();
         if (!caching) batchManager.pushToBatch();
     }
@@ -59,6 +61,8 @@ abstract class FilledPolygonDrawer<T extends BatchManager> extends DrawerTemplat
         vert1(x1, y1);
         vert2(x2, y2);
         vert3(x3, y3);
+        float c = batchManager.floatBits;
+        color(c,c,c);
         batchManager.pushTriangle();
         if (!caching) batchManager.pushToBatch();
     }
@@ -89,6 +93,8 @@ abstract class FilledPolygonDrawer<T extends BatchManager> extends DrawerTemplat
 
             B.set(1, 0).rotateRad(startAngle).scl(radiusX, radiusY);
 
+            float c = batchManager.floatBits;
+
             int n = end-start;
             if (n<2) {
                 // there are no "regular" segments, will never enter loop,
@@ -101,6 +107,7 @@ abstract class FilledPolygonDrawer<T extends BatchManager> extends DrawerTemplat
                 y2(A.x*sinRot+A.y*cosRot + centreY);
                 x3(B.x*cosRot-B.y*sinRot  + centreX);
                 y3(B.x*sinRot+B.y*cosRot + centreY);
+                color(c,c,c);
                 batchManager.pushTriangle();
             } else {
                 //prepare for regular segments
@@ -130,6 +137,7 @@ abstract class FilledPolygonDrawer<T extends BatchManager> extends DrawerTemplat
                     y3(B.x*sinRot+B.y*cosRot + centreY);
                     x4(C.x*cosRot-C.y*sinRot  + centreX);
                     y4(C.x*sinRot+C.y*cosRot + centreY);
+                    color(c,c,c,c);
                     batchManager.pushQuad();
                 } else if (i==n-2) {
                     //draw final triangle
@@ -140,6 +148,7 @@ abstract class FilledPolygonDrawer<T extends BatchManager> extends DrawerTemplat
                     y2(B.x*sinRot+B.y*cosRot + centreY);
                     x3(C.x*cosRot-C.y*sinRot  + centreX);
                     y3(C.x*sinRot+C.y*cosRot + centreY);
+                    color(c,c,c);
                     batchManager.pushTriangle();
                 }
             }
@@ -149,12 +158,13 @@ abstract class FilledPolygonDrawer<T extends BatchManager> extends DrawerTemplat
 
         @Override
         void polygon(float[] vertices, short[] triangles, int trianglesCount) {
-
+            float c = batchManager.floatBits;
             for (int i = 0; i < trianglesCount; i+=3) {
                 batchManager.ensureSpaceForTriangle();
                 vert1(vertices[2*triangles[i]], vertices[2*triangles[i]+1]);
                 vert2(vertices[2*triangles[i+1]], vertices[2*triangles[i+1]+1]);
                 vert3(vertices[2*triangles[i+2]], vertices[2*triangles[i+2]+1]);
+                color(c,c,c);
                 batchManager.pushTriangle();
             }
             batchManager.pushToBatch();
@@ -185,18 +195,22 @@ abstract class FilledPolygonDrawer<T extends BatchManager> extends DrawerTemplat
 
             if (ShapeUtils.epsilonEquals(start * angleInterval, startAngle)) start++;
 
+            float c = batchManager.floatBits;
+
             int n = end-start;
             batchManager.ensureSpace(n + 2);
             int vertexOffset = batchManager.getVerticesArrayIndex();
 
             //centre point - triangle index 0
             vert1(centreX, centreY);
+            color1(c);
             batchManager.pushVertex();
 
             //first perimeter vertex (at start angle) - triangle index 1
             A.set(1, 0).rotateRad(startAngle).scl(radiusX, radiusY);
             x1(A.x*cosRot-A.y*sinRot  + centreX);
             y1(A.x*sinRot+A.y*cosRot + centreY);
+            color1(c);
             batchManager.pushVertex();
             batchManager.pushTriangleIndices((short) vertexOffset, (short) (vertexOffset+1), (short) (vertexOffset+2));
 
@@ -206,6 +220,7 @@ abstract class FilledPolygonDrawer<T extends BatchManager> extends DrawerTemplat
             for (int i = 0; i < n-1; i++) {
                 x1(A.x*cosRot-A.y*sinRot  + centreX);
                 y1(A.x*sinRot+A.y*cosRot + centreY);
+                color1(c);
                 batchManager.pushVertex();
                 dir.set(dir.x * cos - dir.y * sin, dir.x * sin + dir.y * cos);
                 A.set(dir).scl(radiusX, radiusY);
@@ -217,6 +232,7 @@ abstract class FilledPolygonDrawer<T extends BatchManager> extends DrawerTemplat
             A.set(1, 0).rotateRad(endAngle).scl(radiusX, radiusY);
             x1(A.x*cosRot-A.y*sinRot  + centreX);
             y1(A.x*sinRot+A.y*cosRot + centreY);
+            color1(c);
             batchManager.pushVertex();
 
             if (!wasCaching) batchManager.endCaching();
@@ -226,7 +242,7 @@ abstract class FilledPolygonDrawer<T extends BatchManager> extends DrawerTemplat
         void polygon(float[] vertices, short[] triangles, int trianglesCount) {
             int n = vertices.length / 2;
             batchManager.ensureSpace(n);
-            batchManager.pushVertexData(vertices, triangles, trianglesCount);
+            batchManager.pushVertexData(vertices, triangles, trianglesCount, batchManager.floatBits);
             batchManager.pushToBatch();
         }
 
