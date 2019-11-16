@@ -37,6 +37,7 @@ abstract class FilledPolygonDrawer<T extends BatchManager> extends DrawerTemplat
     }
 
     void rectangle(float x, float y, float width, float height, float rotation) {
+        boolean caching = batchManager.isCachingDraws();
         batchManager.ensureSpaceForQuad();
         float cos = (float) Math.cos(rotation), sin = (float) Math.sin(rotation);
         float halfWidth = 0.5f * width, halfHeight = 0.5f * height;
@@ -50,7 +51,16 @@ abstract class FilledPolygonDrawer<T extends BatchManager> extends DrawerTemplat
         x4(halfWidth * cos - (-halfHeight * sin) + centreX);
         y4(halfWidth * sin + (-halfHeight * cos) + centreY);
         batchManager.pushQuad();
-        batchManager.pushToBatch();
+        if (!caching) batchManager.pushToBatch();
+    }
+
+    public void triangle(float x1, float y1, float x2, float y2, float x3, float y3) {
+        boolean caching = batchManager.isCachingDraws();
+        vert1(x1, y1);
+        vert2(x2, y2);
+        vert3(x3, y3);
+        batchManager.pushTriangle();
+        if (!caching) batchManager.pushToBatch();
     }
 
     static class BatchFilledPolygonDrawer extends FilledPolygonDrawer<BatchManager> {

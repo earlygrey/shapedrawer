@@ -701,7 +701,6 @@ public class ShapeDrawer extends AbstractShapeDrawer {
     }
 
 
-
     //====================
     //     FILLED
     //====================
@@ -771,6 +770,10 @@ public class ShapeDrawer extends AbstractShapeDrawer {
      */
     public void filledPolygon(float[] vertices, ShortArray triangles) {
         filledPolygonDrawer.polygon(vertices, triangles);
+    }
+
+    public void filledTriangle(float x1, float y1, float x2, float y2, float x3, float y3) {
+        filledPolygonDrawer.triangle(x1, y1, x2, y2, x3, y3);
     }
 
 
