@@ -1,4 +1,6 @@
 [SNAPSHOT]
+
+[2.1.0]
 - added line to build.gradle to set src/ directory to act as a resources directory, for better GWT dependency management
 - added ability to colour endpoints of lines, and blend polygons and ellipses from a colour at the centre to a colour at the perimeter
 
