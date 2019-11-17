@@ -428,7 +428,7 @@ public class ShapeDrawer extends AbstractShapeDrawer {
     }
 
     //====================
-    //   OUTLINED (ARCS)
+    //       FILLED
     //====================
 
 
@@ -455,9 +455,7 @@ public class ShapeDrawer extends AbstractShapeDrawer {
     }
 
     /**
-     * <p>Draws an ellipse as a stretched regular polygon, estimating the number of sides required
-     * (see {@link #estimateSidesRequired(float, float)}) to appear smooth enough based on the
-     * pixel size that has been set. Calls {@link #polygon(float, float, int, float, float, float, JoinType)}.</p>
+     * <p>Calls {@link #filledEllipse(float, float, float, float, float, float, float)} with the drawer's current colour.</p>
      * @param centreX the x-coordinate of the centre point
      * @param centreY the y-coordinate of the centre point
      * @param radiusX the radius along the x-axis
@@ -465,9 +463,38 @@ public class ShapeDrawer extends AbstractShapeDrawer {
      * @param rotation the anticlockwise rotation in radians
      */
     public void filledEllipse(float centreX, float centreY, float radiusX, float radiusY, float rotation) {
-        filledPolygonDrawer.polygon(centreX, centreY, estimateSidesRequired(radiusX, radiusY), radiusX, radiusY, rotation, 0, ShapeUtils.PI2);
+        filledEllipse(centreX, centreY, radiusX, radiusY, rotation, batchManager.floatBits, batchManager.floatBits);
     }
 
+    /**
+     * <p>Calls {@link #filledEllipse(float, float, float, float, float, float, float)}.</p>
+     * @param centreX the x-coordinate of the centre point
+     * @param centreY the y-coordinate of the centre point
+     * @param radiusX the radius along the x-axis
+     * @param radiusY the radius along the y-axis
+     * @param rotation the anticlockwise rotation in radians
+     * @param innerColor the colour of the centre of the ellipse
+     * @param outerColor the colour of the perimeter of the ellipse
+     */
+    public void filledEllipse(float centreX, float centreY, float radiusX, float radiusY, float rotation, Color innerColor, Color outerColor) {
+        filledEllipse(centreX, centreY, radiusX, radiusY, rotation, innerColor.toFloatBits(), outerColor.toFloatBits());
+    }
+
+    /**
+     * <p>Draws an ellipse as a stretched regular polygon, estimating the number of sides required
+     * (see {@link #estimateSidesRequired(float, float)}) to appear smooth enough based on the
+     * pixel size that has been set.</p>
+     * @param centreX the x-coordinate of the centre point
+     * @param centreY the y-coordinate of the centre point
+     * @param radiusX the radius along the x-axis
+     * @param radiusY the radius along the y-axis
+     * @param rotation the anticlockwise rotation in radians
+     * @param innerColor the packed colour of the centre of the ellipse
+     * @param outerColor the packed colour of the perimeter of the ellipse
+     */
+    public void filledEllipse(float centreX, float centreY, float radiusX, float radiusY, float rotation, float innerColor, float outerColor) {
+        filledPolygonDrawer.polygon(centreX, centreY, estimateSidesRequired(radiusX, radiusY), radiusX, radiusY, rotation, 0, ShapeUtils.PI2, innerColor, outerColor);
+    }
 
     //=======================================
     //          PARTIAL ELLIPSES
@@ -549,6 +576,32 @@ public class ShapeDrawer extends AbstractShapeDrawer {
     }
 
     /**
+     * <p>Draws a sector (pie slice) by calling {@link #sector(float, float, float, float, float, int, float, float)} with the number of sides estimated by {@link #estimateSidesRequired(float, float)}.</p>
+     * @param centreX the x-coordinate of the centre point
+     * @param centreY the y-coordinate of the centre point
+     * @param radius the radius of the circle that this arc is a part of
+     * @param startAngle the angle in radians at which the arc starts
+     * @param radians the angle in radians subtended by the arc
+     * @param innerColor the colour of the centre of the ellipse
+     * @param outerColor the colour of the perimeter of the ellipse
+     */
+    public void sector(float centreX, float centreY, float radius, float startAngle, float radians, Color innerColor, Color outerColor) {
+        sector(centreX, centreY, radius, startAngle, radians, estimateSidesRequired(radius, radius), innerColor.toFloatBits(), outerColor.toFloatBits());
+    }
+
+    /**
+     * <p>Draws a sector (pie slice) by calling {@link #sector(float, float, float, float, float, int, float, float)}.</p>
+     * @param centreX the x-coordinate of the centre point
+     * @param centreY the y-coordinate of the centre point
+     * @param radius the radius of the circle that this arc is a part of
+     * @param startAngle the angle in radians at which the arc starts
+     * @param radians the angle in radians subtended by the arc
+     */
+    public void sector(float centreX, float centreY, float radius, float startAngle, float radians, int sides) {
+        sector(centreX, centreY, radius, startAngle, radians, sides, batchManager.floatBits, batchManager.floatBits);
+    }
+
+    /**
      * <p>Draws a sector (pie slice) by from {@code startAngle} anti-clockwise that subtends the specified angle.</p>
      * @param centreX the x-coordinate of the centre point
      * @param centreY the y-coordinate of the centre point
@@ -556,12 +609,12 @@ public class ShapeDrawer extends AbstractShapeDrawer {
      * @param startAngle the angle in radians at which the arc starts
      * @param radians the angle in radians subtended by the arc
      * @param sides the number of straight line segments to draw the arc with
+     * @param innerColor the packed colour of the centre of the ellipse
+     * @param outerColor the packed colour of the perimeter of the ellipse
      */
-    public void sector(float centreX, float centreY, float radius, float startAngle, float radians, int sides) {
-        filledPolygonDrawer.polygon(centreX, centreY, sides, radius, radius, 0, startAngle, radians);
+    public void sector(float centreX, float centreY, float radius, float startAngle, float radians, int sides, float innerColor, float outerColor) {
+        filledPolygonDrawer.polygon(centreX, centreY, sides, radius, radius, 0, startAngle, radians, innerColor, outerColor);
     }
-
-
 
     //=======================================
     //           REGULAR POLYGONS
@@ -686,7 +739,7 @@ public class ShapeDrawer extends AbstractShapeDrawer {
     }
 
     /**
-     * <p>Draws a filled regular polygon.</p>
+     * <p>Calls {@link #filledPolygon(float, float, int, float, float, float, float, float)} with the drawer's current colour.</p>
      *
      * @param centreX the x-coordinate of the centre point
      * @param centreY the y-coordinate of the centre point
@@ -696,9 +749,40 @@ public class ShapeDrawer extends AbstractShapeDrawer {
      * @param rotation the rotation in radians after scaling
      */
     public void filledPolygon(float centreX, float centreY, int sides, float scaleX, float scaleY, float rotation) {
-        filledPolygonDrawer.polygon(centreX, centreY, sides, scaleX, scaleY, rotation, 0, ShapeUtils.PI2);
+        filledPolygon(centreX, centreY, sides, scaleX, scaleY, rotation, batchManager.floatBits, batchManager.floatBits);
     }
 
+    /**
+     * <p>Calls {@link #filledPolygon(float, float, int, float, float, float, float, float)}.</p>
+     *
+     * @param centreX the x-coordinate of the centre point
+     * @param centreY the y-coordinate of the centre point
+     * @param sides the number of sides
+     * @param scaleX the scale along the x-axis
+     * @param scaleY the scale along the y-axis
+     * @param rotation the rotation in radians after scaling
+     * @param innerColor the colour of the centre of the polygon
+     * @param outerColor the colour of the perimeter of the polygon
+     */
+    public void filledPolygon(float centreX, float centreY, int sides, float scaleX, float scaleY, float rotation, Color innerColor, Color outerColor) {
+        filledPolygon(centreX, centreY, sides, scaleX, scaleY, rotation, innerColor.toFloatBits(), outerColor.toFloatBits());
+    }
+
+    /**
+     * <p>Draws a filled regular polygon.</p>
+     *
+     * @param centreX the x-coordinate of the centre point
+     * @param centreY the y-coordinate of the centre point
+     * @param sides the number of sides
+     * @param scaleX the scale along the x-axis
+     * @param scaleY the scale along the y-axis
+     * @param rotation the rotation in radians after scaling
+     * @param innerColor the packed colour of the centre of the polygon
+     * @param outerColor the packed colour of the perimeter of the polygon
+     */
+    public void filledPolygon(float centreX, float centreY, int sides, float scaleX, float scaleY, float rotation, float innerColor, float outerColor) {
+        filledPolygonDrawer.polygon(centreX, centreY, sides, scaleX, scaleY, rotation, 0, ShapeUtils.PI2, innerColor, outerColor);
+    }
 
     //=======================================
     //           ARBITRARY POLYGONS
@@ -835,10 +919,78 @@ public class ShapeDrawer extends AbstractShapeDrawer {
         filledPolygonDrawer.polygon(vertices, triangles);
     }
 
-    public void filledTriangle(float x1, float y1, float x2, float y2, float x3, float y3) {
-        filledPolygonDrawer.triangle(x1, y1, x2, y2, x3, y3);
+
+    //====================
+    //  FILLED TRIANGLES
+    //====================
+
+    /**
+     * <p>Calls {@link #filledTriangle(float, float, float, float, float, float)}.</p>
+     * @param v1 coordinates of the first vertex
+     * @param v2 coordinates of the second vertex
+     * @param v3 coordinates of the third vertex
+     */
+    public void filledTriangle(Vector2 v1, Vector2 v2, Vector2 v3) {
+        filledTriangle(v1.x, v1.y, v2.x, v2.y, v3.x, v3.y);
     }
 
+    /**
+     * <p>Calls {@link #filledTriangle(float, float, float, float, float, float, float, float, float)}.</p>
+     * @param v1 coordinates of the first vertex
+     * @param v2 coordinates of the second vertex
+     * @param v3 coordinates of the third vertex
+     * @param color1 colour of first vertex
+     * @param color2 colour of second vertex
+     * @param color3 colour of third vertex
+     */
+    public void filledTriangle(Vector2 v1, Vector2 v2, Vector2 v3, Color color1, Color color2, Color color3) {
+        filledTriangle(v1.x, v1.y, v2.x, v2.y, v3.x, v3.y, color1.toFloatBits(), color2.toFloatBits(), color3.toFloatBits());
+    }
+
+    /**
+     * <p>Calls {@link #filledTriangle(float, float, float, float, float, float, float, float, float)} with the drawer's current colour.</p>
+     * @param x1 x coordinate of first vertex
+     * @param y1 y coordinate of first vertex
+     * @param x2 x coordinate of second vertex
+     * @param y2 y coordinate of second vertex
+     * @param x3 x coordinate of third vertex
+     * @param y3 y coordinate of third vertex
+     */
+    public void filledTriangle(float x1, float y1, float x2, float y2, float x3, float y3) {
+        filledTriangle(x1, y1, x2, y2, x3, y3, batchManager.floatBits, batchManager.floatBits, batchManager.floatBits);
+    }
+
+    /**
+     * <p>Calls {@link #filledTriangle(float, float, float, float, float, float, float, float, float)}.</p>
+     * @param x1 x coordinate of first vertex
+     * @param y1 y coordinate of first vertex
+     * @param x2 x coordinate of second vertex
+     * @param y2 y coordinate of second vertex
+     * @param x3 x coordinate of third vertex
+     * @param y3 y coordinate of third vertex
+     * @param color1 packed colour of first vertex
+     * @param color2 packed colour of second vertex
+     * @param color3 packed colour of third vertex
+     */
+    public void filledTriangle(float x1, float y1, float x2, float y2, float x3, float y3, Color color1, Color color2, Color color3) {
+        filledTriangle(x1, y1, x2, y2, x3, y3, color1.toFloatBits(), color2.toFloatBits(), color3.toFloatBits());
+    }
+
+    /**
+     * <p>Draws a filled triangle with the specified vertices and colours.</p>
+     * @param x1 x coordinate of first vertex
+     * @param y1 y coordinate of first vertex
+     * @param x2 x coordinate of second vertex
+     * @param y2 y coordinate of second vertex
+     * @param x3 x coordinate of third vertex
+     * @param y3 y coordinate of third vertex
+     * @param color1 colour of first vertex
+     * @param color2 colour of second vertex
+     * @param color3 colour of third vertex
+     */
+    public void filledTriangle(float x1, float y1, float x2, float y2, float x3, float y3, float color1, float color2, float color3) {
+        filledPolygonDrawer.triangle(x1, y1, x2, y2, x3, y3, color1, color2, color3);
+    }
 
     //=======================================
     //              RECTANGLES
