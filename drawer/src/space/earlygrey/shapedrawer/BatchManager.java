@@ -145,8 +145,6 @@ class BatchManager {
     //================================================================================
 
     void pushVertex() {
-        int i = getVerticesArrayIndex();
-        verts[i + SpriteBatch.C1] = floatBits;
         vertexCount++;
     }
 
@@ -156,11 +154,6 @@ class BatchManager {
      * @return whether the vertex data was pushed to the Batch
      */
     void pushQuad() {
-        int i = getVerticesArrayIndex();
-        verts[i + SpriteBatch.C1] = floatBits;
-        verts[i + SpriteBatch.C2] = floatBits;
-        verts[i + SpriteBatch.C3] = floatBits;
-        verts[i + SpriteBatch.C4] = floatBits;
         vertexCount += 4;
     }
 
@@ -232,4 +225,8 @@ class BatchManager {
     protected float y3() {return verts[getVerticesArrayIndex() + SpriteBatch.Y3];}
     protected float x4() {return verts[getVerticesArrayIndex() + SpriteBatch.X4];}
     protected float y4() {return verts[getVerticesArrayIndex() + SpriteBatch.Y4];}
+    void color1(float c) {verts[getVerticesArrayIndex() + SpriteBatch.C1] = c;}
+    void color2(float c) {verts[getVerticesArrayIndex() + SpriteBatch.C2] = c;}
+    void color3(float c) {verts[getVerticesArrayIndex() + SpriteBatch.C3] = c;}
+    void color4(float c) {verts[getVerticesArrayIndex() + SpriteBatch.C4] = c;}
 }

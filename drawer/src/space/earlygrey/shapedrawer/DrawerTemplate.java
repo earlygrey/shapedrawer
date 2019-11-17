@@ -38,6 +38,8 @@ abstract class DrawerTemplate<T extends BatchManager> {
         vert2(bendsLeft?D:E);
         bendsLeft = Joiner.prepareSmoothJoin(A, B, C, D, E, halfLineWidth, true);
         vert3(bendsLeft?E:D);
+        float c = batchManager.floatBits;
+        color(c,c,c);
         batchManager.pushTriangle();
     }
 
@@ -51,6 +53,8 @@ abstract class DrawerTemplate<T extends BatchManager> {
         Vector2 V3 = bendsLeft?E:D;
         float x = V3.x*cos-V3.y*sin  + offset.x, y = V3.x*sin+V3.y*cos + offset.y;
         vert3(x, y);
+        float c = batchManager.floatBits;
+        color(c,c,c);
         batchManager.pushTriangle();
     }
 
@@ -76,6 +80,14 @@ abstract class DrawerTemplate<T extends BatchManager> {
     void vert2(Vector2 V, Vector2 offset) {vert2(V.x+offset.x, V.y+offset.y);}
     void vert3(Vector2 V, Vector2 offset) {vert3(V.x+offset.x, V.y+offset.y);}
     void vert4(Vector2 V, Vector2 offset) {vert4(V.x+offset.x, V.y+offset.y);}
+    void color1(float c) {batchManager.color1(c);}
+    void color2(float c) {batchManager.color2(c);}
+    void color3(float c) {batchManager.color3(c);}
+    void color4(float c) {batchManager.color4(c);}
+    void color(float c1, float c2, float c3) {
+        color1(c1); color2(c2); color3(c3);}
+    void color(float c1, float c2, float c3, float c4) {
+        color1(c1); color2(c2); color3(c3); color4(c4);}
     float x1() {return batchManager.x1();}
     float y1() {return batchManager.y1();}
     float x2() {return batchManager.x2();}
@@ -84,6 +96,7 @@ abstract class DrawerTemplate<T extends BatchManager> {
     float y3() {return batchManager.y3();}
     float x4() {return batchManager.x4();}
     float y4() {return batchManager.y4();}
+
 
 
 
