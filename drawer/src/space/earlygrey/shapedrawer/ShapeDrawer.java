@@ -57,7 +57,7 @@ public class ShapeDrawer extends AbstractShapeDrawer {
     }
 
     /**
-     * <p>Calls {@link #line(float, float, float, float, float, boolean)}()} with {@code snap} set to true.</p>
+     * <p>Calls {@link #line(float, float, float, float, float)}()}.</p>
      * @param s the starting point of the line
      * @param e the end point of the line
      * @param lineWidth the width of the line in world units
@@ -67,33 +67,30 @@ public class ShapeDrawer extends AbstractShapeDrawer {
     }
 
     /**
-     * <p>Calls {@link #line(float, float, float, float, float, boolean)}()} with {@code snap} set to true.</p>
+     * <p>Calls {@link #line(float, float, float, float, float, boolean)}()} with default line width and {@code snap}.</p>
      * @param s the starting point of the line
      * @param e the end point of the line
-     * @param color temporarily changes the ShapeDrawer's colour
+     * @param color the colour of the line
      */
     public void line(Vector2 s, Vector2 e, Color color) {
-        float c = setColor(color);
-        line(s.x, s.y, e.x, e.y, defaultLineWidth);
-        setColor(c);
+        float c = color.toFloatBits();
+        line(s.x, s.y, e.x, e.y, defaultLineWidth, isDefaultSnap(), c, c);
     }
 
     /**
-     * <p>Calls {@link #line(float, float, float, float, float, boolean)}()} with {@code snap} set to true.</p>
+     * <p>Calls {@link #line(float, float, float, float, float, boolean, float, float)}()} with default line width and {@code snap}.</p>
      * @param s the starting point of the line
      * @param e the end point of the line
-     * @param color temporarily changes the ShapeDrawer's colour
+     * @param color color the colour of the line
      * @param lineWidth the width of the line in world units
      */
     public void line(Vector2 s, Vector2 e, Color color, float lineWidth) {
-        float c = setColor(color);
-        line(s.x, s.y, e.x, e.y, color, lineWidth);
-        setColor(c);
+        float c = color.toFloatBits();
+        line(s.x, s.y, e.x, e.y, lineWidth, isDefaultSnap(), c, c);
     }
 
     /**
-     * <p>Calls {@link #line(float, float, float, float, float, boolean)}()} with {@code lineWidth} set to
-     * the current default and {@code snap} set to true.</p>
+     * <p>Calls {@link #line(float, float, float, float, float)}()} .</p>
      * @param x1 the x-component of the first point
      * @param y1 the y-component of the first point
      * @param x2 the x-component of the second point
@@ -104,35 +101,34 @@ public class ShapeDrawer extends AbstractShapeDrawer {
     }
 
     /**
-     * <p>Calls {@link #line(float, float, float, float, float, boolean)}()} with {@code lineWidth} set to
-     * the current default and {@code snap} set to true.</p>
+     * <p>Calls {@link #line(float, float, float, float, Color, float)}()} with {@code lineWidth} set to
+     * the current default.</p>
      * @param x1 the x-component of the first point
      * @param y1 the y-component of the first point
      * @param x2 the x-component of the second point
      * @param y2 the y-component of the second point
-     * @param color temporarily changes the ShapeDrawer's colour
+     * @param color color the colour of the line
      */
     public void line(float x1, float y1, float x2, float y2, Color color) {
         line(x1, y1, x2, y2, color, defaultLineWidth);
     }
 
     /**
-     * <p>Calls {@link #line(float, float, float, float, float, boolean)}()} with {@code snap} set to true.</p>
+     * <p>Calls {@link #line(float, float, float, float, Color, float)}()} with {@code snap} set to the default value.</p>
      * @param x1 the x-component of the first point
      * @param y1 the y-component of the first point
      * @param x2 the x-component of the second point
      * @param y2 the y-component of the second point
-     * @param color temporarily changes the ShapeDrawer's colour
+     * @param color color the colour of the line
      * @param lineWidth the width of the line in world units
      */
     public void line(float x1, float y1, float x2, float y2, Color color, float lineWidth) {
-        float c = setColor(color);
-        line(x1, y1, x2, y2, lineWidth);
-        setColor(c);
+        float c = color.toFloatBits();
+        line(x1, y1, x2, y2, lineWidth, isDefaultSnap(), c, c);
     }
 
     /**
-     * <p>Calls {@link #line(float, float, float, float, float, boolean)}()} with {@code snap} set to true.</p>
+     * <p>Calls {@link #line(float, float, float, float, float, boolean)}()} with {@code snap} set to the default value.</p>
      * @param x1 the x-component of the first point
      * @param y1 the y-component of the first point
      * @param x2 the x-component of the second point
@@ -144,14 +140,79 @@ public class ShapeDrawer extends AbstractShapeDrawer {
     }
 
     /**
+     * <p>Calls {@link #line(float, float, float, float, float, boolean, float, float)}()} with the default colour.</p>
+     * @param x1 the x-component of the first point
+     * @param y1 the y-component of the first point
+     * @param x2 the x-component of the second point
+     * @param y2 the y-component of the second point
+     * @param lineWidth the width of the line in world units
+     */
+    public void line(float x1, float y1, float x2, float y2, float lineWidth, boolean snap) {
+        line(x1, y1, x2, y2, lineWidth, snap, batchManager.floatBits, batchManager.floatBits);
+    }
+
+    /**
+     * <p>Calls {@link #line(float, float, float, float, Color, Color)}()}.</p>
+     * @param s the starting point of the line
+     * @param e the end point of the line
+     * @param color1 the colour of the first point of the line
+     * @param color2 the colour of the second point of the line
+     */
+    public void line(Vector2 s, Vector2 e, Color color1, Color color2) {
+        line(s.x, s.y, e.x, e.y, color1, color2);
+    }
+
+    /**
+     * <p>Calls {@link #line(float, float, float, float, float, boolean, Color, Color)}()} with default line width and {@code snap}.</p>
+     * @param x1 the x-component of the first point
+     * @param y1 the y-component of the first point
+     * @param x2 the x-component of the second point
+     * @param y2 the y-component of the second point
+     * @param color1 the colour of the first point of the line
+     * @param color2 the colour of the second point of the line
+     */
+    public void line(float x1, float y1, float x2, float y2, Color color1, Color color2) {
+        line(x1, y1, x2, y2, getDefaultLineWidth(), isDefaultSnap(), color1, color2);
+    }
+
+    /**
+     * <p>Calls {@link #line(float, float, float, float, float, boolean, Color, Color)}()}  with default {@code snap} value.</p>
+     * @param x1 the x-component of the first point
+     * @param y1 the y-component of the first point
+     * @param x2 the x-component of the second point
+     * @param y2 the y-component of the second point
+     * @param lineWidth the width of the line in world units
+     * @param color1 the colour of the first point of the line
+     * @param color2 the colour of the second point of the line
+     */
+    public void line(float x1, float y1, float x2, float y2, float lineWidth, Color color1, Color color2) {
+        line(x1, y1, x2, y2, lineWidth, isDefaultSnap(), color1, color2);
+    }
+
+    /**
+     * <p>Calls {@link #line(float, float, float, float, float, boolean, float, float)}()}.</p>
+     * @param x1 the x-component of the first point
+     * @param y1 the y-component of the first point
+     * @param x2 the x-component of the second point
+     * @param y2 the y-component of the second point
+     * @param lineWidth the width of the line in world units
+     * @param snap whether to snap the start and end coordinates to the centre of the pixel
+     * @param color1 the colour of the first point of the line
+     * @param color2 the colour of the second point of the line
+     */
+    public void line(float x1, float y1, float x2, float y2, float lineWidth, boolean snap, Color color1, Color color2) {
+        line(x1, y1, x2, y2, lineWidth, snap, color1.toFloatBits(), color2.toFloatBits());
+    }
+
+    /**
      *
      * <p>Draws a line between (x1, y1) and (x2, y2) with width {@code lineWidth}. The edges of the line are centred at
      * (x1, y1) and (x2, y2).</p>
+     * <p>The colour of the line will be blended between the first and second colours.</p>
      * <p>If {@code snap} is true, the start and end
      * points will be snapped to the centre of their respective pixels, and then offset very slightly so that the line
      * is guaranteed to contain the centre of the pixel. This is important when pixel perfect precision
      * is necessary, such as when drawing to a low resolution frame buffer.</p>
-     * <p>This is the most performant method for drawing a line.</p>
      *
      * @param x1 the x-component of the first point
      * @param y1 the y-component of the first point
@@ -159,27 +220,9 @@ public class ShapeDrawer extends AbstractShapeDrawer {
      * @param y2 the y-component of the second point
      * @param lineWidth the width of the line in world units
      * @param snap whether to snap the start and end coordinates to the centre of the pixel
+     * @param color1 the packed colour of the first point of the line
+     * @param color2 the packed colour of the second point of the line
      */
-    public void line(float x1, float y1, float x2, float y2, float lineWidth, boolean snap) {
-        line(x1, y1, x2, y2, lineWidth, snap, batchManager.floatBits, batchManager.floatBits);
-    }
-
-    public void line(Vector2 s, Vector2 e, Color color1, Color color2) {
-        line(s.x, s.y, e.x, e.y, color1, color2);
-    }
-
-    public void line(float x1, float y1, float x2, float y2, Color color1, Color color2) {
-        line(x1, y1, x2, y2, getDefaultLineWidth(), isDefaultSnap(), color1, color2);
-    }
-
-    public void line(float x1, float y1, float x2, float y2, float lineWidth, Color color1, Color color2) {
-        line(x1, y1, x2, y2, lineWidth, isDefaultSnap(), color1, color2);
-    }
-
-    public void line(float x1, float y1, float x2, float y2, float lineWidth, boolean snap, Color color1, Color color2) {
-        line(x1, y1, x2, y2, lineWidth, snap, color1.toFloatBits(), color2.toFloatBits());
-    }
-
     public void line(float x1, float y1, float x2, float y2, float lineWidth, boolean snap, float color1, float color2) {
         lineDrawer.line(x1, y1, x2, y2, lineWidth, snap, color1, color2);
     }
