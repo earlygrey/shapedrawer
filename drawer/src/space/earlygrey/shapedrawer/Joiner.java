@@ -3,6 +3,12 @@ package space.earlygrey.shapedrawer;
 import com.badlogic.gdx.math.Vector;
 import com.badlogic.gdx.math.Vector2;
 
+/**
+ * <p>Static methods for calculating the vertices of the lines for various join types.</p>
+ *
+ * @author earlygrey
+ */
+
 class Joiner {
 
     static final Vector2 AB = new Vector2(), BC = new Vector2(), v = new Vector2();
@@ -65,6 +71,22 @@ class Joiner {
         AB.setLength(halfLineWidth);
         D.set(-AB.y, AB.x).add(B);
         E.set(AB.y, -AB.x).add(B);
+    }
+
+    static void prepareFlatEndpoint(float pathPointX, float pathPointY, float endPointX, float endPointY, Vector2 D, Vector2 E, float halfLineWidth) {
+        v.set(endPointX, endPointY).sub(pathPointX, pathPointY).setLength(halfLineWidth);
+        D.set(v.y, -v.x).add(endPointX, endPointY);
+        E.set(-v.y, v.x).add(endPointX, endPointY);
+    }
+
+    static void prepareFlatEndpoint(Vector2 pathPoint, Vector2 endPoint, Vector2 D, Vector2 E, float halfLineWidth) {
+        prepareFlatEndpoint(pathPoint.x, pathPoint.y, endPoint.x, endPoint.y, D, E, halfLineWidth);
+    }
+
+    static void prepareRadialEndpoint(Vector2 A, Vector2 D, Vector2 E, float halfLineWidth) {
+        v.set(A).setLength(halfLineWidth);
+        D.set(A).sub(v);
+        E.set(A).add(v);
     }
 
 }

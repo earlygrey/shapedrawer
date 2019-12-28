@@ -1,12 +1,34 @@
 package space.earlygrey.shapedrawer;
 
-class LineDrawer extends DrawerTemplate {
+import com.badlogic.gdx.graphics.Color;
 
-    LineDrawer(ShapeDrawer drawer) {
-        super(drawer);
+/**
+ * <p>Contains functions for calculating vertex data for drawing individual lines.</p>
+ *
+ * @author earlygrey
+ */
+
+class LineDrawer extends DrawerTemplate<BatchManager> {
+
+    LineDrawer(BatchManager batchManager, AbstractShapeDrawer drawer) {
+        super(batchManager, drawer);
     }
 
     void line(float x1, float y1, float x2, float y2, float lineWidth, boolean snap) {
+        line(x1, y1, x2, y2, lineWidth, snap, batchManager.floatBits, batchManager.floatBits);
+    }
+    void line(float x1, float y1, float x2, float y2, float lineWidth, boolean snap, float c1, float c2) {
+        pushLine(x1, y1, x2, y2, lineWidth, snap, c1, c2);
+        batchManager.pushToBatch();
+    }
+
+    void pushLine(float x1, float y1, float x2, float y2, float lineWidth, boolean snap) {
+        pushLine(x1, y1, x2, y2, lineWidth, snap, batchManager.floatBits, batchManager.floatBits);
+    }
+
+    void pushLine(float x1, float y1, float x2, float y2, float lineWidth, boolean snap, float c1, float c2) {
+
+        batchManager.ensureSpaceForQuad();
 
         // dif=(xdif,ydif) is the vector going from (x1, y1) to the first vertex going clockwise around the border of the line.
         // l=(lx,ly) is the vector from (x1, y1) to (x2, y2)
@@ -18,8 +40,8 @@ class LineDrawer extends DrawerTemplate {
             then extend the line very slightly in each direction, so it covers the centre of the start and end pixels.
             This is because nearest neighbour just takes the colour from right in the centre.
             */
-            float offset = drawer.offset;
-            float pixelSize = drawer.pixelSize, halfPixelSize = drawer.halfPixelSize;
+            float offset = batchManager.offset;
+            float pixelSize = batchManager.pixelSize, halfPixelSize = batchManager.halfPixelSize;
             x1 = ShapeUtils.snap(x1, pixelSize, halfPixelSize) - Math.signum(lx) * offset;
             y1 = ShapeUtils.snap(y1, pixelSize, halfPixelSize) - Math.signum(ly) * offset;
             x2 = ShapeUtils.snap(x2, pixelSize, halfPixelSize) + Math.signum(lx) * offset;
@@ -50,7 +72,14 @@ class LineDrawer extends DrawerTemplate {
         y3(y2+ydif);
         x4(x2+xdif);
         y4(y2-ydif);
-        drawVerts();
+
+        color1(c1);
+        color2(c1);
+        color3(c2);
+        color4(c2);
+
+        batchManager.pushQuad();
+        if (!batchManager.isCachingDraws()) batchManager.pushToBatch();
     }
 
 

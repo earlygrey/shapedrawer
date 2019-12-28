@@ -1,5 +1,36 @@
-[1.0.0]
-- initial code
+[SNAPSHOT]
+
+[2.1.0]
+- added line to build.gradle to set src/ directory to act as a resources directory, for better GWT dependency management
+- added ability to colour endpoints of lines, and blend polygons and ellipses from a colour at the centre to a colour at the perimeter
+
+[2.0.3]
+- fixed bug where filledRectangle() didn't push to the batch, so subsequent drawer calls could produce incorrect results
+
+[2.0.2]
+- fixed bug where triangles short[] array was not big enough
+- fixed bug where vertices array was nto big enough for very large shapes, it now resizes if needed
+
+[2.0.1]
+- added setColor(r,g,b,a) method
+- fixed texture coordinate bug where sometimes incorrect region of texture was used for drawing
+
+[2.0.0]
+- removed PolygonShapeDrawer class, ShapeDrawer can draw filled shapes but does so in a way depending on the type of batch provided. This is a breaking change from the previous version
+- large internal refactor, reduced visibility of some internal methods (from protected to package-private)
+- fixed bug with arc() where certain angles would produce artifacts
+
+[1.3.0]
+- added PolygonShapeDrawer, which can draw filled shapes for regular polygons (which includes circles and ellipses) and rectangles
+
+[1.2.0]
+- fixed path bug when consecutive points had a coordinate in common
+- vertex information is cached in a large float[] instead of being sent every time a quad is calculated
+- added path arguments for paths defined by float[]s and FloatArrays
 
 [1.1.0]
 - Added HTML5 support.
+- Added ShapeDrawerDrawable to allow shape drawing in Scene2D UI's.
+
+[1.0.0]
+- initial code

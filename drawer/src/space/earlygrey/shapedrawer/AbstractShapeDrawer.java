@@ -2,11 +2,15 @@ package space.earlygrey.shapedrawer;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Color;
+import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.Batch;
+import com.badlogic.gdx.graphics.g2d.PolygonBatch;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.math.Matrix4;
-import com.badlogic.gdx.math.Vector2;
+
+import space.earlygrey.shapedrawer.FilledPolygonDrawer.BatchFilledPolygonDrawer;
+import space.earlygrey.shapedrawer.FilledPolygonDrawer.PolygonBatchFilledPolygonDrawer;
 
 /**
  * <p>Contains the mechanics for using the Batch and settings such as line width and pixel size.</p>
@@ -20,16 +24,17 @@ public abstract class AbstractShapeDrawer {
     // MEMBERS
     //================================================================================
 
-    protected final Batch batch;
-    protected TextureRegion r;
-    protected final float[] verts = new float[20];
+    final BatchManager batchManager;
+    float defaultLineWidth = 1;
+    boolean defaultSnap = false;
 
-    protected float pixelSize = 1, halfPixelSize = 0.5f * pixelSize;
-    protected float offset = ShapeUtils.EPSILON * pixelSize;
-    protected float defaultLineWidth = pixelSize;
-    protected boolean defaultSnap = false;
 
     protected static final Matrix4 mat4 = new Matrix4();
+
+    protected final LineDrawer lineDrawer;
+    protected final PathDrawer pathDrawer;
+    protected final PolygonDrawer polygonDrawer;
+    protected final FilledPolygonDrawer filledPolygonDrawer;
 
 
     //================================================================================
@@ -41,10 +46,21 @@ public abstract class AbstractShapeDrawer {
      * @param batch the batch used for drawing. Cannot be changed.
      * @param region the texture region used for drawing. Can be changed later.
      */
-    protected AbstractShapeDrawer(Batch batch, TextureRegion region) {
-        this.batch = batch;
-        setTextureRegion(region);
-        setColor(Color.WHITE);
+
+    AbstractShapeDrawer(Batch batch, TextureRegion region) {
+        if (batch instanceof PolygonBatch) {
+            PolygonBatchManager manager = new PolygonBatchManager((PolygonBatch) batch, region);
+            filledPolygonDrawer = new PolygonBatchFilledPolygonDrawer(manager, this);
+            batchManager = manager;
+        } else {
+            batchManager = new BatchManager(batch, region);
+            filledPolygonDrawer = new BatchFilledPolygonDrawer(batchManager, this);
+        }
+
+        lineDrawer = new LineDrawer(batchManager, this);
+        pathDrawer = new PathDrawer(batchManager, this);
+        polygonDrawer = new PolygonDrawer(batchManager, this);
+
     }
 
 
@@ -98,11 +114,20 @@ public abstract class AbstractShapeDrawer {
      * <p>Makes a guess as to whether joins will be discernible on the screen on based on the thickness of the line.
      * This affects the default behaviour when a {@link JoinType} is unspecified.</p>
      * <p>You can override this if you want to change this behaviour.</p>
-     * @param lineWidth
+     * @param lineWidth the width of the line in world units
      * @return whether drawing joins will likely be discernible
      */
     protected boolean isJoinNecessary(float lineWidth) {
-        return lineWidth > 3 * pixelSize;
+        return lineWidth > 3 * getPixelSize();
+    }
+
+    protected int estimateSidesRequired(float radiusX, float radiusY) {
+        float circumference = (float) (ShapeUtils.PI2 * Math.sqrt((radiusX*radiusX + radiusY*radiusY)/2f));
+        int sides = (int) (circumference / (16 * getPixelSize()));
+        float a = Math.min(radiusX, radiusY), b = Math.max(radiusX, radiusY);
+        float eccentricity = (float) Math.sqrt(1-((a*a) / (b*b)));
+        sides += (sides * eccentricity) / 16;
+        return Math.max(sides, 20);
     }
 
     //================================================================================
@@ -118,11 +143,7 @@ public abstract class AbstractShapeDrawer {
      * @return the previous screen pixel size in world units
      */
     public float setPixelSize(float pixelSize) {
-        float oldPixelSize = this.pixelSize;
-        this.pixelSize = pixelSize;
-        halfPixelSize = 0.5f * pixelSize;
-        offset = ShapeUtils.EPSILON * pixelSize;
-        return oldPixelSize;
+        return batchManager.setPixelSize(pixelSize);
     }
 
     /**
@@ -130,7 +151,7 @@ public abstract class AbstractShapeDrawer {
      * @return the current setting for the pixel size in world units
      */
     public float getPixelSize() {
-        return pixelSize;
+        return batchManager.getPixelSize();
     }
 
     /**
@@ -138,7 +159,7 @@ public abstract class AbstractShapeDrawer {
      * @return the batch this ShapeDrawer was initialised with
      */
     public Batch getBatch() {
-        return batch;
+        return batchManager.getBatch();
     }
 
     /**
@@ -146,7 +167,7 @@ public abstract class AbstractShapeDrawer {
      * @return the current TextureRegion used for drawing
      */
     public TextureRegion getRegion() {
-        return r;
+        return batchManager.getRegion();
     }
 
     /**
@@ -193,17 +214,7 @@ public abstract class AbstractShapeDrawer {
      * @return the previous texture region
      */
     public TextureRegion setTextureRegion(TextureRegion region) {
-        TextureRegion oldRegion = this.r;
-        this.r = region;
-        verts[SpriteBatch.U1] = r.getU();
-        verts[SpriteBatch.V1] = r.getV();
-        verts[SpriteBatch.U2] = r.getU2();
-        verts[SpriteBatch.V2] = r.getV();
-        verts[SpriteBatch.U3] = r.getU2();
-        verts[SpriteBatch.V3] = r.getV2();
-        verts[SpriteBatch.U4] = r.getU();
-        verts[SpriteBatch.V4] = r.getV2();
-        return oldRegion;
+        return batchManager.setTextureRegion(region);
     }
 
     /**
@@ -217,18 +228,13 @@ public abstract class AbstractShapeDrawer {
     }
 
     /**
-     * Sets the colour of the ShapeDrawer. This works just like {@link Batch#setColor(Color)} though drawing is not affected by
-     * the colour of the Batch.
+     * <p>Sets the colour of the ShapeDrawer. This works just like {@link Batch#setColor(Color)} though drawing is not affected by
+     * the colour of the Batch.</p>
      * @param floatBits the packed float value of the colour, see {@link Color#toFloatBits()}.
      * @return the previous packed float value of the ShapeDrawer's colour
      */
     public float setColor(float floatBits) {
-        float oldColor = getPackedColor();
-        verts[SpriteBatch.C1] = floatBits;
-        verts[SpriteBatch.C2] = floatBits;
-        verts[SpriteBatch.C3] = floatBits;
-        verts[SpriteBatch.C4] = floatBits;
-        return oldColor;
+        return batchManager.setColor(floatBits);
     }
 
     /**
@@ -236,45 +242,19 @@ public abstract class AbstractShapeDrawer {
      * @return the packed colour of this ShapeDrawer
      */
     public float getPackedColor() {
-        return verts[SpriteBatch.C1];
+        return batchManager.getPackedColor();
     }
 
-
-    //================================================================================
-    // BATCH UTILITY METHODS
-    //================================================================================
-
-    protected void drawVerts() {
-        batch.draw(r.getTexture(), verts, 0, 20);
+    /**
+     * <p>Sets the packed colour using {@link Color#toFloatBits(float, float, float, float)}.</p>
+     * @param r
+     * @param g
+     * @param b
+     * @param a
+     * @return the packed colour of this ShapeDrawer
+     */
+    public float setColor (float r, float g, float b, float a) {
+        return setColor(Color.toFloatBits(r, g, b, a));
     }
-
-    protected void x1(float x1){verts[SpriteBatch.X1] = x1;}
-    protected void y1(float y1){verts[SpriteBatch.Y1] = y1;}
-    protected void x2(float x2){verts[SpriteBatch.X2] = x2;}
-    protected void y2(float y2){verts[SpriteBatch.Y2] = y2;}
-    protected void x3(float x3){verts[SpriteBatch.X3] = x3;}
-    protected void y3(float y3){verts[SpriteBatch.Y3] = y3;}
-    protected void x4(float x4){verts[SpriteBatch.X4] = x4;}
-    protected void y4(float y4){verts[SpriteBatch.Y4] = y4;}
-    protected void vert1(float x, float y) {x1(x);y1(y);}
-    protected void vert2(float x, float y) {x2(x);y2(y);}
-    protected void vert3(float x, float y) {x3(x);y3(y);}
-    protected void vert4(float x, float y) {x4(x);y4(y);}
-    protected void vert1(Vector2 V) {vert1(V.x, V.y);}
-    protected void vert2(Vector2 V) {vert2(V.x, V.y);}
-    protected void vert3(Vector2 V) {vert3(V.x, V.y);}
-    protected void vert4(Vector2 V) {vert4(V.x, V.y);}
-    protected void vert1(Vector2 V, Vector2 offset) {vert1(V.x+offset.x, V.y+offset.y);}
-    protected void vert2(Vector2 V, Vector2 offset) {vert2(V.x+offset.x, V.y+offset.y);}
-    protected void vert3(Vector2 V, Vector2 offset) {vert3(V.x+offset.x, V.y+offset.y);}
-    protected void vert4(Vector2 V, Vector2 offset) {vert4(V.x+offset.x, V.y+offset.y);}
-    protected float x1() {return verts[SpriteBatch.X1];}
-    protected float y1() {return verts[SpriteBatch.Y1];}
-    protected float x2() {return verts[SpriteBatch.X2];}
-    protected float y2() {return verts[SpriteBatch.Y2];}
-    protected float x3() {return verts[SpriteBatch.X3];}
-    protected float y3() {return verts[SpriteBatch.Y3];}
-    protected float x4() {return verts[SpriteBatch.X4];}
-    protected float y4() {return verts[SpriteBatch.Y4];}
 
 }

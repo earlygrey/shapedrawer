@@ -9,10 +9,12 @@ import com.badlogic.gdx.graphics.Pixmap.Format;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.Batch;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
+import com.badlogic.gdx.graphics.g2d.PolygonSpriteBatch;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer.ShapeType;
+import com.badlogic.gdx.math.EarClippingTriangulator;
 import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.scenes.scene2d.Actor;
@@ -31,10 +33,14 @@ import com.badlogic.gdx.scenes.scene2d.utils.ChangeListener;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 import com.badlogic.gdx.utils.Align;
 import com.badlogic.gdx.utils.Array;
+import com.badlogic.gdx.utils.ShortArray;
+import com.badlogic.gdx.utils.TimeUtils;
 import com.badlogic.gdx.utils.viewport.FitViewport;
 
-import space.earlygrey.shapedrawer.ShapeDrawer;
 import space.earlygrey.shapedrawer.JoinType;
+import space.earlygrey.shapedrawer.ShapeDrawer;
+import space.earlygrey.shapedrawer.ShapeUtils;
+import space.earlygrey.shapedrawer.test.TestUtils.RollingAverage;
 
 public class ShapeDrawerTest extends ApplicationAdapter {
 
@@ -43,12 +49,14 @@ public class ShapeDrawerTest extends ApplicationAdapter {
 	 */
 
 	ShapeDrawer drawer;
-	SpriteBatch batch;
+	Batch batch;
 	Texture texture;
 	Stage stage;
 	Skin skin;
 
 	float[] vertices =  new float[16];
+	ShortArray triangles = new ShortArray();
+	static final EarClippingTriangulator triangulator = new EarClippingTriangulator();
 	Array<Vector2> path = new Array<Vector2>();
 
 	ShapeRenderer sr;
@@ -58,22 +66,31 @@ public class ShapeDrawerTest extends ApplicationAdapter {
 	JoinType joinType = JoinType.POINTY;
 
 	int sides = 8;
-	boolean touched = false;
+	boolean touched = false, closedPath = false;
+	boolean filled = false;
 
 	Table preview, srPreview;
 
 	enum ShapeMode {
-		LINE, PATH, POLYGON, ELLIPSE, RECTANGLE;
+		LINE, PATH, POLYGON, ELLIPSE, ARC, RECTANGLE;
 	}
 
-	float runTime;
+	static float runTime;
 	Vector2 v = new Vector2(), anchor = new Vector2(), v2 = new Vector2();
+
+	RollingAverage average = new RollingAverage(10);
+
+    boolean usePoly = true;
 
 	@Override
 	public void create () {
 
+		if (usePoly) {
+			batch = new PolygonSpriteBatch(32767);
+		} else {
+			batch = new SpriteBatch(8191);
+		}
 
-		batch = new SpriteBatch();
 		stage = new Stage(new FitViewport(Gdx.graphics.getWidth(), Gdx.graphics.getHeight()), batch);
 
 		//create single white pixel
@@ -89,7 +106,7 @@ public class ShapeDrawerTest extends ApplicationAdapter {
 		final Color lightBlue = skin.getColor("light_blue");
 
 		drawer = new ShapeDrawer(batch, region);
-		Color drawColor = lightBlue;
+		Color drawColor = new Color(1,1,1,0.6f);
 		drawer.setColor(drawColor);
 		sr = new ShapeRenderer();
 		sr.setColor(drawColor);
@@ -98,10 +115,12 @@ public class ShapeDrawerTest extends ApplicationAdapter {
 
 		final Label tipLabel = new Label("", skin);
 		final Label drawerMethodLabel = new Label("ShapeDrawer#line()", skin), srMethodLabel = new Label("ShapeRenderer#rectLine()", skin);
-		final Label instructionLabel = new Label("drag in here to adjust", skin);
+		final Label instructionLabel = new Label("drag to move endpoint", skin);
 		instructionLabel.setAlignment(Align.center);
 		final TextButton clearPathButton = new TextButton("Clear", skin);
 		final CheckBox dragPathCheckbox = new CheckBox("drag path", skin);
+		final CheckBox closedPathCheckbox = new CheckBox("closed", skin);
+        final CheckBox filledCheckbox = new CheckBox("filled", skin);
 
 		Table root = new Table();
 		root.setFillParent(true);
@@ -130,8 +149,9 @@ public class ShapeDrawerTest extends ApplicationAdapter {
 						joinSelectorTable.setVisible(false);
 						sidesSelectorTable.setVisible(false);
 						clearPathButton.setVisible(false);
-						//tipLabel.setText("");
-						instructionLabel.setText("drag in here to move endpoint");
+						closedPathCheckbox.setVisible(false);
+                        filledCheckbox.setVisible(false);
+						instructionLabel.setText("drag to move endpoint");
 						dragPathCheckbox.setVisible(false);
 						drawerMethodLabel.setText("ShapeDrawer#line()");
 						srMethodLabel.setText("ShapeRenderer#rectLine()");
@@ -141,7 +161,8 @@ public class ShapeDrawerTest extends ApplicationAdapter {
 						joinSelectorTable.setVisible(true);
 						sidesSelectorTable.setVisible(false);
 						clearPathButton.setVisible(true);
-						//tipLabel.setText("");
+						closedPathCheckbox.setVisible(true);
+                        filledCheckbox.setVisible(false);
 						instructionLabel.setText("click to set a waypoint");
 						dragPathCheckbox.setVisible(true);
 						drawerMethodLabel.setText("ShapeDrawer#path()");
@@ -153,8 +174,9 @@ public class ShapeDrawerTest extends ApplicationAdapter {
 						joinSelectorTable.setVisible(true);
 						sidesSelectorTable.setVisible(true);
 						clearPathButton.setVisible(false);
-						//tipLabel.setText("");
-						instructionLabel.setText("drag in here to adjust\nsize and rotation");
+						closedPathCheckbox.setVisible(false);
+                        filledCheckbox.setVisible(true);
+						instructionLabel.setText("drag to adjust\nsize and rotation");
 						dragPathCheckbox.setVisible(false);
 						drawerMethodLabel.setText("ShapeDrawer#polygon()");
 						srMethodLabel.setText("ShapeRenderer#polygon()");
@@ -164,20 +186,32 @@ public class ShapeDrawerTest extends ApplicationAdapter {
 						joinSelectorTable.setVisible(false);
 						sidesSelectorTable.setVisible(false);
 						clearPathButton.setVisible(false);
-						//tipLabel.setText("");
-						instructionLabel.setText("drag in here to adjust\nsize and rotation");
+						closedPathCheckbox.setVisible(false);
+                        filledCheckbox.setVisible(true);
+						instructionLabel.setText("drag to adjust\nsize and rotation");
 						dragPathCheckbox.setVisible(false);
 						drawerMethodLabel.setText("ShapeDrawer#ellipse()");
 						srMethodLabel.setText("ShapeRenderer#ellipse()");
+						break;
+					case ARC:
+						joinSelectorTable.setVisible(false);
+						sidesSelectorTable.setVisible(false);
+						clearPathButton.setVisible(false);
+						closedPathCheckbox.setVisible(false);
+                        filledCheckbox.setVisible(true);
+						instructionLabel.setText("drag to adjust arc");
+						dragPathCheckbox.setVisible(false);
+						drawerMethodLabel.setText("ShapeDrawer#arc()");
+						srMethodLabel.setText("ShapeRenderer#arc()");
 						break;
 					case RECTANGLE:
 						selectBoxJoin.setSelected(JoinType.POINTY);
 						joinSelectorTable.setVisible(false);
 						sidesSelectorTable.setVisible(false);
 						clearPathButton.setVisible(false);
-						//tipLabel.setText("you can also achieve a rectangle by drawing a polygon with " +
-						//		"4 sides,\nbut if there's no rotation it uses line() and is pixel perfect.");
-						instructionLabel.setText("drag in here to adjust size");
+						closedPathCheckbox.setVisible(false);
+                        filledCheckbox.setVisible(true);
+						instructionLabel.setText("drag to adjust size");
 						dragPathCheckbox.setVisible(false);
 						drawerMethodLabel.setText("ShapeDrawer#rectangle()");
 						srMethodLabel.setText("ShapeRenderer#rect()");
@@ -260,13 +294,15 @@ public class ShapeDrawerTest extends ApplicationAdapter {
 
 
 		controlsTable.add(clearPathButton).padTop(10).space(30);
+		controlsTable.add(closedPathCheckbox).padTop(10).space(30);
+        controlsTable.add(filledCheckbox).padTop(10).space(30);
 		controlsTable.add(shapeSelectorTable).padTop(10).space(30);
 		controlsTable.add(joinSelectorTable).padTop(10).space(30);
 		controlsTable.add(dragPathCheckbox).padTop(10).space(30);
 		controlsTable.row();
-		controlsTable.add(widthSelectorTable).padTop(10).colspan(4);
+		controlsTable.add(widthSelectorTable).padTop(10).colspan(6);
 		controlsTable.row();
-		controlsTable.add(sidesSelectorTable).padTop(10).colspan(4);
+		controlsTable.add(sidesSelectorTable).padTop(10).colspan(6);
 
 
 		root.add(previewTable).pad(2).grow().top().padBottom(10);
@@ -282,23 +318,7 @@ public class ShapeDrawerTest extends ApplicationAdapter {
 				return true;
 			}
 		});
-		root.setTouchable(Touchable.enabled);
-		root.addListener(new InputListener() {
-			@Override
-			public boolean touchDown(InputEvent event, float x, float y, int pointer, int button) {
-				if (shapeMode == ShapeMode.PATH) {
-					path.add(setToMouse(new Vector2()));
-					if (path.size>100) path.removeIndex(0);
-				}
-				return true;
-			}
 
-			@Override
-			public void touchDragged(InputEvent event, float x, float y, int pointer) {
-				//path.add(setToMouse(new Vector2()));
-				//if (path.size>100) path.removeIndex(0);
-			}
-		});
 		preview.setTouchable(Touchable.enabled);
 		preview.addListener(new InputListener() {
 			float lastPathAdditionRuntime;
@@ -339,6 +359,18 @@ public class ShapeDrawerTest extends ApplicationAdapter {
 				path.clear();
 			}
 		});
+		closedPathCheckbox.addListener(new ClickListener() {
+			@Override
+			public void clicked(InputEvent event, float x, float y) {
+				closedPath = closedPathCheckbox.isChecked();
+			}
+		});
+        filledCheckbox.addListener(new ClickListener() {
+            @Override
+            public void clicked(InputEvent event, float x, float y) {
+                filled = !filled;
+            }
+        });
 
 		Gdx.input.setInputProcessor(stage);
 
@@ -349,7 +381,9 @@ public class ShapeDrawerTest extends ApplicationAdapter {
 		joinSelectorTable.setVisible(false);
 		sidesSelectorTable.setVisible(false);
 		clearPathButton.setVisible(false);
+        filledCheckbox.setVisible(false);
 		dragPathCheckbox.setVisible(false);
+		closedPathCheckbox.setVisible(false);
 		preview.localToStageCoordinates(v.set(preview.getWidth(), preview.getHeight()).scl(0.5f));
 
 		anchor.set(stage.getWidth(), stage.getHeight()).scl(0.5f);
@@ -372,12 +406,16 @@ public class ShapeDrawerTest extends ApplicationAdapter {
 			vertices[i+1] = x*sin+y*cos + srY;
 			v2.rotateRad(angleInterval);
 		}
+
+		triangles = triangulator.computeTriangles(vertices);
 	}
 
 	@Override
 	public void render () {
 		Gdx.gl.glClearColor(0f, 0f, 1f, 1f);
 		Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
+        Gdx.gl.glEnable(GL20.GL_BLEND);
+        Gdx.gl.glBlendFunc(GL20.GL_SRC_ALPHA, GL20.GL_ONE_MINUS_SRC_ALPHA);
 
 		runTime += Gdx.graphics.getDeltaTime();
 
@@ -388,8 +426,8 @@ public class ShapeDrawerTest extends ApplicationAdapter {
 		preview.localToStageCoordinates(v.set(preview.getWidth(), preview.getHeight()).scl(0.5f));
 		int x = (int) v.x, y = (int) v.y;
 		float rotation = v.set(anchor).sub(x, y).angleRad();
+		rotation = ShapeUtils.normaliseAngleToPositive(rotation);
 		float scale = anchor.dst(x, y);
-
 
 		switch(shapeMode) {
 			case LINE: default:
@@ -405,18 +443,27 @@ public class ShapeDrawerTest extends ApplicationAdapter {
 					v2.set(p2).sub(x, y).add(srX, srY);
 					sr.rectLine(v.x, v.y, v2.x, v2.y, drawer.getDefaultLineWidth());
 				}
+				if (closedPath && path.size >= 2) {
+					v.set(path.get(path.size-1)).sub(x, y).add(srX, srY);
+					v2.set(path.first()).sub(x, y).add(srX, srY);
+					sr.rectLine(v.x, v.y, v2.x, v2.y, drawer.getDefaultLineWidth());
+				}
 				break;
 			case POLYGON:
 				sr.begin(ShapeType.Line);
 				sr.polygon(vertices);
 				break;
 			case ELLIPSE:
-				sr.begin(ShapeType.Line);
+				sr.begin(filled?ShapeType.Filled:ShapeType.Line);
 				float w = scale, h = 200;
 				sr.ellipse(srX-w, srY-h, 2*w, 2*h, rotation*MathUtils.radiansToDegrees);
 				break;
+			case ARC:
+				sr.begin(filled?ShapeType.Filled:ShapeType.Line);
+				sr.arc(srX, srY, 200, 0, rotation*MathUtils.radiansToDegrees);
+				break;
 			case RECTANGLE:
-				sr.begin(ShapeType.Line);
+				sr.begin(filled?ShapeType.Filled:ShapeType.Line);
 				w = Math.abs(anchor.x - x); h = Math.abs(anchor.y - y);
 				sr.rect(srX-w, srY-h, 2*w, 2*h);
 
@@ -427,36 +474,72 @@ public class ShapeDrawerTest extends ApplicationAdapter {
 
 		batch.begin();
 
+		long time = TimeUtils.nanoTime();
 		switch(shapeMode) {
 			case LINE: default:
-				drawer.line(x, y,anchor.x, anchor.y);
+                drawer.line(x, y,anchor.x, anchor.y);
 				break;
 			case PATH:
-				drawer.path(path, joinType);
+				drawer.path(path, joinType, !closedPath);
 				break;
 			case POLYGON:
-				drawer.polygon(x, y, sides, scale, 200, rotation, joinType);
+				if (filled) {
+					drawer.filledPolygon(x, y, sides, scale, 200, rotation);
+					//drawer.filledPolygon(vertices, triangles);
+				} else {
+					drawer.polygon(x, y, sides, scale, 200, rotation, joinType);
+				}
 				break;
 			case ELLIPSE:
-				drawer.ellipse(x, y, anchor.dst(x, y), 200, rotation);
+				if (filled) {
+					drawer.filledEllipse(x, y, scale, 200, rotation);
+				} else {
+					drawer.ellipse(x, y, scale, 200, rotation);
+				}
+				break;
+			case ARC:
+				if (filled) {
+					drawer.sector(x, y, 200, 0, rotation);
+				} else {
+					drawer.arc(x, y, 200, 0f, rotation);
+				}
 				break;
 			case RECTANGLE:
 				int w = 2 * (int) Math.abs(anchor.x - x), h = 2 * (int) Math.abs(anchor.y - y);
-				drawer.rectangle(x-0.5f*w, y-0.5f*h, w, h);
+				if (filled) {
+					drawer.filledRectangle(x-0.5f*w, y-0.5f*h, w, h);
+				} else {
+					drawer.rectangle(x-0.5f*w, y-0.5f*h, w, h);
+				}
+
 				break;
 		}
 
+		average.add(TimeUtils.nanosToMillis(TimeUtils.timeSinceNanos(time)));
+
 		batch.end();
+
+		int calls = 0;
+		if (batch instanceof PolygonSpriteBatch) {
+			calls = ((PolygonSpriteBatch)batch).renderCalls;
+		} else if (batch instanceof SpriteBatch) {
+			calls = ((SpriteBatch)batch).renderCalls;
+		}
 
 		stage.act();
 		stage.draw();
 
 		batch.begin();
 
-		debugFont.draw(batch, Gdx.graphics.getFramesPerSecond()+"fps", stage.getWidth()-80, 20);
+		debugFont.draw(batch, Gdx.graphics.getFramesPerSecond()+"fps", stage.getWidth()-100, 20);
+		debugFont.draw(batch, "draw: "+average+"ms", stage.getWidth()-100, 40);
+		debugFont.draw(batch, "calls: "+calls, stage.getWidth()-100, 60);
 
 		batch.end();
+
+
 	}
+	
 
 	Vector2 setToMouse(Vector2 vec) {
 		return vec.set(Gdx.input.getX(), Gdx.graphics.getHeight() - Gdx.input.getY());
@@ -467,6 +550,7 @@ public class ShapeDrawerTest extends ApplicationAdapter {
 		super.resize(width, height);
 		stage.getViewport().update(width, height);
 	}
+
 
 	@Override
 	public void dispose () {

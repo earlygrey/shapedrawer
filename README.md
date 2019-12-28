@@ -1,6 +1,6 @@
 # Shape Drawer
 
-[![](https://jitpack.io/v/earlygrey/shapedrawer.svg)](https://jitpack.io/#earlygrey/shapedrawer)
+[![](https://jitpack.io/v/earlygrey/shapedrawer.svg)](https://jitpack.io/#space.earlygrey/shapedrawer)
 
 ---
 
@@ -10,26 +10,32 @@ Draws simple shapes like libgdx's [ShapeRenderer](https://libgdx.badlogicgames.c
 
 Comes with overloaded methods to draw lines, paths, ellipses, regular polygons and rectangles.
 
-Just needs to be provided with a Batch (SpriteBatch or PolygonSpriteBatch will work) and a TextureRegion.
+Just needs to be provided with a Batch and a TextureRegion. However, note that if you want to draw filled shapes, it is more efficient to use a batch that implements [PolygonBatch](https://libgdx.badlogicgames.com/ci/nightlies/docs/api/com/badlogic/gdx/graphics/g2d/PolygonBatch.html) (eg a [PolygonSpriteBatch](https://libgdx.badlogicgames.com/ci/nightlies/docs/api/com/badlogic/gdx/graphics/g2d/PolygonSpriteBatch.html)) instead of a Batch that does not (eg a [SpriteBatch](https://libgdx.badlogicgames.com/ci/nightlies/docs/api/com/badlogic/gdx/graphics/g2d/SpriteBatch.html)).
+
+![Gif didn't load - see wiki for images!](https://media.giphy.com/media/MBwnPWOrbIxQ2kTQja/giphy.gif)
 
 ---
 
 ## Including in Project
 
-To use this in your gradle project, add the following to your root build.gradle file:
+To use this in your gradle project, add the version number and jitpack repository information to your root build.gradle file:
  
-```
+```groovy
 allprojects {
-	repositories {
-		...
-		maven { url 'https://jitpack.io' }
-	}
+    ext {
+    	...
+        shapedrawerVersion = '2.1.0'
+    }
+    repositories {
+	...
+	maven { url 'https://jitpack.io' }
+    }
 }
 ```
 And  in your core project add the dependency:
-```
+```groovy
 dependencies {
-        implementation 'space.earlygrey:shapedrawer:1.0.0'
+    implementation "space.earlygrey:shapedrawer:$shapedrawerVersion"
 }
 ```
 
@@ -43,7 +49,7 @@ project(":html") {
 
     dependencies {
         ...
-        implementation 'space.earlygrey:shapedrawer:1.0.0:sources'
+        implementation "space.earlygrey:shapedrawer:$shapedrawerVersion:sources"
     }
 }
 ```
@@ -53,7 +59,7 @@ And add the following line to the GdxDefinition.gwt.xml file in the HTML project
 <inherits name="space.earlygrey.shapedrawer"/>
 ```
 
-See the [jitpack website](https://jitpack.io/#earlygrey/shapedrawer/-SNAPSHOT) for more info.
+See the [jitpack website](https://jitpack.io/#space.earlygrey/shapedrawer) for more info.
 
 
 ## Usage
