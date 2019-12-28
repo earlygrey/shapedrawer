@@ -1143,7 +1143,7 @@ public class ShapeDrawer extends AbstractShapeDrawer {
      * @param rect a {@link Rectangle} object
      */
     public void filledRectangle(Rectangle rect) {
-        rectangle(rect.x, rect.y, rect.width, rect.height);
+        filledRectangle(rect.x, rect.y, rect.width, rect.height);
     }
 
     /**
