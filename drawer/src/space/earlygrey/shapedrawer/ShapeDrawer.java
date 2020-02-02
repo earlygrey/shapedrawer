@@ -1001,7 +1001,7 @@ public class ShapeDrawer extends AbstractShapeDrawer {
     //====================
 
     /**
-     * <p>Calls {@link #rectangle(Rectangle)} with the current default line width.
+     * <p>Calls {@link #rectangle(Rectangle, float)} with the current default line width.
      * See {@link #rectangle(float, float, float, float, float, JoinType)} for more information.</p>
      * @param rect a {@link Rectangle} object
      */
