@@ -935,6 +935,17 @@ public class ShapeDrawer extends AbstractShapeDrawer {
     }
 
     /**
+     * <p>Calls {@link #filledTriangle(float, float, float, float, float, float, Color)}.</p>
+     * @param v1 coordinates of the first vertex
+     * @param v2 coordinates of the second vertex
+     * @param v3 coordinates of the third vertex
+     * @param color the colour of the triangle
+     */
+    public void filledTriangle(Vector2 v1, Vector2 v2, Vector2 v3, Color color) {
+        filledTriangle(v1.x, v1.y, v2.x, v2.y, v3.x, v3.y, color);
+    }
+
+    /**
      * <p>Calls {@link #filledTriangle(float, float, float, float, float, float, float, float, float)}.</p>
      * @param v1 coordinates of the first vertex
      * @param v2 coordinates of the second vertex
@@ -968,12 +979,27 @@ public class ShapeDrawer extends AbstractShapeDrawer {
      * @param y2 y coordinate of second vertex
      * @param x3 x coordinate of third vertex
      * @param y3 y coordinate of third vertex
-     * @param color1 packed colour of first vertex
-     * @param color2 packed colour of second vertex
-     * @param color3 packed colour of third vertex
+     * @param color1 colour of first vertex
+     * @param color2 colour of second vertex
+     * @param color3 colour of third vertex
      */
     public void filledTriangle(float x1, float y1, float x2, float y2, float x3, float y3, Color color1, Color color2, Color color3) {
         filledTriangle(x1, y1, x2, y2, x3, y3, color1.toFloatBits(), color2.toFloatBits(), color3.toFloatBits());
+    }
+
+    /**
+     * <p>Calls {@link #filledTriangle(float, float, float, float, float, float, float, float, float)}.</p>
+     * @param x1 x coordinate of first vertex
+     * @param y1 y coordinate of first vertex
+     * @param x2 x coordinate of second vertex
+     * @param y2 y coordinate of second vertex
+     * @param x3 x coordinate of third vertex
+     * @param y3 y coordinate of third vertex
+     * @param color colour of the triangle
+     */
+    public void filledTriangle(float x1, float y1, float x2, float y2, float x3, float y3, Color color) {
+        float c = color.toFloatBits();
+        filledTriangle(x1, y1, x2, y2, x3, y3, c, c, c);
     }
 
     /**
@@ -984,9 +1010,9 @@ public class ShapeDrawer extends AbstractShapeDrawer {
      * @param y2 y coordinate of second vertex
      * @param x3 x coordinate of third vertex
      * @param y3 y coordinate of third vertex
-     * @param color1 colour of first vertex
-     * @param color2 colour of second vertex
-     * @param color3 colour of third vertex
+     * @param color1 packed colour of first vertex
+     * @param color2 packed colour of second vertex
+     * @param color3 packed colour of third vertex
      */
     public void filledTriangle(float x1, float y1, float x2, float y2, float x3, float y3, float color1, float color2, float color3) {
         filledPolygonDrawer.triangle(x1, y1, x2, y2, x3, y3, color1, color2, color3);
