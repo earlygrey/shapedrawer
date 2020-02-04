@@ -17,16 +17,6 @@ public class GraphDrawer {
     public ShapeDrawer shapeDrawer;
     
     /**
-     * The {@link Color} of the graph path.
-     */
-    public Color color = new Color(Color.WHITE);
-    
-    /**
-     * The width of the lines used to draw the graph path.
-     */
-    public float lineWidth = 1;
-    
-    /**
      * The type of mitre joint used for connecting the sample points.
      */
     public JoinType joinType = JoinType.SMOOTH;
@@ -90,8 +80,6 @@ public class GraphDrawer {
      * @param y The y coordinate of where the graph will be drawn.
      * @param width The width of the graph drawing.
      * @param height The height of the graph drawing.
-     * @param color The color of the lines used to draw the graph path.
-     * @param lineWidth The width of the lines used to draw the graph path.
      * @param joinType The type of mitre joint used for connecting the sample points.
      * @param samples The number of sample points to estimate the shape of the graph. Increase this for better accuracy
      *                in larger drawings or complicated formulas. Note that the actual number of samples drawn will
@@ -104,9 +92,8 @@ public class GraphDrawer {
      *                below the x axis. Setting rescale = true scales the graph so that y values will stay entirely
      *                inside the height of the graph bounds.
      */
-    public void draw(Interpolation interpolation, float x, float y, float width, float height, Color color,
-                     float lineWidth, JoinType joinType, int samples, float plotBegin, float plotEnd, float domainBegin,
-                     float domainEnd, boolean rescale) {
+    public void draw(Interpolation interpolation, float x, float y, float width, float height, JoinType joinType,
+                     int samples, float plotBegin, float plotEnd, float domainBegin, float domainEnd, boolean rescale) {
         if (plotBegin >= plotEnd) {
             throw new IllegalArgumentException("plotBegin must be less than plotEnd");
         } else if (domainBegin >= domainEnd) {
@@ -168,10 +155,7 @@ public class GraphDrawer {
         }
         
         //Draw the graph.
-        float previousColor = shapeDrawer.getPackedColor();
-        shapeDrawer.setColor(color);
-        shapeDrawer.path(path, lineWidth, joinType, true);
-        shapeDrawer.setColor(previousColor);
+        shapeDrawer.path(path, shapeDrawer.getDefaultLineWidth(), joinType, true);
     }
     
     /**
@@ -184,7 +168,7 @@ public class GraphDrawer {
      * @param height The height of the graph drawing.
      */
     public void draw(Interpolation interpolation, float x, float y, float width, float height) {
-        draw(interpolation, x, y, width, height, color, lineWidth, joinType, samples, plotBegin, plotEnd, domainBegin, domainEnd, rescale);
+        draw(interpolation, x, y, width, height, joinType, samples, plotBegin, plotEnd, domainBegin, domainEnd, rescale);
     }
     
     /**
@@ -195,12 +179,10 @@ public class GraphDrawer {
      * @param y The y coordinate of where the graph will be drawn.
      * @param width The width of the graph drawing.
      * @param height The height of the graph drawing.
-     * @param color The color of the lines used to draw the graph path.
-     * @param lineWidth The width of the lines used to draw the graph path.
      * @param joinType The type of mitre joint used for connecting the sample points.
      */
-    public void draw(Interpolation interpolation, float x, float y, float width, float height, Color color, float lineWidth, JoinType joinType) {
-        draw(interpolation, x, y, width, height, color, lineWidth, joinType, samples, plotBegin, plotEnd, domainBegin, domainEnd, rescale);
+    public void draw(Interpolation interpolation, float x, float y, float width, float height, JoinType joinType) {
+        draw(interpolation, x, y, width, height, joinType, samples, plotBegin, plotEnd, domainBegin, domainEnd, rescale);
     }
     
     /**
@@ -210,7 +192,7 @@ public class GraphDrawer {
      * @param rectangle A rectangle that defines the x, y, width, and height of the graph drawing.
      */
     public void draw(Interpolation interpolation, Rectangle rectangle) {
-        draw(interpolation, rectangle.x, rectangle.y, rectangle.width, rectangle.height, color, lineWidth, joinType, samples, plotBegin, plotEnd, domainBegin, domainEnd, rescale);
+        draw(interpolation, rectangle.x, rectangle.y, rectangle.width, rectangle.height, joinType, samples, plotBegin, plotEnd, domainBegin, domainEnd, rescale);
     }
     
     /**
@@ -221,12 +203,10 @@ public class GraphDrawer {
      * @param interpolation The Interpolation that describes the graph's formula. See {@link Interpolation} for available
      *                      defaults or create your own!
      * @param rectangle A rectangle that defines the x, y, width, and height of the graph drawing.
-     * @param color The color of the lines used to draw the graph path.
-     * @param lineWidth The width of the lines used to draw the graph path.
      * @param joinType The type of mitre joint used for connecting the sample points.
      */
-    public void draw(Interpolation interpolation, Rectangle rectangle, Color color, float lineWidth, JoinType joinType) {
-        draw(interpolation, rectangle.x, rectangle.y, rectangle.width, rectangle.height, color, lineWidth, joinType, samples, plotBegin, plotEnd, domainBegin, domainEnd, rescale);
+    public void draw(Interpolation interpolation, Rectangle rectangle, JoinType joinType) {
+        draw(interpolation, rectangle.x, rectangle.y, rectangle.width, rectangle.height, joinType, samples, plotBegin, plotEnd, domainBegin, domainEnd, rescale);
     }
     
     /**
@@ -243,38 +223,6 @@ public class GraphDrawer {
      */
     public void setShapeDrawer(ShapeDrawer shapeDrawer) {
         this.shapeDrawer = shapeDrawer;
-    }
-    
-    /**
-     * Returns the {@link Color} of the graph path.
-     * @return The {@link Color}
-     */
-    public Color getColor() {
-        return color;
-    }
-    
-    /**
-     * Sets the {@link Color} of the graph path.
-     * @param color The {@link Color}
-     */
-    public void setColor(Color color) {
-        this.color.set(color);
-    }
-    
-    /**
-     * Returns the width of the lines used to draw the graph path.
-     * @return the width of the lines.
-     */
-    public float getLineWidth() {
-        return lineWidth;
-    }
-    
-    /**
-     * Sets the width of the lines used to draw the graph path.
-     * @param lineWidth the width of the lines.
-     */
-    public void setLineWidth(float lineWidth) {
-        this.lineWidth = lineWidth;
     }
     
     /**
