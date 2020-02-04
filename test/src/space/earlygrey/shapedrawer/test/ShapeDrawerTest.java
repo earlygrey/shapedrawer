@@ -15,6 +15,7 @@ import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer.ShapeType;
 import com.badlogic.gdx.math.EarClippingTriangulator;
+import com.badlogic.gdx.math.Interpolation;
 import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.scenes.scene2d.Actor;
@@ -37,6 +38,7 @@ import com.badlogic.gdx.utils.ShortArray;
 import com.badlogic.gdx.utils.TimeUtils;
 import com.badlogic.gdx.utils.viewport.FitViewport;
 
+import space.earlygrey.shapedrawer.GraphDrawer;
 import space.earlygrey.shapedrawer.JoinType;
 import space.earlygrey.shapedrawer.ShapeDrawer;
 import space.earlygrey.shapedrawer.ShapeUtils;
@@ -49,6 +51,7 @@ public class ShapeDrawerTest extends ApplicationAdapter {
 	 */
 
 	ShapeDrawer drawer;
+	GraphDrawer graphDrawer;
 	Batch batch;
 	Texture texture;
 	Stage stage;
@@ -72,7 +75,7 @@ public class ShapeDrawerTest extends ApplicationAdapter {
 	Table preview, srPreview;
 
 	enum ShapeMode {
-		LINE, PATH, POLYGON, ELLIPSE, ARC, RECTANGLE;
+		LINE, PATH, POLYGON, ELLIPSE, ARC, RECTANGLE, GRAPH;
 	}
 
 	static float runTime;
@@ -110,6 +113,8 @@ public class ShapeDrawerTest extends ApplicationAdapter {
 		drawer.setColor(drawColor);
 		sr = new ShapeRenderer();
 		sr.setColor(drawColor);
+		
+		graphDrawer = new GraphDrawer(drawer);
 
 		debugFont = new BitmapFont();
 
@@ -215,6 +220,18 @@ public class ShapeDrawerTest extends ApplicationAdapter {
 						dragPathCheckbox.setVisible(false);
 						drawerMethodLabel.setText("ShapeDrawer#rectangle()");
 						srMethodLabel.setText("ShapeRenderer#rect()");
+						break;
+					case GRAPH:
+						selectBoxJoin.setSelected(JoinType.SMOOTH);
+						joinSelectorTable.setVisible(true);
+						sidesSelectorTable.setVisible(false);
+						clearPathButton.setVisible(false);
+						closedPathCheckbox.setVisible(false);
+						filledCheckbox.setVisible(false);
+						instructionLabel.setText("drag to adjust size");
+						dragPathCheckbox.setVisible(false);
+						drawerMethodLabel.setText("GraphDrawer#draw()");
+						srMethodLabel.setText("N/A");
 						break;
 				}
 			}
@@ -468,6 +485,9 @@ public class ShapeDrawerTest extends ApplicationAdapter {
 				sr.rect(srX-w, srY-h, 2*w, 2*h);
 
 				break;
+			case GRAPH:
+				//no preview for ShapeRenderer because you can only draw graphs with ShapeDrawer
+				break;
 		}
 		sr.end();
 
@@ -512,6 +532,12 @@ public class ShapeDrawerTest extends ApplicationAdapter {
 					drawer.rectangle(x-0.5f*w, y-0.5f*h, w, h);
 				}
 
+				break;
+			case GRAPH:
+				w = 2 * (int) Math.abs(anchor.x - x);
+				h = 2 * (int) Math.abs(anchor.y - y);
+				graphDrawer.setJoinType(joinType);
+				graphDrawer.draw(Interpolation.elastic, x-0.5f*w, y-0.5f*h, w, h);
 				break;
 		}
 
