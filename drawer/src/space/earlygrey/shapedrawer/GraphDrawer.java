@@ -6,8 +6,9 @@ import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.utils.FloatArray;
 
 /**
- * <p>Contains functions for drawing graphs of {@link Interpolation} instances. Use the default interpolations or create
- * your own! GraphDrawer assumes a single, continuous graph formula is provided.</p>
+ * Contains functions for drawing graphs of {@link Interpolation} instances. Use the default interpolations or create
+ * your own! GraphDrawer assumes a single, continuous graph formula is provided.
+ *
  * @author Raymond "Raeleus" Buckley
  */
 public class GraphDrawer {
@@ -47,8 +48,8 @@ public class GraphDrawer {
     public float domainBegin = 0;
     
     /**
-     * Alpha values greater than domainEnd are not plotted. Alpha is the term used to describe the linear value along the
-     * x axis. To show the full graph, domainBegin must equal plotBegin and domainEnd must equal plotEnd.
+     * Alpha values greater than domainEnd are not plotted. Alpha is the term used to describe the linear value along
+     * the x axis. To show the full graph, domainBegin must equal plotBegin and domainEnd must equal plotEnd.
      */
     public float domainEnd = 1;
     
@@ -69,28 +70,31 @@ public class GraphDrawer {
     }
     
     /**
-     * <p>Draws a graph with the specified Interpolation and values. GraphDrawer assumes a single, continuous graph formula.
+     * <p>Draws a graph with the specified Interpolation and values. GraphDrawer assumes a single, continuous graph
+     * formula.
+     * <p>
      * Alpha is the term used to describe the linear value along the x axis. Typical y values are expected to be between
      * 0 and 1 and is scaled to the height of the drawn graph. However, y values can still be outside of this range. See
      * the "rescale" parameter.</p>
      * <p>This method overrides the class provided values</p>
-     * @param interpolation The Interpolation that describes the graph's formula. See {@link Interpolation} for available
-     *                      defaults or create your own!
-     * @param x The x coordinate of where the graph will be drawn.
-     * @param y The y coordinate of where the graph will be drawn.
-     * @param width The width of the graph drawing.
-     * @param height The height of the graph drawing.
-     * @param joinType The type of mitre joint used for connecting the sample points.
-     * @param samples The number of sample points to estimate the shape of the graph. Increase this for better accuracy
-     *                in larger drawings or complicated formulas. Note that the actual number of samples drawn will
-     *                depend on domainBegin and domainEnd. Value must be greater than 2.
-     * @param plotBegin The alpha value to begin plotting at x. Typical interpolations begin at 0.
-     * @param plotEnd The alpha value where plotting ends at x + width. Typical interpolations end at 1.
-     * @param domainBegin Alpha values less than domainBegin are not plotted.
-     * @param domainEnd Alpha values greater than domainEnd are not plotted.
-     * @param rescale Given any particular alpha, the resulting y value can exceed the height of the graph bounds or dip
-     *                below the x axis. Setting rescale = true scales the graph so that y values will stay entirely
-     *                inside the height of the graph bounds.
+     *
+     * @param interpolation The Interpolation that describes the graph's formula. See {@link Interpolation} for
+     *                      available defaults or create your own!
+     * @param x             The x coordinate of where the graph will be drawn.
+     * @param y             The y coordinate of where the graph will be drawn.
+     * @param width         The width of the graph drawing.
+     * @param height        The height of the graph drawing.
+     * @param joinType      The type of mitre joint used for connecting the sample points.
+     * @param samples       The number of sample points to estimate the shape of the graph. Increase this for better
+     *                      accuracy in larger drawings or complicated formulas. Note that the actual number of samples
+     *                      drawn will depend on domainBegin and domainEnd. Value must be greater than 2.
+     * @param plotBegin     The alpha value to begin plotting at x. Typical interpolations begin at 0.
+     * @param plotEnd       The alpha value where plotting ends at x + width. Typical interpolations end at 1.
+     * @param domainBegin   Alpha values less than domainBegin are not plotted.
+     * @param domainEnd     Alpha values greater than domainEnd are not plotted.
+     * @param rescale       Given any particular alpha, the resulting y value can exceed the height of the graph bounds
+     *                      or dip below the x axis. Setting rescale = true scales the graph so that y values will stay
+     *                      entirely inside the height of the graph bounds.
      */
     public void draw(Interpolation interpolation, float x, float y, float width, float height, JoinType joinType,
                      int samples, float plotBegin, float plotEnd, float domainBegin, float domainEnd, boolean rescale) {
@@ -149,7 +153,7 @@ public class GraphDrawer {
             if (high > y + height) {
                 float scale = height / (high - y);
                 for (int i = 1; i < path.size; i += 2) {
-                    path.set(i, (path.get(i) - y) * scale + y ) ;
+                    path.set(i, (path.get(i) - y) * scale + y);
                 }
             }
         }
@@ -159,58 +163,70 @@ public class GraphDrawer {
     }
     
     /**
-     * Draws a graph with the specified Interpolation and values. GraphDrawer assumes a single, continuous graph formula.
-     * @param interpolation The Interpolation that describes the graph's formula. See {@link Interpolation} for available
-     *                      defaults or create your own!
-     * @param x The x coordinate of where the graph will be drawn.
-     * @param y The y coordinate of where the graph will be drawn.
-     * @param width The width of the graph drawing.
-     * @param height The height of the graph drawing.
+     * Draws a graph with the specified Interpolation and values. GraphDrawer assumes a single, continuous graph
+     * formula.
+     *
+     * @param interpolation The Interpolation that describes the graph's formula. See {@link Interpolation} for
+     *                      available defaults or create your own!
+     * @param x             The x coordinate of where the graph will be drawn.
+     * @param y             The y coordinate of where the graph will be drawn.
+     * @param width         The width of the graph drawing.
+     * @param height        The height of the graph drawing.
      */
     public void draw(Interpolation interpolation, float x, float y, float width, float height) {
-        draw(interpolation, x, y, width, height, joinType, samples, plotBegin, plotEnd, domainBegin, domainEnd, rescale);
+        draw(interpolation, x, y, width, height, joinType, samples, plotBegin, plotEnd, domainBegin, domainEnd,
+                rescale);
     }
     
     /**
-     * Draws a graph with the specified Interpolation and values. GraphDrawer assumes a single, continuous graph formula.
-     * @param interpolation The Interpolation that describes the graph's formula. See {@link Interpolation} for available
-     *                      defaults or create your own!
-     * @param x The x coordinate of where the graph will be drawn.
-     * @param y The y coordinate of where the graph will be drawn.
-     * @param width The width of the graph drawing.
-     * @param height The height of the graph drawing.
-     * @param joinType The type of mitre joint used for connecting the sample points.
+     * Draws a graph with the specified Interpolation and values. GraphDrawer assumes a single, continuous graph
+     * formula.
+     *
+     * @param interpolation The Interpolation that describes the graph's formula. See {@link Interpolation} for
+     *                      available defaults or create your own!
+     * @param x             The x coordinate of where the graph will be drawn.
+     * @param y             The y coordinate of where the graph will be drawn.
+     * @param width         The width of the graph drawing.
+     * @param height        The height of the graph drawing.
+     * @param joinType      The type of mitre joint used for connecting the sample points.
      */
     public void draw(Interpolation interpolation, float x, float y, float width, float height, JoinType joinType) {
-        draw(interpolation, x, y, width, height, joinType, samples, plotBegin, plotEnd, domainBegin, domainEnd, rescale);
+        draw(interpolation, x, y, width, height, joinType, samples, plotBegin, plotEnd, domainBegin, domainEnd,
+                rescale);
     }
     
     /**
-     * Draws a graph with the specified Interpolation and values. GraphDrawer assumes a single, continuous graph formula.
-     * @param interpolation The Interpolation that describes the graph's formula. See {@link Interpolation} for available
-     *                      defaults or create your own!
-     * @param rectangle A rectangle that defines the x, y, width, and height of the graph drawing.
+     * Draws a graph with the specified Interpolation and values. GraphDrawer assumes a single, continuous graph
+     * formula.
+     *
+     * @param interpolation The Interpolation that describes the graph's formula. See {@link Interpolation} for
+     *                      available defaults or create your own!
+     * @param rectangle     A rectangle that defines the x, y, width, and height of the graph drawing.
      */
     public void draw(Interpolation interpolation, Rectangle rectangle) {
-        draw(interpolation, rectangle.x, rectangle.y, rectangle.width, rectangle.height, joinType, samples, plotBegin, plotEnd, domainBegin, domainEnd, rescale);
+        draw(interpolation, rectangle.x, rectangle.y, rectangle.width, rectangle.height, joinType, samples, plotBegin,
+                plotEnd, domainBegin, domainEnd, rescale);
     }
     
     /**
-     * Draws a graph with the specified Interpolation and values. GraphDrawer assumes a single, continuous graph formula.
-     * Alpha is the term used to describe the linear value along the x axis. Typical y values are expected to be between
-     * 0 and 1 and is scaled to the height of the drawn graph. However, y values can still be outside of this range. See
-     * the "rescale" parameter.
-     * @param interpolation The Interpolation that describes the graph's formula. See {@link Interpolation} for available
-     *                      defaults or create your own!
-     * @param rectangle A rectangle that defines the x, y, width, and height of the graph drawing.
-     * @param joinType The type of mitre joint used for connecting the sample points.
+     * Draws a graph with the specified Interpolation and values. GraphDrawer assumes a single, continuous graph
+     * formula. Alpha is the term used to describe the linear value along the x axis. Typical y values are expected to
+     * be between 0 and 1 and is scaled to the height of the drawn graph. However, y values can still be outside of this
+     * range. See the "rescale" parameter.
+     *
+     * @param interpolation The Interpolation that describes the graph's formula. See {@link Interpolation} for
+     *                      available defaults or create your own!
+     * @param rectangle     A rectangle that defines the x, y, width, and height of the graph drawing.
+     * @param joinType      The type of mitre joint used for connecting the sample points.
      */
     public void draw(Interpolation interpolation, Rectangle rectangle, JoinType joinType) {
-        draw(interpolation, rectangle.x, rectangle.y, rectangle.width, rectangle.height, joinType, samples, plotBegin, plotEnd, domainBegin, domainEnd, rescale);
+        draw(interpolation, rectangle.x, rectangle.y, rectangle.width, rectangle.height, joinType, samples, plotBegin,
+                plotEnd, domainBegin, domainEnd, rescale);
     }
     
     /**
      * Returns the {@link ShapeDrawer} used to render the graph path.
+     *
      * @return The {@link ShapeDrawer}
      */
     public ShapeDrawer getShapeDrawer() {
@@ -219,6 +235,7 @@ public class GraphDrawer {
     
     /**
      * Sets the {@link ShapeDrawer} used to render the graph path.
+     *
      * @param shapeDrawer The {@link ShapeDrawer}
      */
     public void setShapeDrawer(ShapeDrawer shapeDrawer) {
@@ -227,6 +244,7 @@ public class GraphDrawer {
     
     /**
      * Returns the type of mitre joint used for connecting the sample points.
+     *
      * @return The {@link JoinType}.
      */
     public JoinType getJoinType() {
@@ -235,6 +253,7 @@ public class GraphDrawer {
     
     /**
      * Sets the type of mitre joint used for connecting the sample points.
+     *
      * @param joinType The {@link JoinType}.
      */
     public void setJoinType(JoinType joinType) {
@@ -245,6 +264,7 @@ public class GraphDrawer {
      * Returns the number of sample points to estimate the shape of the graph. An increase in samples means better
      * accuracy in larger drawings or complicated formulas. Note that the actual number of samples drawn will depend on
      * domainBegin and domainEnd.
+     *
      * @return The number of sample points.
      */
     public int getSamples() {
@@ -252,9 +272,10 @@ public class GraphDrawer {
     }
     
     /**
-     * Sets the number of sample points to estimate the shape of the graph. An increase in samples means better
-     * accuracy in larger drawings or complicated formulas. Note that the actual number of samples drawn will depend on
+     * Sets the number of sample points to estimate the shape of the graph. An increase in samples means better accuracy
+     * in larger drawings or complicated formulas. Note that the actual number of samples drawn will depend on
      * domainBegin and domainEnd.
+     *
      * @param samples The number of sample points. Value must be greater than 2.
      */
     public void setSamples(int samples) {
@@ -264,6 +285,7 @@ public class GraphDrawer {
     /**
      * Returns the alpha value to begin plotting at x.  Alpha is the term used to describe the linear value along the x
      * axis. Typical interpolations begin at 0.
+     *
      * @return The beginning alpha value.
      */
     public float getPlotBegin() {
@@ -273,6 +295,7 @@ public class GraphDrawer {
     /**
      * Sets the alpha value to begin plotting at x. Alpha is the term used to describe the linear value along the x
      * axis. Typical interpolations begin at 0.
+     *
      * @param plotBegin The beginning alpha value.
      */
     public void setPlotBegin(float plotBegin) {
@@ -282,6 +305,7 @@ public class GraphDrawer {
     /**
      * Returns the alpha value where plotting ends at x + width. Alpha is the term used to describe the linear value
      * along the x axis. Typical interpolations end at 1.
+     *
      * @return The ending alpha value.
      */
     public float getPlotEnd() {
@@ -291,6 +315,7 @@ public class GraphDrawer {
     /**
      * Sets the alpha value where plotting ends at x + width. Alpha is the term used to describe the linear value along
      * the x axis. Typical interpolations end at 1.
+     *
      * @param plotEnd The ending alpha value.
      */
     public void setPlotEnd(float plotEnd) {
@@ -301,6 +326,7 @@ public class GraphDrawer {
      * Returns the domainBegin value. Alpha values less than domainBegin are not plotted. Alpha is the term used to
      * describe the linear value along the x axis. To show the full graph, domainBegin must equal plotBegin and
      * domainEnd must equal plotEnd.
+     *
      * @return The beginning of the domain.
      */
     public float getDomainBegin() {
@@ -311,6 +337,7 @@ public class GraphDrawer {
      * Sets the domainBegin value. Alpha values less than domainBegin are not plotted. Alpha is the term used to
      * describe the linear value along the x axis. To show the full graph, domainBegin must equal plotBegin and
      * domainEnd must equal plotEnd.
+     *
      * @param domainBegin The beginning of the domain.
      */
     public void setDomainBegin(float domainBegin) {
@@ -321,6 +348,7 @@ public class GraphDrawer {
      * Returns the domainEnd value. Alpha values greater than domainEnd are not plotted. Alpha is the term used to
      * describe the linear value along the x axis. To show the full graph, domainBegin must equal plotBegin and
      * domainEnd must equal plotEnd.
+     *
      * @return The end of the domain.
      */
     public float getDomainEnd() {
@@ -331,6 +359,7 @@ public class GraphDrawer {
      * Sets the domainEnd value. Alpha values greater than domainEnd are not plotted. Alpha is the term used to describe
      * the linear value along the x axis. To show the full graph, domainBegin must equal plotBegin and domainEnd must
      * equal plotEnd.
+     *
      * @param domainEnd The end of the domain.
      */
     public void setDomainEnd(float domainEnd) {
@@ -341,6 +370,7 @@ public class GraphDrawer {
      * Returns the rescale value. Given any particular alpha, the resulting y value can exceed the height of the graph
      * bounds or dip below the x axis. Setting rescale = true scales the graph so that y values will stay entirely
      * inside the height of the graph bounds.
+     *
      * @return The rescale value.
      */
     public boolean isRescale() {
@@ -351,6 +381,7 @@ public class GraphDrawer {
      * Sets the rescale value. Given any particular alpha, the resulting y value can exceed the height of the graph
      * bounds or dip below the x axis. Setting rescale = true scales the graph so that y values will stay entirely
      * inside the height of the graph bounds.
+     *
      * @param rescale The rescale value.
      */
     public void setRescale(boolean rescale) {
