@@ -15,50 +15,50 @@ public class GraphDrawer {
     /**
      * The {@link ShapeDrawer} used to render the graph path.
      */
-    public ShapeDrawer shapeDrawer;
+    private ShapeDrawer shapeDrawer;
     
     /**
      * The type of mitre joint used for connecting the sample points.
      */
-    public JoinType joinType = JoinType.SMOOTH;
+    private JoinType joinType = JoinType.SMOOTH;
     
     /**
      * The number of sample points to estimate the shape of the graph. Increase this for better accuracy in larger
      * drawings or complicated formulas. Note that the actual number of samples drawn will depend on domainBegin and
      * domainEnd. Value must be greater than 2.
      */
-    public int samples = 50;
+    private int samples = 50;
     
     /**
      * The alpha value to begin plotting at x. Typical interpolations begin at 0. Alpha is the term used to describe the
      * linear value along the x axis.
      */
-    public float plotBegin = 0;
+    private float plotBegin = 0;
     
     /**
      * The alpha value where plotting ends at x + width. Typical interpolations end at 1. Alpha is the term used to
      * describe the linear value along the x axis.
      */
-    public float plotEnd = 1;
+    private float plotEnd = 1;
     
     /**
      * Alpha values less than domainBegin are not plotted. Alpha is the term used to describe the linear value along the
      * x axis. To show the full graph, domainBegin must equal plotBegin and domainEnd must equal plotEnd.
      */
-    public float domainBegin = 0;
+    private float domainBegin = 0;
     
     /**
      * Alpha values greater than domainEnd are not plotted. Alpha is the term used to describe the linear value along
      * the x axis. To show the full graph, domainBegin must equal plotBegin and domainEnd must equal plotEnd.
      */
-    public float domainEnd = 1;
+    private float domainEnd = 1;
     
     /**
      * Given any particular alpha, the resulting y value can exceed the height of the graph bounds or dip below the x
      * axis. Setting rescale = true scales the graph so that y values will stay entirely inside the height of the graph
      * bounds.
      */
-    public boolean rescale = true;
+    private boolean rescale = true;
     
     /**
      * Cached FloatArray used to pass sample points to ShapeDrawer for rendering.
