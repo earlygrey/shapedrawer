@@ -1,8 +1,9 @@
-[SNAPSHOT]
+[2.2.0]
 - adds GraphDrawer and GraphDrawerDrawable
 - adds graph drawing to tests
 - a few extra filledTriangle methods
 - corrections for some minor documentation errors
+- fixed filledRectangle(Rectangle rect) calling rectangle()
 
 [2.1.0]
 - added line to build.gradle to set src/ directory to act as a resources directory, for better GWT dependency management
