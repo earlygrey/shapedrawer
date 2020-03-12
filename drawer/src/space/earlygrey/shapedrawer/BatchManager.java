@@ -73,9 +73,11 @@ class BatchManager {
     public TextureRegion setTextureRegion(TextureRegion region) {
         TextureRegion oldRegion = this.r;
         this.r = region;
+        float u = 0.5f * (r.getU() + r.getU2());
+        float v = 0.5f * (r.getV() + r.getV2());
         for (int i = 0; i < verts.length; i+=VERTEX_SIZE) {
-            verts[i + SpriteBatch.U1] = 0.5f * (r.getU() + r.getU2());
-            verts[i + SpriteBatch.V1] = 0.5f * (r.getV() + r.getV2());
+            verts[i + SpriteBatch.U1] = u;
+            verts[i + SpriteBatch.V1] = v;
         }
         return oldRegion;
     }
