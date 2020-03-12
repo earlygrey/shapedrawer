@@ -1,3 +1,6 @@
+[UNRELEASED]
+- fixed bug where pixels outside specified region were sometimes drawn
+
 [2.2.0]
 - adds GraphDrawer and GraphDrawerDrawable
 - adds graph drawing to tests
