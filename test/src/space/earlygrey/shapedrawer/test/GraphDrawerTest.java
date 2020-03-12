@@ -53,7 +53,7 @@ public class GraphDrawerTest extends ApplicationAdapter {
         
         graphDrawerDrawable = new GraphDrawerDrawable(graphDrawer);
         graphDrawerDrawable.setColor(skin.getColor("light_blue"));
-        graphDrawerDrawable.interpolation = Interpolation.elastic;
+        graphDrawerDrawable.setInterpolation(Interpolation.elastic);
         graphDrawerDrawable.setJoinType(JoinType.SMOOTH);
         graphDrawerDrawable.setLineWidth(2);
         graphDrawerDrawable.setSamples(200);
@@ -93,7 +93,7 @@ public class GraphDrawerTest extends ApplicationAdapter {
     
         final SelectBox<JoinType> joinTypeSelectBox = new SelectBox<JoinType>(skin);
         joinTypeSelectBox.setItems(JoinType.values());
-        joinTypeSelectBox.setSelected(graphDrawerDrawable.joinType);
+        joinTypeSelectBox.setSelected(graphDrawerDrawable.getJoinType());
         table.add(joinTypeSelectBox).uniformX().fillX();
         joinTypeSelectBox.addListener(new ChangeListener() {
             @Override
@@ -145,7 +145,7 @@ public class GraphDrawerTest extends ApplicationAdapter {
         label = new Label("Plot Begin:", skin);
         table.add(label);
     
-        final Slider plotBeginSlider = new Slider(-2, graphDrawerDrawable.domainEnd - .01f, .01f, false, skin);
+        final Slider plotBeginSlider = new Slider(-2, graphDrawerDrawable.getDomainEnd() - .01f, .01f, false, skin);
         plotBeginSlider.setValue(graphDrawerDrawable.getDomainBegin());
         table.add(plotBeginSlider);
     
@@ -155,7 +155,7 @@ public class GraphDrawerTest extends ApplicationAdapter {
         label = new Label("Plot End:", skin);
         table.add(label);
     
-        final Slider plotEndSlider = new Slider(graphDrawerDrawable.domainBegin + .01f, 2, .01f, false, skin);
+        final Slider plotEndSlider = new Slider(graphDrawerDrawable.getDomainBegin() + .01f, 2, .01f, false, skin);
         plotEndSlider.setValue(graphDrawerDrawable.getDomainEnd());
         table.add(plotEndSlider);
     
@@ -166,7 +166,7 @@ public class GraphDrawerTest extends ApplicationAdapter {
         label = new Label("Domain Begin:", skin);
         table.add(label);
     
-        final Slider domainBeginSlider = new Slider(graphDrawerDrawable.domainBegin, graphDrawerDrawable.plotEnd - .01f, .01f, false, skin);
+        final Slider domainBeginSlider = new Slider(graphDrawerDrawable.getDomainBegin(), graphDrawerDrawable.getPlotEnd() - .01f, .01f, false, skin);
         domainBeginSlider.setValue(graphDrawerDrawable.getPlotBegin());
         table.add(domainBeginSlider);
     
@@ -176,7 +176,7 @@ public class GraphDrawerTest extends ApplicationAdapter {
         label = new Label("Domain End:", skin);
         table.add(label);
     
-        final Slider domainEndSlider = new Slider(graphDrawerDrawable.plotBegin + .01f, graphDrawerDrawable.domainEnd, .01f, false, skin);
+        final Slider domainEndSlider = new Slider(graphDrawerDrawable.getPlotBegin() + .01f, graphDrawerDrawable.getDomainEnd(), .01f, false, skin);
         domainEndSlider.setValue(graphDrawerDrawable.getPlotEnd());
         table.add(domainEndSlider);
     
@@ -221,7 +221,7 @@ public class GraphDrawerTest extends ApplicationAdapter {
         
         root.row();
         final TextButton textButton = new TextButton("Resize", skin, "toggle");
-        textButton.setChecked(graphDrawerDrawable.rescale);
+        textButton.setChecked(graphDrawerDrawable.isRescale());
         root.add(textButton);
         textButton.addListener(new ChangeListener() {
             @Override
