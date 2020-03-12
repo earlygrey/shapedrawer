@@ -74,8 +74,8 @@ class BatchManager {
         TextureRegion oldRegion = this.r;
         this.r = region;
         for (int i = 0; i < verts.length; i+=VERTEX_SIZE) {
-            verts[i + SpriteBatch.U1] = r.getU();
-            verts[i + SpriteBatch.V1] = r.getV();
+            verts[i + SpriteBatch.U1] = 0.5f * (r.getU() + r.getU2());
+            verts[i + SpriteBatch.V1] = 0.5f * (r.getV() + r.getV2());
         }
         return oldRegion;
     }
