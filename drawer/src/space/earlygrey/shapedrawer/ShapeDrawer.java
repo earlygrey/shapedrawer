@@ -433,7 +433,7 @@ public class ShapeDrawer extends AbstractShapeDrawer {
 
 
     /**
-     * <p>Draws a filled circle by calling {@link #filledEllipse(float, float, float, float, float)} with rotation set to 0
+     * <p>Draws a filled circle (disc) by calling {@link #filledEllipse(float, float, float, float, float)} with rotation set to 0
      * and radiusX and radiusY set to {@code radius}.</p>
      * @param centreX the x-coordinate of the centre point
      * @param centreY the y-coordinate of the centre point
@@ -441,6 +441,41 @@ public class ShapeDrawer extends AbstractShapeDrawer {
      */
     public void filledCircle(float centreX, float centreY, float radius) {
         filledEllipse(centreX, centreY, radius, radius, 0);
+    }
+
+    /**
+     * <p>Draws a filled circle (disc) by calling {@link #filledEllipse(float, float, float, float, float)} with rotation set to 0
+     * and radiusX and radiusY set to {@code radius}.</p>
+     * @param centre the centre of the disc
+     * @param radius the radius
+     */
+    public void filledCircle(Vector2 centre, float radius) {
+        filledEllipse(centre.x, centre.y, radius, radius, 0);
+    }
+
+    /**
+     * <p>Draws a filled circle (disc) by calling {@link #filledEllipse(float, float, float, float, float, float, float)} with rotation set to 0
+     * and radiusX and radiusY set to {@code radius}.</p>
+     * @param centreX the x-coordinate of the centre point
+     * @param centreY the y-coordinate of the centre point
+     * @param radius the radius
+     * @param color the colour of the disc
+     */
+    public void filledCircle(float centreX, float centreY, float radius, Color color) {
+        float c = color.toFloatBits();
+        filledEllipse(centreX, centreY, radius, radius, 0, c, c);
+    }
+
+    /**
+     * <p>Draws a filled circle (disc) by calling {@link #filledEllipse(float, float, float, float, float, float, float)} with rotation set to 0
+     * and radiusX and radiusY set to {@code radius}.</p>
+     * @param centre the centre of the disc
+     * @param radius the radius
+     *  @param color the colour of the disc
+     */
+    public void filledCircle(Vector2 centre, float radius, Color color) {
+        float c = color.toFloatBits();
+        filledEllipse(centre.x, centre.y, radius, radius, 0, c, c);
     }
 
     /**
