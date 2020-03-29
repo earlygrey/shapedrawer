@@ -37,6 +37,11 @@ abstract class FilledPolygonDrawer<T extends BatchManager> extends DrawerTemplat
     }
 
     void rectangle(float x, float y, float width, float height, float rotation) {
+        float c = batchManager.floatBits;
+        rectangle(x, y, width, height, rotation, c, c, c, c);
+    }
+
+    void rectangle(float x, float y, float width, float height, float rotation, float c1, float c2, float c3, float c4) {
         boolean caching = batchManager.isCachingDraws();
         batchManager.ensureSpaceForQuad();
         float cos = (float) Math.cos(rotation), sin = (float) Math.sin(rotation);
@@ -50,8 +55,7 @@ abstract class FilledPolygonDrawer<T extends BatchManager> extends DrawerTemplat
         y3(-halfWidth * sin + (-halfHeight * cos) + centreY);
         x4(halfWidth * cos - (-halfHeight * sin) + centreX);
         y4(halfWidth * sin + (-halfHeight * cos) + centreY);
-        float c = batchManager.floatBits;
-        color(c,c,c,c);
+        color(c1,c2,c3,c4);
         batchManager.pushQuad();
         if (!caching) batchManager.pushToBatch();
     }
