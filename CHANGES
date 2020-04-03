@@ -1,4 +1,6 @@
 [UNRELEASED]
+
+[2.3.0]
 - fixed bug where pixels outside specified region were sometimes drawn
 - fixed errors in GraphDrawerTest caused by GraphDrawerDrawable fields being set to private
 - added methods to colour vertices of filled rectangles
