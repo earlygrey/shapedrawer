@@ -2,10 +2,10 @@ apply plugin: "java"
 
 sourceCompatibility = 1.6
 sourceSets.main.java.srcDirs = [ "src/" ]
-sourceSets.main.resources.srcDirs = ["../test/assets"]
+sourceSets.main.resources.srcDirs = ["assets"]
 
 project.ext.mainClassName = "space.earlygrey.shapedrawer.test.DesktopLauncher"
-project.ext.assetsDir = new File("../test/assets")
+project.ext.assetsDir = new File("assets")
 
 task run(dependsOn: classes, type: JavaExec) {
     main = project.mainClassName
