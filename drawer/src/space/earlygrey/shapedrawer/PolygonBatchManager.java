@@ -4,6 +4,8 @@ import com.badlogic.gdx.graphics.g2d.PolygonBatch;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 
+import space.earlygrey.shapedrawer.Drawing.PolygonDrawing;
+
 class PolygonBatchManager extends BatchManager {
 
     protected short[] triangles;
@@ -18,12 +20,16 @@ class PolygonBatchManager extends BatchManager {
         triangles = new short[trianglesLength];
     }
 
-
     //Note that the constructor ensures that the Batch is a PolygonBatch.
     @Override
     @SuppressWarnings("unchecked")
     public PolygonBatch getBatch() {
         return (PolygonBatch) super.getBatch();
+    }
+
+    @Override
+    Drawing createDrawing() {
+        return new PolygonDrawing(this);
     }
 
     @Override
@@ -80,7 +86,12 @@ class PolygonBatchManager extends BatchManager {
     @Override
     void pushToBatch() {
         if (vertexCount == 0) return;
-        getBatch().draw(r.getTexture(), verts, 0, getVerticesArrayIndex(), triangles, 0, getTrianglesArrayOffset());
+        if (isRecording()) {
+            drawing.pushVertices();
+        } else {
+            getBatch().draw(r.getTexture(), verts, 0, getVerticesArrayIndex(), triangles, 0, getTrianglesArrayOffset());
+        }
+
         vertexCount = 0;
         triangleCount = 0;
     }
