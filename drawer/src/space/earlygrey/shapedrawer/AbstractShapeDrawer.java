@@ -2,10 +2,8 @@ package space.earlygrey.shapedrawer;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Color;
-import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.Batch;
 import com.badlogic.gdx.graphics.g2d.PolygonBatch;
-import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.math.Matrix4;
 
@@ -61,6 +59,23 @@ public abstract class AbstractShapeDrawer {
         pathDrawer = new PathDrawer(batchManager, this);
         polygonDrawer = new PolygonDrawer(batchManager, this);
 
+    }
+
+    /**
+     * Starts recording what is subsequently drawn, so it can be cached later in a {@link Drawing}.
+     * Used in conjunction with {{@link AbstractShapeDrawer#stopRecording()}}.
+     */
+    public void startRecording() {
+        batchManager.startRecording();
+    }
+
+    /**
+     * Stops recording and returns a {@link Drawing}, which can be saved and drawn at any time
+     * without having to perform shape calculations.
+     * @return
+     */
+    public Drawing stopRecording() {
+        return batchManager.stopRecording();
     }
 
 

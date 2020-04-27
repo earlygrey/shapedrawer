@@ -32,6 +32,8 @@ class BatchManager {
 
     protected static final Matrix4 mat4 = new Matrix4();
 
+    Drawing drawing = null;
+
     // These are named just for clarity
     static final int DEFAULT_VERTEX_CACHE_SIZE = 2000;
     static final int VERTEX_SIZE = 5, QUAD_PUSH_SIZE = 4 * VERTEX_SIZE;
@@ -141,9 +143,31 @@ class BatchManager {
     }
 
 
+    //================================================================================
+    // RECORDING
+    //================================================================================
+
+    void startRecording() {
+        drawing = createDrawing();
+    }
+
+    Drawing createDrawing() {
+        return new Drawing(this);
+    }
+
+    Drawing stopRecording() {
+        drawing.finalise();
+        Drawing returnVal = drawing;
+        drawing = null;
+        return returnVal;
+    }
+
+    boolean isRecording() {
+        return drawing != null;
+    }
 
     //================================================================================
-    // DRAWING METHODS
+    // DRAWING
     //================================================================================
 
     void pushVertex() {
@@ -203,7 +227,11 @@ class BatchManager {
      */
     void pushToBatch() {
         if (vertexCount == 0) return;
-        batch.draw(r.getTexture(), verts, 0, getVerticesArrayIndex());
+        if (isRecording()) {
+            drawing.pushVertices();
+        } else {
+            batch.draw(r.getTexture(), verts, 0, getVerticesArrayIndex());
+        }
         vertexCount = 0;
     }
 
