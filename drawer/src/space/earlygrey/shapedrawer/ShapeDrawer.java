@@ -259,6 +259,15 @@ public class ShapeDrawer extends AbstractShapeDrawer {
     }
 
     /**
+     * <p>Calls {@link #path(Array, float, boolean)} with {@code lineWidth} set to the default.</p>
+     * @param path an ordered Array of Vector2s representing path points
+     * @param open if false then the first and last points are connected
+     */
+    public void path(Array<Vector2> path, boolean open) {
+        path(path, defaultLineWidth, open);
+    }
+
+    /**
      *
      * @param path an ordered Array of Vector2s representing path points
      * @param joinType the type of join, see {@link JoinType}
