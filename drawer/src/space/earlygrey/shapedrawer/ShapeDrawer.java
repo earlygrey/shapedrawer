@@ -349,7 +349,18 @@ public class ShapeDrawer extends AbstractShapeDrawer {
     }
 
     /**
-     * <p>Calls {@link #circle(float, float, float, float, JoinType)} with default line width.</p>
+ float)} with default line width.</p>
+     * @param centreX the x-coordinate of the centre point
+     * @param centreY the y-coordinate of the centre point
+     * @param radius the radius
+     */
+    public void circle(float centreX, float centreY, float radius) {
+        circle(centreX, centreY, radius, defaultLineWidth);
+    }
+
+    /**
+     * <p>Calls {@link #circle(float, float, float, float, Color)} with default line width.</p>
+       * <p>Calls {@link #circle(float, float, float, float, JoinType)} with default line width.</p>
      * @param centreX the x-coordinate of the centre point
      * @param centreY the y-coordinate of the centre point
      * @param radius the radius
@@ -360,8 +371,9 @@ public class ShapeDrawer extends AbstractShapeDrawer {
     }
 
     /**
-     * <p>Calls {@link #circle(float, float, float, JoinType)} with joinType set to {@link JoinType#SMOOTH}.</p>
-     * @param centreX the x-coordinate of the centre point
+rdinate of the centre point
+     * @param centreY the y-coordinate of the centre point
+     * @param radius the radius     * @param centreX the x-coordinate of the centre point
      * @param centreY the y-coordinate of the centre point
      * @param radius the radius
      * @param lineWidth the width of the line in world units
@@ -371,7 +383,19 @@ public class ShapeDrawer extends AbstractShapeDrawer {
     }
 
     /**
-     * <p>Calls {@link #ellipse(float, float, float, float, float, float, JoinType)} with rotation set to 0
+
+     * @param centreY the y-coordinate of the centre point
+     * @param radius the radius
+     * @param lineWidth the width of the line in world units
+     */
+    public void circle(float centreX, float centreY, float radius, float lineWidth) {
+        circle(centreX, centreY, radius, lineWidth, isJoinNecessary(lineWidth)?JoinType.SMOOTH:JoinType.NONE);
+    }
+
+    /**
+     * <p>Calls {@link #circle(float, float, float, float, JoinType, Color)} with joinType set to {@link JoinType#SMOOTH}.</p>
+     * @param centreX the x-coordinate of the centre point
+     * @param centreY the y-coordinate     * <p>Calls {@link #ellipse(float, float, float, float, float, float, JoinType)} with rotation set to 0
      * and radiusX and radiusY set to {@code radius}.</p>
      * @param centreX the x-coordinate of the centre point
      * @param centreY the y-coordinate of the centre point
@@ -384,7 +408,20 @@ public class ShapeDrawer extends AbstractShapeDrawer {
     }
 
     /**
-     * <p>Calls {@link #ellipse(float, float, float, float, float, float)} with rotation set to 0 and default line width.</p>
+eY the y-coordinate of the centre point
+     * @param radius the radius
+     * @param lineWidth the width of the line in world units
+     * @param joinType the type of join, see {@link JoinType}
+     */
+    public void circle(float centreX, float centreY, float radius, float lineWidth, JoinType joinType) {
+        ellipse(centreX, centreY, radius, radius, 0, lineWidth, joinType);
+    }
+
+    /**
+     * <p>Calls {@link #ellipse(float, float, float, float, float, float, JoinType, Color)} with rotation set to 0
+     * and radiusX and radiusY set to {@code radius}.</p>
+     * @param centreX the x-coordinate of the centre point
+     * @param centreY the y-coordinate of the centre poin     * <p>Calls {@link #ellipse(float, float, float, float, float, float)} with rotation set to 0 and default line width.</p>
      * @param centreX the x-coordinate of the centre point
      * @param centreY the y-coordinate of the centre point
      * @param radiusX the radius along the x-axis
@@ -436,7 +473,41 @@ public class ShapeDrawer extends AbstractShapeDrawer {
         polygon(centreX, centreY, estimateSidesRequired(radiusX, radiusY), radiusX, radiusY, rotation, lineWidth, joinType);
     }
 
-    //====================
+is
+     * @param rotation the anticlockwise rotation in radians
+     * @param lineWidth the width of the line in world units
+     * @param joinType the type of join, see {@link JoinType}
+     */
+    public void ellipse(float centreX, float centreY, float radiusX, float radiusY, float rotation, float lineWidth, JoinType joinType) {
+        polygon(centreX, centreY, estimateSidesRequired(radiusX, radiusY), radiusX, radiusY, rotation, lineWidth, joinType);
+    }
+
+    /**
+     * <p>Draws an ellipse as a stretched regular polygon, estimating the number of sides required
+     * (see {@link #estimateSidesRequired(float, float)}) to appear smooth enough based on the
+     * pixel size that has been set. Calls {@link #polygon(float, float, int, float, float, float, float, JoinType, float)}.</p>
+     * @param centreX the x-coordinate of the centre point
+     * @param centreY the y-coordinate of the centre point
+     * @param radiusX the radius along the x-axis
+     * @param radiusY the radius along the y-axis
+     * @param rotation the anticlockwise rotation in radians
+     * @param lineWidth the width of the line in world units
+     * @param joinType the type of join, see {@link JoinType}
+     * @param color the colour
+     */
+    public void ellipse(float centreX, float centreY, float radiusX, float radiusY, float rotation, float lineWidth, JoinType joinType, Color color) {
+        polygon(centreX, centreY, estimateSidesRequired(radiusX, radiusY), radiusX, radiusY, rotation, lineWidth, joinType, color.toFloatBits());
+    }
+
+    /**
+     * <p>Draws an ellipse as a stretched regular polygon, estimating the number of sides required
+     * (see {@link #estimateSidesRequired(float, float)}) to appear smooth enough based on the
+     * pixel size that has been set. Calls {@link #polygon(float, float, int, float, float, float, float, JoinType, float)}.</p>
+     * @param centreX the x-coordinate of the centre point
+     * @param centreY the y-coordinate of the centre point
+     * @param radiusX the radius along the x-axis
+     * @param radiusY the radius along the y-axis
+     * @param rotatio    //====================
     //       FILLED
     //====================
 
@@ -753,7 +824,25 @@ public class ShapeDrawer extends AbstractShapeDrawer {
         polygonDrawer.polygon(centreX, centreY, sides, scaleX, scaleY, rotation, lineWidth, joinType, 0, ShapeUtils.PI2);
     }
 
-    //====================
+p>Draws the regular polygon specified by drawing lines between the vertices.</p>
+     *
+     * @param centreX the x-coordinate of the centre point
+     * @param centreY the y-coordinate of the centre point
+     * @param sides the number of sides
+     * @param scaleX the scale along the x-axis
+     * @param scaleY the scale along the y-axis
+     * @param rotation the rotation in radians after scaling
+     * @param lineWidth the width of the line in world units
+     * @param joinType the type of join, see {@link JoinType}
+     */
+    public void polygon(float centreX, float centreY, int sides, float scaleX, float scaleY, float rotation, float lineWidth, JoinType joinType) {
+        polygonDrawer.polygon(centreX, centreY, sides, scaleX, scaleY, rotation, lineWidth, joinType, 0, ShapeUtils.PI2);
+    }
+
+    /**
+     * <p>Draws the regular polygon specified by drawing lines between the vertices.</p>
+     *
+     //====================
     //     FILLED
     //====================
 
