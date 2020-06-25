@@ -28,6 +28,7 @@ public abstract class AbstractShapeDrawer {
 
 
     protected static final Matrix4 mat4 = new Matrix4();
+    protected static final float[] trianglePathPoints = new float[6];
 
     protected final LineDrawer lineDrawer;
     protected final PathDrawer pathDrawer;
@@ -134,6 +135,14 @@ public abstract class AbstractShapeDrawer {
      */
     protected boolean isJoinNecessary(float lineWidth) {
         return lineWidth > 3 * getPixelSize();
+    }
+
+    /**
+     * See {@link AbstractShapeDrawer#isJoinNecessary(float)}.
+     * @return
+     */
+    protected boolean isJoinNecessary() {
+        return isJoinNecessary(getDefaultLineWidth());
     }
 
     protected int estimateSidesRequired(float radiusX, float radiusY) {
