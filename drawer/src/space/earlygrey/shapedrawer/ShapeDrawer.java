@@ -349,18 +349,7 @@ public class ShapeDrawer extends AbstractShapeDrawer {
     }
 
     /**
- float)} with default line width.</p>
-     * @param centreX the x-coordinate of the centre point
-     * @param centreY the y-coordinate of the centre point
-     * @param radius the radius
-     */
-    public void circle(float centreX, float centreY, float radius) {
-        circle(centreX, centreY, radius, defaultLineWidth);
-    }
-
-    /**
-     * <p>Calls {@link #circle(float, float, float, float, Color)} with default line width.</p>
-       * <p>Calls {@link #circle(float, float, float, float, JoinType)} with default line width.</p>
+     * <p>Calls {@link #circle(float, float, float, float, JoinType)} with default line width.</p>
      * @param centreX the x-coordinate of the centre point
      * @param centreY the y-coordinate of the centre point
      * @param radius the radius
@@ -371,31 +360,18 @@ public class ShapeDrawer extends AbstractShapeDrawer {
     }
 
     /**
-rdinate of the centre point
-     * @param centreY the y-coordinate of the centre point
-     * @param radius the radius     * @param centreX the x-coordinate of the centre point
-     * @param centreY the y-coordinate of the centre point
-     * @param radius the radius
-     * @param lineWidth the width of the line in world units
-     */
-    public void circle(float centreX, float centreY, float radius, float lineWidth) {
-        circle(centreX, centreY, radius, lineWidth, isJoinNecessary(lineWidth)?JoinType.SMOOTH:JoinType.NONE);
-    }
-
-    /**
-
-     * @param centreY the y-coordinate of the centre point
-     * @param radius the radius
-     * @param lineWidth the width of the line in world units
-     */
-    public void circle(float centreX, float centreY, float radius, float lineWidth) {
-        circle(centreX, centreY, radius, lineWidth, isJoinNecessary(lineWidth)?JoinType.SMOOTH:JoinType.NONE);
-    }
-
-    /**
-     * <p>Calls {@link #circle(float, float, float, float, JoinType, Color)} with joinType set to {@link JoinType#SMOOTH}.</p>
+     * <p>Calls {@link #circle(float, float, float, JoinType)} with joinType set to {@link JoinType#SMOOTH}.</p>
      * @param centreX the x-coordinate of the centre point
-     * @param centreY the y-coordinate     * <p>Calls {@link #ellipse(float, float, float, float, float, float, JoinType)} with rotation set to 0
+     * @param centreY the y-coordinate of the centre point
+     * @param radius the radius
+     * @param lineWidth the width of the line in world units
+     */
+    public void circle(float centreX, float centreY, float radius, float lineWidth) {
+        circle(centreX, centreY, radius, lineWidth, isJoinNecessary(lineWidth)?JoinType.SMOOTH:JoinType.NONE);
+    }
+
+    /**
+     * <p>Calls {@link #ellipse(float, float, float, float, float, float, JoinType)} with rotation set to 0
      * and radiusX and radiusY set to {@code radius}.</p>
      * @param centreX the x-coordinate of the centre point
      * @param centreY the y-coordinate of the centre point
@@ -408,20 +384,7 @@ rdinate of the centre point
     }
 
     /**
-eY the y-coordinate of the centre point
-     * @param radius the radius
-     * @param lineWidth the width of the line in world units
-     * @param joinType the type of join, see {@link JoinType}
-     */
-    public void circle(float centreX, float centreY, float radius, float lineWidth, JoinType joinType) {
-        ellipse(centreX, centreY, radius, radius, 0, lineWidth, joinType);
-    }
-
-    /**
-     * <p>Calls {@link #ellipse(float, float, float, float, float, float, JoinType, Color)} with rotation set to 0
-     * and radiusX and radiusY set to {@code radius}.</p>
-     * @param centreX the x-coordinate of the centre point
-     * @param centreY the y-coordinate of the centre poin     * <p>Calls {@link #ellipse(float, float, float, float, float, float)} with rotation set to 0 and default line width.</p>
+     * <p>Calls {@link #ellipse(float, float, float, float, float, float)} with rotation set to 0 and default line width.</p>
      * @param centreX the x-coordinate of the centre point
      * @param centreY the y-coordinate of the centre point
      * @param radiusX the radius along the x-axis
@@ -473,41 +436,7 @@ eY the y-coordinate of the centre point
         polygon(centreX, centreY, estimateSidesRequired(radiusX, radiusY), radiusX, radiusY, rotation, lineWidth, joinType);
     }
 
-is
-     * @param rotation the anticlockwise rotation in radians
-     * @param lineWidth the width of the line in world units
-     * @param joinType the type of join, see {@link JoinType}
-     */
-    public void ellipse(float centreX, float centreY, float radiusX, float radiusY, float rotation, float lineWidth, JoinType joinType) {
-        polygon(centreX, centreY, estimateSidesRequired(radiusX, radiusY), radiusX, radiusY, rotation, lineWidth, joinType);
-    }
-
-    /**
-     * <p>Draws an ellipse as a stretched regular polygon, estimating the number of sides required
-     * (see {@link #estimateSidesRequired(float, float)}) to appear smooth enough based on the
-     * pixel size that has been set. Calls {@link #polygon(float, float, int, float, float, float, float, JoinType, float)}.</p>
-     * @param centreX the x-coordinate of the centre point
-     * @param centreY the y-coordinate of the centre point
-     * @param radiusX the radius along the x-axis
-     * @param radiusY the radius along the y-axis
-     * @param rotation the anticlockwise rotation in radians
-     * @param lineWidth the width of the line in world units
-     * @param joinType the type of join, see {@link JoinType}
-     * @param color the colour
-     */
-    public void ellipse(float centreX, float centreY, float radiusX, float radiusY, float rotation, float lineWidth, JoinType joinType, Color color) {
-        polygon(centreX, centreY, estimateSidesRequired(radiusX, radiusY), radiusX, radiusY, rotation, lineWidth, joinType, color.toFloatBits());
-    }
-
-    /**
-     * <p>Draws an ellipse as a stretched regular polygon, estimating the number of sides required
-     * (see {@link #estimateSidesRequired(float, float)}) to appear smooth enough based on the
-     * pixel size that has been set. Calls {@link #polygon(float, float, int, float, float, float, float, JoinType, float)}.</p>
-     * @param centreX the x-coordinate of the centre point
-     * @param centreY the y-coordinate of the centre point
-     * @param radiusX the radius along the x-axis
-     * @param radiusY the radius along the y-axis
-     * @param rotatio    //====================
+    //====================
     //       FILLED
     //====================
 
@@ -824,25 +753,7 @@ is
         polygonDrawer.polygon(centreX, centreY, sides, scaleX, scaleY, rotation, lineWidth, joinType, 0, ShapeUtils.PI2);
     }
 
-p>Draws the regular polygon specified by drawing lines between the vertices.</p>
-     *
-     * @param centreX the x-coordinate of the centre point
-     * @param centreY the y-coordinate of the centre point
-     * @param sides the number of sides
-     * @param scaleX the scale along the x-axis
-     * @param scaleY the scale along the y-axis
-     * @param rotation the rotation in radians after scaling
-     * @param lineWidth the width of the line in world units
-     * @param joinType the type of join, see {@link JoinType}
-     */
-    public void polygon(float centreX, float centreY, int sides, float scaleX, float scaleY, float rotation, float lineWidth, JoinType joinType) {
-        polygonDrawer.polygon(centreX, centreY, sides, scaleX, scaleY, rotation, lineWidth, joinType, 0, ShapeUtils.PI2);
-    }
-
-    /**
-     * <p>Draws the regular polygon specified by drawing lines between the vertices.</p>
-     *
-     //====================
+    //====================
     //     FILLED
     //====================
 
@@ -1052,6 +963,104 @@ p>Draws the regular polygon specified by drawing lines between the vertices.</p>
         filledPolygonDrawer.polygon(vertices, triangles);
     }
 
+
+    //====================
+    //  FILLED TRIANGLES
+    //====================
+
+    /**
+     * <p>Calls {@link #filledTriangle(float, float, float, float, float, float)}.</p>
+     * @param v1 coordinates of the first vertex
+     * @param v2 coordinates of the second vertex
+     * @param v3 coordinates of the third vertex
+     */
+    public void filledTriangle(Vector2 v1, Vector2 v2, Vector2 v3) {
+        filledTriangle(v1.x, v1.y, v2.x, v2.y, v3.x, v3.y);
+    }
+
+    /**
+     * <p>Calls {@link #filledTriangle(float, float, float, float, float, float, Color)}.</p>
+     * @param v1 coordinates of the first vertex
+     * @param v2 coordinates of the second vertex
+     * @param v3 coordinates of the third vertex
+     * @param color the colour of the triangle
+     */
+    public void filledTriangle(Vector2 v1, Vector2 v2, Vector2 v3, Color color) {
+        filledTriangle(v1.x, v1.y, v2.x, v2.y, v3.x, v3.y, color);
+    }
+
+    /**
+     * <p>Calls {@link #filledTriangle(float, float, float, float, float, float, float, float, float)}.</p>
+     * @param v1 coordinates of the first vertex
+     * @param v2 coordinates of the second vertex
+     * @param v3 coordinates of the third vertex
+     * @param color1 colour of first vertex
+     * @param color2 colour of second vertex
+     * @param color3 colour of third vertex
+     */
+    public void filledTriangle(Vector2 v1, Vector2 v2, Vector2 v3, Color color1, Color color2, Color color3) {
+        filledTriangle(v1.x, v1.y, v2.x, v2.y, v3.x, v3.y, color1.toFloatBits(), color2.toFloatBits(), color3.toFloatBits());
+    }
+
+    /**
+     * <p>Calls {@link #filledTriangle(float, float, float, float, float, float, float, float, float)} with the drawer's current colour.</p>
+     * @param x1 x coordinate of first vertex
+     * @param y1 y coordinate of first vertex
+     * @param x2 x coordinate of second vertex
+     * @param y2 y coordinate of second vertex
+     * @param x3 x coordinate of third vertex
+     * @param y3 y coordinate of third vertex
+     */
+    public void filledTriangle(float x1, float y1, float x2, float y2, float x3, float y3) {
+        filledTriangle(x1, y1, x2, y2, x3, y3, batchManager.floatBits, batchManager.floatBits, batchManager.floatBits);
+    }
+
+    /**
+     * <p>Calls {@link #filledTriangle(float, float, float, float, float, float, float, float, float)}.</p>
+     * @param x1 x coordinate of first vertex
+     * @param y1 y coordinate of first vertex
+     * @param x2 x coordinate of second vertex
+     * @param y2 y coordinate of second vertex
+     * @param x3 x coordinate of third vertex
+     * @param y3 y coordinate of third vertex
+     * @param color1 colour of first vertex
+     * @param color2 colour of second vertex
+     * @param color3 colour of third vertex
+     */
+    public void filledTriangle(float x1, float y1, float x2, float y2, float x3, float y3, Color color1, Color color2, Color color3) {
+        filledTriangle(x1, y1, x2, y2, x3, y3, color1.toFloatBits(), color2.toFloatBits(), color3.toFloatBits());
+    }
+
+    /**
+     * <p>Calls {@link #filledTriangle(float, float, float, float, float, float, float, float, float)}.</p>
+     * @param x1 x coordinate of first vertex
+     * @param y1 y coordinate of first vertex
+     * @param x2 x coordinate of second vertex
+     * @param y2 y coordinate of second vertex
+     * @param x3 x coordinate of third vertex
+     * @param y3 y coordinate of third vertex
+     * @param color colour of the triangle
+     */
+    public void filledTriangle(float x1, float y1, float x2, float y2, float x3, float y3, Color color) {
+        float c = color.toFloatBits();
+        filledTriangle(x1, y1, x2, y2, x3, y3, c, c, c);
+    }
+
+    /**
+     * <p>Draws a filled triangle with the specified vertices and colours.</p>
+     * @param x1 x coordinate of first vertex
+     * @param y1 y coordinate of first vertex
+     * @param x2 x coordinate of second vertex
+     * @param y2 y coordinate of second vertex
+     * @param x3 x coordinate of third vertex
+     * @param y3 y coordinate of third vertex
+     * @param color1 packed colour of first vertex
+     * @param color2 packed colour of second vertex
+     * @param color3 packed colour of third vertex
+     */
+    public void filledTriangle(float x1, float y1, float x2, float y2, float x3, float y3, float color1, float color2, float color3) {
+        filledPolygonDrawer.triangle(x1, y1, x2, y2, x3, y3, color1, color2, color3);
+    }
 
     //=======================================
     //              RECTANGLES
@@ -1377,252 +1386,3 @@ p>Draws the regular polygon specified by drawing lines between the vertices.</p>
     }
 
 }
-    //=======================================
-    //              TRIANGLES
-    //=======================================
-
-    //====================
-    //     OUTLINED
-    //====================
-
-    /**
-     * Calls {@link #triangle(Vector2, Vector2, Vector2, float)}.
-     * @param v1 the first vertex
-     * @param v2 the second vertex
-     * @param v3 the third vertex
-     */
-    public void triangle(Vector2 v1, Vector2 v2, Vector2 v3) {
-        triangle(v1, v2, v3, getDefaultLineWidth());
-    }
-
-    /**
-     * Calls {@link #triangle(Vector2, Vector2, Vector2, float, float)}.
-     * @param v1 the first vertex
-     * @param v2 the second vertex
-     * @param v3 the third vertex
-     * @param color the packed float colour
-     */
-    public void triangle(Vector2 v1, Vector2 v2, Vector2 v3, Color color) {
-        triangle(v1, v2, v3, getDefaultLineWidth(), color.toFloatBits());
-    }
-
-    /**
-     * Calls {@link #triangle(Vector2, Vector2, Vector2, float, float)}.
-     * @param v1 the first vertex
-     * @param v2 the second vertex
-     * @param v3 the third vertex
-     * @param lineWidth
-     */
-    public void triangle(Vector2 v1, Vector2 v2, Vector2 v3, float lineWidth) {
-        triangle(v1, v2, v3, lineWidth, getPackedColor());
-    }
-
-    /**
-     * Calls {@link #triangle(Vector2, Vector2, Vector2, float, JoinType, float)}.
-     * @param v1 the first vertex
-     * @param v2 the second vertex
-     * @param v3 the third vertex
-     * @param lineWidth
-     * @param color the packed float colour
-     */
-    public void triangle(Vector2 v1, Vector2 v2, Vector2 v3, float lineWidth, float color) {
-        triangle(v1, v2, v3, lineWidth, isJoinNecessary(lineWidth)?JoinType.POINTY:JoinType.NONE, color);
-    }
-
-    /**
-     * Calls {@link #triangle(float, float, float, float, float, float, float, JoinType, float)}.
-     * @param v1 the first vertex
-     * @param v2 the second vertex
-     * @param v3 the third vertex
-     * @param lineWidth
-     * @param joinType the type of join, see {@link JoinType}
-     * @param color the packed float colour
-     */
-    public void triangle(Vector2 v1, Vector2 v2, Vector2 v3, float lineWidth, JoinType joinType, float color) {
-        triangle(v1.x, v1.y, v2.x, v2.y, v3.x, v3.y, lineWidth, joinType, color);
-    }
-
-    /**
-     * Calls {@link #triangle(float, float, float, float, float, float, float)} with the current drawer colour.
-     * @param x1 x coord of first vertex
-     * @param y1 y coord of first vertex
-     * @param x2 x coord of second vertex
-     * @param y2 y coord of second vertex
-     * @param x3 x coord of third vertex
-     * @param y3 y coord of third vertex
-     */
-    public void triangle(float x1, float y1, float x2, float y2, float x3, float y3) {
-        triangle(x1, y1, x2, y2, x3, y3, getDefaultLineWidth());
-    }
-
-    /**
-     * Calls {@link #triangle(float, float, float, float, float, float, float, JoinType, float)}.
-     * @param x1 x coord of first vertex
-     * @param y1 y coord of first vertex
-     * @param x2 x coord of second vertex
-     * @param y2 y coord of second vertex
-     * @param x3 x coord of third vertex
-     * @param y3 y coord of third vertex
-     * @param color the packed float colour
-     */
-    public void triangle(float x1, float y1, float x2, float y2, float x3, float y3, Color color) {
-        triangle(x1, y1, x2, y2, x3, y3, getDefaultLineWidth(), isJoinNecessary()?JoinType.POINTY:JoinType.NONE, color.toFloatBits());
-    }
-
-    /**
-     * Calls {@link #triangle(float, float, float, float, float, float, float, JoinType, float) with the current drawer colour.
-     * @param x1 x coord of first vertex
-     * @param y1 y coord of first vertex
-     * @param x2 x coord of second vertex
-     * @param y2 y coord of second vertex
-     * @param x3 x coord of third vertex
-     * @param y3 y coord of third vertex
-     * @param lineWidth
-     */
-    public void triangle(float x1, float y1, float x2, float y2, float x3, float y3, float lineWidth) {
-        triangle(x1, y1, x2, y2, x3, y3, lineWidth, isJoinNecessary(lineWidth)?JoinType.POINTY:JoinType.NONE, getPackedColor());
-    }
-
-    /**
-     * Calls {@link #triangle(float, float, float, float, float, float, float, JoinType, float)}.
-     * @param x1 x coord of first vertex
-     * @param y1 y coord of first vertex
-     * @param x2 x coord of second vertex
-     * @param y2 y coord of second vertex
-     * @param x3 x coord of third vertex
-     * @param y3 y coord of third vertex
-     * @param lineWidth
-     * @param color the packed float colour
-     */
-    public void triangle(float x1, float y1, float x2, float y2, float x3, float y3, float lineWidth, float color) {
-        triangle(x1, y1, x2, y2, x3, y3, lineWidth, isJoinNecessary(lineWidth)?JoinType.POINTY:JoinType.NONE, color);
-    }
-
-    /**
-     * Draws a triangle with the specified vertices and colour.
-     * @param x1 x coord of first vertex
-     * @param y1 y coord of first vertex
-     * @param x2 x coord of second vertex
-     * @param y2 y coord of second vertex
-     * @param x3 x coord of third vertex
-     * @param y3 y coord of third vertex
-     * @param lineWidth 
-     * @param joinType the type of join, see {@link JoinType}
-     * @param color the packed float colour
-     */
-    public void triangle(float x1, float y1, float x2, float y2, float x3, float y3, float lineWidth, JoinType joinType, float color) {
-        float c = setColor(color);
-        if (joinType == JoinType.NONE) {
-            line(x1, y1, x2, y2);
-            line(x2, y2, x3, y3);
-            line(x3, y3, x1, y1);
-        } else {
-            trianglePathPoints[0] = x1;
-            trianglePathPoints[1] = y1;
-            trianglePathPoints[2] = x2;
-            trianglePathPoints[3] = y2;
-            trianglePathPoints[4] = x3;
-            trianglePathPoints[5] = y3;
-            pathDrawer.path(trianglePathPoints, lineWidth, joinType, false);
-        }
-        setColor(c);
-    }
-
-    //====================
-    //      FILLED
-    //====================
-
-    /**
-     * <p>Calls {@link #filledTriangle(float, float, float, float, float, float)}.</p>
-     * @param v1 coordinates of the first vertex
-     * @param v2 coordinates of the second vertex
-     * @param v3 coordinates of the third vertex
-     */
-    public void filledTriangle(Vector2 v1, Vector2 v2, Vector2 v3) {
-        filledTriangle(v1.x, v1.y, v2.x, v2.y, v3.x, v3.y);
-    }
-
-    /**
-     * <p>Calls {@link #filledTriangle(float, float, float, float, float, float, Color)}.</p>
-     * @param v1 coordinates of the first vertex
-     * @param v2 coordinates of the second vertex
-     * @param v3 coordinates of the third vertex
-     * @param color the colour of the triangle
-     */
-    public void filledTriangle(Vector2 v1, Vector2 v2, Vector2 v3, Color color) {
-        filledTriangle(v1.x, v1.y, v2.x, v2.y, v3.x, v3.y, color);
-    }
-
-    /**
-     * <p>Calls {@link #filledTriangle(float, float, float, float, float, float, float, float, float)}.</p>
-     * @param v1 coordinates of the first vertex
-     * @param v2 coordinates of the second vertex
-     * @param v3 coordinates of the third vertex
-     * @param color1 colour of first vertex
-     * @param color2 colour of second vertex
-     * @param color3 colour of third vertex
-     */
-    public void filledTriangle(Vector2 v1, Vector2 v2, Vector2 v3, Color color1, Color color2, Color color3) {
-        filledTriangle(v1.x, v1.y, v2.x, v2.y, v3.x, v3.y, color1.toFloatBits(), color2.toFloatBits(), color3.toFloatBits());
-    }
-
-    /**
-     * <p>Calls {@link #filledTriangle(float, float, float, float, float, float, float, float, float)} with the drawer's current colour.</p>
-     * @param x1 x coordinate of first vertex
-     * @param y1 y coordinate of first vertex
-     * @param x2 x coordinate of second vertex
-     * @param y2 y coordinate of second vertex
-     * @param x3 x coordinate of third vertex
-     * @param y3 y coordinate of third vertex
-     */
-    public void filledTriangle(float x1, float y1, float x2, float y2, float x3, float y3) {
-        filledTriangle(x1, y1, x2, y2, x3, y3, batchManager.floatBits, batchManager.floatBits, batchManager.floatBits);
-    }
-
-    /**
-     * <p>Calls {@link #filledTriangle(float, float, float, float, float, float, float, float, float)}.</p>
-     * @param x1 x coordinate of first vertex
-     * @param y1 y coordinate of first vertex
-     * @param x2 x coordinate of second vertex
-     * @param y2 y coordinate of second vertex
-     * @param x3 x coordinate of third vertex
-     * @param y3 y coordinate of third vertex
-     * @param color1 colour of first vertex
-     * @param color2 colour of second vertex
-     * @param color3 colour of third vertex
-     */
-    public void filledTriangle(float x1, float y1, float x2, float y2, float x3, float y3, Color color1, Color color2, Color color3) {
-        filledTriangle(x1, y1, x2, y2, x3, y3, color1.toFloatBits(), color2.toFloatBits(), color3.toFloatBits());
-    }
-
-    /**
-     * <p>Calls {@link #filledTriangle(float, float, float, float, float, float, float, float, float)}.</p>
-     * @param x1 x coordinate of first vertex
-     * @param y1 y coordinate of first vertex
-     * @param x2 x coordinate of second vertex
-     * @param y2 y coordinate of second vertex
-     * @param x3 x coordinate of third vertex
-     * @param y3 y coordinate of third vertex
-     * @param color colour of the triangle
-     */
-    public void filledTriangle(float x1, float y1, float x2, float y2, float x3, float y3, Color color) {
-        float c = color.toFloatBits();
-        filledTriangle(x1, y1, x2, y2, x3, y3, c, c, c);
-    }
-
-    /**
-     * <p>Draws a filled triangle with the specified vertices and colours.</p>
-     * @param x1 x coordinate of first vertex
-     * @param y1 y coordinate of first vertex
-     * @param x2 x coordinate of second vertex
-     * @param y2 y coordinate of second vertex
-     * @param x3 x coordinate of third vertex
-     * @param y3 y coordinate of third vertex
-     * @param color1 packed colour of first vertex
-     * @param color2 packed colour of second vertex
-     * @param color3 packed colour of third vertex
-     */
-    public void filledTriangle(float x1, float y1, float x2, float y2, float x3, float y3, float color1, float color2, float color3) {
-        filledPolygonDrawer.triangle(x1, y1, x2, y2, x3, y3, color1, color2, color3);
-    }
-
