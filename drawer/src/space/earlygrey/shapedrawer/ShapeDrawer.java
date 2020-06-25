@@ -964,8 +964,159 @@ public class ShapeDrawer extends AbstractShapeDrawer {
     }
 
 
+    //=======================================
+    //              TRIANGLES
+    //=======================================
+
     //====================
-    //  FILLED TRIANGLES
+    //     OUTLINED
+    //====================
+
+    /**
+     * Calls {@link #triangle(Vector2, Vector2, Vector2, float)}.
+     * @param v1 the first vertex
+     * @param v2 the second vertex
+     * @param v3 the third vertex
+     */
+    public void triangle(Vector2 v1, Vector2 v2, Vector2 v3) {
+        triangle(v1, v2, v3, getDefaultLineWidth());
+    }
+
+    /**
+     * Calls {@link #triangle(Vector2, Vector2, Vector2, float, float)}.
+     * @param v1 the first vertex
+     * @param v2 the second vertex
+     * @param v3 the third vertex
+     * @param color the packed float colour
+     */
+    public void triangle(Vector2 v1, Vector2 v2, Vector2 v3, Color color) {
+        triangle(v1, v2, v3, getDefaultLineWidth(), color.toFloatBits());
+    }
+
+    /**
+     * Calls {@link #triangle(Vector2, Vector2, Vector2, float, float)}.
+     * @param v1 the first vertex
+     * @param v2 the second vertex
+     * @param v3 the third vertex
+     * @param lineWidth
+     */
+    public void triangle(Vector2 v1, Vector2 v2, Vector2 v3, float lineWidth) {
+        triangle(v1, v2, v3, lineWidth, getPackedColor());
+    }
+
+    /**
+     * Calls {@link #triangle(Vector2, Vector2, Vector2, float, JoinType, float)}.
+     * @param v1 the first vertex
+     * @param v2 the second vertex
+     * @param v3 the third vertex
+     * @param lineWidth
+     * @param color the packed float colour
+     */
+    public void triangle(Vector2 v1, Vector2 v2, Vector2 v3, float lineWidth, float color) {
+        triangle(v1, v2, v3, lineWidth, isJoinNecessary(lineWidth)?JoinType.POINTY:JoinType.NONE, color);
+    }
+
+    /**
+     * Calls {@link #triangle(float, float, float, float, float, float, float, JoinType, float)}.
+     * @param v1 the first vertex
+     * @param v2 the second vertex
+     * @param v3 the third vertex
+     * @param lineWidth
+     * @param joinType the type of join, see {@link JoinType}
+     * @param color the packed float colour
+     */
+    public void triangle(Vector2 v1, Vector2 v2, Vector2 v3, float lineWidth, JoinType joinType, float color) {
+        triangle(v1.x, v1.y, v2.x, v2.y, v3.x, v3.y, lineWidth, joinType, color);
+    }
+
+    /**
+     * Calls {@link #triangle(float, float, float, float, float, float, float)} with the current drawer colour.
+     * @param x1 x coord of first vertex
+     * @param y1 y coord of first vertex
+     * @param x2 x coord of second vertex
+     * @param y2 y coord of second vertex
+     * @param x3 x coord of third vertex
+     * @param y3 y coord of third vertex
+     */
+    public void triangle(float x1, float y1, float x2, float y2, float x3, float y3) {
+        triangle(x1, y1, x2, y2, x3, y3, getDefaultLineWidth());
+    }
+
+    /**
+     * Calls {@link #triangle(float, float, float, float, float, float, float, JoinType, float)}.
+     * @param x1 x coord of first vertex
+     * @param y1 y coord of first vertex
+     * @param x2 x coord of second vertex
+     * @param y2 y coord of second vertex
+     * @param x3 x coord of third vertex
+     * @param y3 y coord of third vertex
+     * @param color the packed float colour
+     */
+    public void triangle(float x1, float y1, float x2, float y2, float x3, float y3, Color color) {
+        triangle(x1, y1, x2, y2, x3, y3, getDefaultLineWidth(), isJoinNecessary()?JoinType.POINTY:JoinType.NONE, color.toFloatBits());
+    }
+
+    /**
+     * Calls {@link #triangle(float, float, float, float, float, float, float, JoinType, float) with the current drawer colour.
+     * @param x1 x coord of first vertex
+     * @param y1 y coord of first vertex
+     * @param x2 x coord of second vertex
+     * @param y2 y coord of second vertex
+     * @param x3 x coord of third vertex
+     * @param y3 y coord of third vertex
+     * @param lineWidth
+     */
+    public void triangle(float x1, float y1, float x2, float y2, float x3, float y3, float lineWidth) {
+        triangle(x1, y1, x2, y2, x3, y3, lineWidth, isJoinNecessary(lineWidth)?JoinType.POINTY:JoinType.NONE, getPackedColor());
+    }
+
+    /**
+     * Calls {@link #triangle(float, float, float, float, float, float, float, JoinType, float)}.
+     * @param x1 x coord of first vertex
+     * @param y1 y coord of first vertex
+     * @param x2 x coord of second vertex
+     * @param y2 y coord of second vertex
+     * @param x3 x coord of third vertex
+     * @param y3 y coord of third vertex
+     * @param lineWidth
+     * @param color the packed float colour
+     */
+    public void triangle(float x1, float y1, float x2, float y2, float x3, float y3, float lineWidth, float color) {
+        triangle(x1, y1, x2, y2, x3, y3, lineWidth, isJoinNecessary(lineWidth)?JoinType.POINTY:JoinType.NONE, color);
+    }
+
+    /**
+     * Draws a triangle with the specified vertices and colour.
+     * @param x1 x coord of first vertex
+     * @param y1 y coord of first vertex
+     * @param x2 x coord of second vertex
+     * @param y2 y coord of second vertex
+     * @param x3 x coord of third vertex
+     * @param y3 y coord of third vertex
+     * @param lineWidth
+     * @param joinType the type of join, see {@link JoinType}
+     * @param color the packed float colour
+     */
+    public void triangle(float x1, float y1, float x2, float y2, float x3, float y3, float lineWidth, JoinType joinType, float color) {
+        float c = setColor(color);
+        if (joinType == JoinType.NONE) {
+            line(x1, y1, x2, y2);
+            line(x2, y2, x3, y3);
+            line(x3, y3, x1, y1);
+        } else {
+            trianglePathPoints[0] = x1;
+            trianglePathPoints[1] = y1;
+            trianglePathPoints[2] = x2;
+            trianglePathPoints[3] = y2;
+            trianglePathPoints[4] = x3;
+            trianglePathPoints[5] = y3;
+            pathDrawer.path(trianglePathPoints, lineWidth, joinType, false);
+        }
+        setColor(c);
+    }
+
+    //====================
+    //      FILLED
     //====================
 
     /**
