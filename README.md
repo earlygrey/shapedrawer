@@ -4,7 +4,7 @@
 
 ---
 
-A library for [libgdx](https://libgdx.badlogicgames.com/), an open-source game development application framework written in java.
+A library for [libgdx](https://github.com/libgdx/libgdx), an open-source game development application framework written in java.
 
 Draws simple shapes like libgdx's [ShapeRenderer](https://libgdx.badlogicgames.com/ci/nightlies/docs/api/com/badlogic/gdx/graphics/glutils/ShapeRenderer.html) does, but uses a Batch to perform the drawing. This means it can be used in between `Batch#begin()` and `Batch#end()` without needing to flush the Batch.
 
