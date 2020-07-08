@@ -1057,7 +1057,7 @@ public class ShapeDrawer extends AbstractShapeDrawer {
     }
 
     /**
-     * Calls {@link #triangle(float, float, float, float, float, float, float, JoinType, float) with the current drawer colour.
+     * Calls {@link #triangle(float, float, float, float, float, float, float, JoinType, float)} with the current drawer colour.
      * @param x1 x coord of first vertex
      * @param y1 y coord of first vertex
      * @param x2 x coord of second vertex
@@ -1419,8 +1419,8 @@ public class ShapeDrawer extends AbstractShapeDrawer {
     /**
      * Draws a filled rectangle.
      * @param rect a {@link Rectangle} object
-     * @oaram color1 the colour of the vertices on the right
-     * @oaram color2 the colour of the left vertices on the left
+     * @param color1 the colour of the vertices on the right
+     * @param color2 the colour of the left vertices on the left
      */
     public void filledRectangle(Rectangle rect, Color color1, Color color2) {
         filledPolygonDrawer.rectangle(rect.x, rect.y, rect.width, rect.height, 0, color1.toFloatBits(), color2.toFloatBits(), color2.toFloatBits(), color1.toFloatBits());
@@ -1429,10 +1429,10 @@ public class ShapeDrawer extends AbstractShapeDrawer {
     /**
      * Draws a filled rectangle.
      * @param rect a {@link Rectangle} object
-     * @oaram color1 the colour of the top right vertex
-     * @oaram color2 the colour of the top left vertex
-     * @oaram color3 the colour of the bottom left vertex
-     * @oaram color4 the colour of the bottom right vertex
+     * @param color1 the colour of the top right vertex
+     * @param color2 the colour of the top left vertex
+     * @param color3 the colour of the bottom left vertex
+     * @param color4 the colour of the bottom right vertex
      */
     public void filledRectangle(Rectangle rect, Color color1, Color color2, Color color3, Color color4) {
         filledPolygonDrawer.rectangle(rect.x, rect.y, rect.width, rect.height, 0, color1.toFloatBits(), color2.toFloatBits(), color3.toFloatBits(), color4.toFloatBits());
@@ -1442,8 +1442,8 @@ public class ShapeDrawer extends AbstractShapeDrawer {
      * Draws a filled rectangle.
      * @param rect a {@link Rectangle} object
      * @param rotation the anticlockwise rotation in radians
-     * @oaram color1 the colour of the vertices on the right
-     * @oaram color2 the colour of the left vertices on the left
+     * @param color1 the colour of the vertices on the right
+     * @param color2 the colour of the left vertices on the left
      */
     public void filledRectangle(Rectangle rect, float rotation, Color color1, Color color2) {
         filledPolygonDrawer.rectangle(rect.x, rect.y, rect.width, rect.height, rotation, color1.toFloatBits(), color2.toFloatBits(), color2.toFloatBits(), color1.toFloatBits());
@@ -1453,10 +1453,10 @@ public class ShapeDrawer extends AbstractShapeDrawer {
      * Draws a filled rectangle.
      * @param rect a {@link Rectangle} object
      * @param rotation the anticlockwise rotation in radians
-     * @oaram c1 the colour of the top right vertex
-     * @oaram c2 the colour of the top left vertex
-     * @oaram c3 the colour of the bottom left vertex
-     * @oaram c4 the colour of the bottom right vertex
+     * @param color1 the colour of the top right vertex
+     * @param color2 the colour of the top left vertex
+     * @param color3 the colour of the bottom left vertex
+     * @param color4 the colour of the bottom right vertex
      */
     public void filledRectangle(Rectangle rect, float rotation, Color color1, Color color2, Color color3, Color color4) {
         filledPolygonDrawer.rectangle(rect.x, rect.y, rect.width, rect.height, rotation, color1.toFloatBits(), color2.toFloatBits(), color3.toFloatBits(), color4.toFloatBits());
@@ -1468,8 +1468,8 @@ public class ShapeDrawer extends AbstractShapeDrawer {
      * @param y the y-coordinate of the bottom left corner of the rectangle
      * @param width the width of the rectangle
      * @param height the height of the rectangle
-     * @oaram color1 the colour of the vertices on the right
-     * @oaram color2 the colour of the left vertices on the left
+     * @param color1 the colour of the vertices on the right
+     * @param color2 the colour of the left vertices on the left
      */
     public void filledRectangle(float x, float y, float width, float height, Color color1, Color color2) {
         filledPolygonDrawer.rectangle(x, y, width, height, 0, color1.toFloatBits(), color2.toFloatBits(), color2.toFloatBits(), color1.toFloatBits());
@@ -1482,8 +1482,8 @@ public class ShapeDrawer extends AbstractShapeDrawer {
      * @param width the width of the rectangle
      * @param height the height of the rectangle
      * @param rotation the anticlockwise rotation in radians
-     * @oaram color1 the colour of the vertices on the right
-     * @oaram color2 the colour of the left vertices on the left
+     * @param color1 the colour of the vertices on the right
+     * @param color2 the colour of the left vertices on the left
      */
     public void filledRectangle(float x, float y, float width, float height, float rotation, Color color1, Color color2) {
         filledPolygonDrawer.rectangle(x, y, width, height, rotation, color1.toFloatBits(), color2.toFloatBits(), color2.toFloatBits(), color1.toFloatBits());
@@ -1495,10 +1495,10 @@ public class ShapeDrawer extends AbstractShapeDrawer {
      * @param y the y-coordinate of the bottom left corner of the rectangle
      * @param width the width of the rectangle
      * @param height the height of the rectangle
-     * @oaram color1 the colour of the top right vertex
-     * @oaram color2 the colour of the top left vertex
-     * @oaram color3 the colour of the bottom left vertex
-     * @oaram color4 the colour of the bottom right vertex
+     * @param color1 the colour of the top right vertex
+     * @param color2 the colour of the top left vertex
+     * @param color3 the colour of the bottom left vertex
+     * @param color4 the colour of the bottom right vertex
      */
     public void filledRectangle(float x, float y, float width, float height, Color color1, Color color2, Color color3, Color color4) {
         filledPolygonDrawer.rectangle(x, y, width, height, 0, color1.toFloatBits(), color2.toFloatBits(), color3.toFloatBits(), color4.toFloatBits());
@@ -1511,10 +1511,10 @@ public class ShapeDrawer extends AbstractShapeDrawer {
      * @param width the width of the rectangle
      * @param height the height of the rectangle
      * @param rotation the anticlockwise rotation in radians
-     * @oaram color1 the colour of the top right vertex
-     * @oaram color2 the colour of the top left vertex
-     * @oaram color3 the colour of the bottom left vertex
-     * @oaram color4 the colour of the bottom right vertex
+     * @param color1 the colour of the top right vertex
+     * @param color2 the colour of the top left vertex
+     * @param color3 the colour of the bottom left vertex
+     * @param color4 the colour of the bottom right vertex
      */
     public void filledRectangle(float x, float y, float width, float height, float rotation, Color color1, Color color2, Color color3, Color color4) {
         filledPolygonDrawer.rectangle(x, y, width, height, rotation, color1.toFloatBits(), color2.toFloatBits(), color3.toFloatBits(), color4.toFloatBits());
@@ -1527,10 +1527,10 @@ public class ShapeDrawer extends AbstractShapeDrawer {
      * @param width the width of the rectangle
      * @param height the height of the rectangle
      * @param rotation the anticlockwise rotation in radians
-     * @oaram c1 the colour of the top right vertex
-     * @oaram c2 the colour of the top left vertex
-     * @oaram c3 the colour of the bottom left vertex
-     * @oaram c4 the colour of the bottom right vertex
+     * @param c1 the colour of the top right vertex
+     * @param c2 the colour of the top left vertex
+     * @param c3 the colour of the bottom left vertex
+     * @param c4 the colour of the bottom right vertex
      */
     public void filledRectangle(float x, float y, float width, float height, float rotation, float c1, float c2, float c3, float c4) {
         filledPolygonDrawer.rectangle(x, y, width, height, rotation, c1, c2, c3, c4);

@@ -73,7 +73,6 @@ public abstract class AbstractShapeDrawer {
     /**
      * Stops recording and returns a {@link Drawing}, which can be saved and drawn at any time
      * without having to perform shape calculations.
-     * @return
      */
     public Drawing stopRecording() {
         return batchManager.stopRecording();
@@ -139,7 +138,6 @@ public abstract class AbstractShapeDrawer {
 
     /**
      * See {@link AbstractShapeDrawer#isJoinNecessary(float)}.
-     * @return
      */
     protected boolean isJoinNecessary() {
         return isJoinNecessary(getDefaultLineWidth());
