@@ -61,6 +61,8 @@ And add the following line to the GdxDefinition.gwt.xml file in the HTML project
 
 See the [jitpack website](https://jitpack.io/#space.earlygrey/shapedrawer) for more info.
 
+Alternatively, if you're using [gdx-liftoff](https://github.com/tommyettinger/gdx-liftoff) to create your project you can find shape drawer under the "third-party" tab.
+
 
 ## Usage
 
