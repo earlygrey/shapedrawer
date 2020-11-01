@@ -29,7 +29,7 @@ class Joiner {
             return angle;
         }
         float len = (float) (halfLineWidth / Math.sin(angle));
-        boolean bendsLeft = angle>0;
+        boolean bendsLeft = angle<0;
         AB.setLength(len);
         BC.setLength(len);
         Vector insidePoint = bendsLeft?D:E;
@@ -50,7 +50,7 @@ class Joiner {
         float len = (float) (halfLineWidth / Math.sin(angle));
         AB.setLength(len);
         BC.setLength(len);
-        boolean bendsLeft = angle>0;
+        boolean bendsLeft = angle<0;
         Vector insidePoint = bendsLeft?D:E;
         Vector outsidePoint = bendsLeft?E:D;
         insidePoint.set(B).sub(AB).add(BC);
