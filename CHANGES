@@ -1,4 +1,6 @@
 [UNRELEASED]
+
+[2.4.0]
 - fixed compatibility with libGDX 1.9.12
 - added Drawing class
 - added path(path, open) method
