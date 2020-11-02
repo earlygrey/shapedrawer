@@ -1,6 +1,7 @@
 package space.earlygrey.shapedrawer;
 
 import com.badlogic.gdx.math.MathUtils;
+import com.badlogic.gdx.math.Vector2;
 
 public class ShapeUtils {
 
@@ -32,6 +33,10 @@ public class ShapeUtils {
 
     public static float ceil(float x, float interval) {
         return (float) (Math.ceil(x / interval) * interval);
+    }
+
+    public static float angleRad (Vector2 v, Vector2 reference) {
+        return (float) Math.atan2(reference.x * v.y - reference.y * v.x, v.x * reference.x + v.y * reference.y);
     }
 
 }
