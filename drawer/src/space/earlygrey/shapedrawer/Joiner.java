@@ -23,13 +23,13 @@ class Joiner {
     static float preparePointyJoin(Vector2 A, Vector2 B, Vector2 C, Vector2 D, Vector2 E, float halfLineWidth) {
         AB.set(B).sub(A);
         BC.set(C).sub(B);
-        float angle = AB.angleRad(BC);
+        float angle = ShapeUtils.angleRad(AB, BC);
         if (ShapeUtils.epsilonEquals(angle, 0) || ShapeUtils.epsilonEquals(angle, ShapeUtils.PI2)) {
             prepareStraightJoin(B, D, E, halfLineWidth);
             return angle;
         }
         float len = (float) (halfLineWidth / Math.sin(angle));
-        boolean bendsLeft = angle>0;
+        boolean bendsLeft = angle < 0;
         AB.setLength(len);
         BC.setLength(len);
         Vector insidePoint = bendsLeft?D:E;
@@ -42,7 +42,7 @@ class Joiner {
     static boolean prepareSmoothJoin(Vector2 A, Vector2 B, Vector2 C, Vector2 D, Vector2 E, float halfLineWidth, boolean startOfEdge) {
         AB.set(B).sub(A);
         BC.set(C).sub(B);
-        float angle = AB.angleRad(BC);
+        float angle = ShapeUtils.angleRad(AB, BC);
         if (ShapeUtils.epsilonEquals(angle, 0) || ShapeUtils.epsilonEquals(angle, ShapeUtils.PI2)) {
             prepareStraightJoin(B, D, E, halfLineWidth);
             return true;
@@ -50,7 +50,7 @@ class Joiner {
         float len = (float) (halfLineWidth / Math.sin(angle));
         AB.setLength(len);
         BC.setLength(len);
-        boolean bendsLeft = angle>0;
+        boolean bendsLeft = angle < 0;
         Vector insidePoint = bendsLeft?D:E;
         Vector outsidePoint = bendsLeft?E:D;
         insidePoint.set(B).sub(AB).add(BC);
