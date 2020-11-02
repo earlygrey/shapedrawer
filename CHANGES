@@ -1,5 +1,9 @@
 [UNRELEASED]
-- fix compatibility with libGDX 1.9.12
+- fixed compatibility with libGDX 1.9.12
+- added Drawing class
+- added path(path, open) method
+- added coloured circle methods
+- added triangle methods
 
 [2.3.0]
 - fixed bug where pixels outside specified region were sometimes drawn
