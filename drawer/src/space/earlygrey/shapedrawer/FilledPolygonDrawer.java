@@ -24,7 +24,11 @@ abstract class FilledPolygonDrawer<T extends BatchManager> extends DrawerTemplat
     abstract void polygon(float[] vertices, short[] triangles, int trianglesCount);
 
     void polygon(float[] vertices) {
-        ShortArray triangles = triangulator.computeTriangles(vertices);
+        polygon(vertices, 0, vertices.length);
+    }
+
+    void polygon(float[] vertices, int offest, int count) {
+        ShortArray triangles = triangulator.computeTriangles(vertices, offest, count);
         polygon(vertices, triangles);
     }
 

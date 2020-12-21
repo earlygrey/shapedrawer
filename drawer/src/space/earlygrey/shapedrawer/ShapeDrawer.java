@@ -899,7 +899,7 @@ public class ShapeDrawer extends AbstractShapeDrawer {
 
     /**
      * <p>Draws a filled polygon.</p>
-     * <p>Note: this triangulates the polygon every time it is called - it is greatly recommended to cache
+     * <p>Note: this triangulates the polygon every time it is called - it is recommended to cache
      * the triangles and use {@link #filledPolygon(Polygon, short[])} or {@link #filledPolygon(Polygon, ShortArray)} instead.
      * You can use something like {@link com.badlogic.gdx.math.EarClippingTriangulator#computeTriangles(float[])} to calculate the triangles.</p>
      * @param polygon the polygon to draw
@@ -910,13 +910,26 @@ public class ShapeDrawer extends AbstractShapeDrawer {
 
     /**
      * <p>Draws a filled polygon using the specified vertices.</p>
-     * <p>Note: this triangulates the polygon every time it is called - it is greatly recommended to cache
+     * <p>Note: this triangulates the polygon every time it is called - it is recommended to cache
      * the triangles and use {@link #filledPolygon(float[], short[])} or {@link #filledPolygon(float[], ShortArray)} instead.
      * You can use something like {@link com.badlogic.gdx.math.EarClippingTriangulator#computeTriangles(float[])} to calculate the triangles.</p>
      * @param vertices consecutive ordered pairs of the x-y coordinates of the vertices of the polygon
      */
     public void filledPolygon(float[] vertices) {
         filledPolygonDrawer.polygon(vertices);
+    }
+
+    /**
+     * <p>Draws a filled polygon using the specified vertices.</p>
+     * <p>Note: this triangulates the polygon every time it is called - it is recommended to cache
+     * the triangles and use {@link #filledPolygon(float[], short[])} or {@link #filledPolygon(float[], ShortArray)} instead.
+     * You can use something like {@link com.badlogic.gdx.math.EarClippingTriangulator#computeTriangles(float[])} to calculate the triangles.</p>
+     * @param vertices consecutive ordered pairs of the x-y coordinates of the vertices of the polygon
+     * @param offset the index of the vertices float[] at which to start drawing
+     * @param count the number of vertices to draw from the offset
+     */
+    public void filledPolygon(float[] vertices, int offset, int count) {
+        filledPolygonDrawer.polygon(vertices, offset, count);
     }
 
     /**
