@@ -32,9 +32,12 @@ public class ShapeDrawer extends AbstractShapeDrawer {
     // CONSTRUCTOR
     //================================================================================
 
+    public ShapeDrawer(Batch batch) {
+        this(batch, null);
+    }
+
     public ShapeDrawer(Batch batch, TextureRegion region) {
         super(batch, region);
-
     }
 
 
