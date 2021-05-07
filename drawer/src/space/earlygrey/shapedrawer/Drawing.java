@@ -22,6 +22,7 @@ public class Drawing {
      * Draw the cached shapes to the screen. Must be used in between {@link Batch#begin()} and {@link Batch#end()}.
      */
     public void draw() {
+        if (batchManager.r == null) throw new IllegalStateException("The texture region is null. Please set a texture region first (e.g. in the constructor or by calling setTextureRegion(TextureRegion region))");        
         for (int i = 0; i < vertexBatches.size; i++) {
             float[] vertices = vertexBatches.get(i);
             getBatchManager().getBatch().draw(batchManager.r.getTexture(), vertices, 0, vertices.length);
@@ -53,6 +54,7 @@ public class Drawing {
 
         @Override
         public void draw() {
+            if (batchManager.r == null) throw new IllegalStateException("The texture region is null. Please set a texture region first (e.g. in the constructor or by calling setTextureRegion(TextureRegion region))");
             for (int i = 0; i < vertexBatches.size; i++) {
                 float[] vertices = vertexBatches.get(i);
                 short[] triangles = triangleBatches.get(i);

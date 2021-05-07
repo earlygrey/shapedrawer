@@ -75,11 +75,13 @@ class BatchManager {
     public TextureRegion setTextureRegion(TextureRegion region) {
         TextureRegion oldRegion = this.r;
         this.r = region;
-        float u = 0.5f * (r.getU() + r.getU2());
-        float v = 0.5f * (r.getV() + r.getV2());
-        for (int i = 0; i < verts.length; i+=VERTEX_SIZE) {
-            verts[i + SpriteBatch.U1] = u;
-            verts[i + SpriteBatch.V1] = v;
+        if (region != null) {
+            float u = 0.5f * (r.getU() + r.getU2());
+            float v = 0.5f * (r.getV() + r.getV2());
+            for (int i = 0; i < verts.length; i+=VERTEX_SIZE) {
+                verts[i + SpriteBatch.U1] = u;
+                verts[i + SpriteBatch.V1] = v;
+            }
         }
         return oldRegion;
     }
@@ -230,6 +232,7 @@ class BatchManager {
         if (isRecording()) {
             drawing.pushVertices();
         } else {
+            if (r == null) throw new IllegalStateException("The texture region is null. Please set a texture region first (e.g. in the constructor or by calling setTextureRegion(TextureRegion region))");
             batch.draw(r.getTexture(), verts, 0, getVerticesArrayIndex());
         }
         vertexCount = 0;
