@@ -1116,9 +1116,9 @@ public class ShapeDrawer extends AbstractShapeDrawer {
     public void triangle(float x1, float y1, float x2, float y2, float x3, float y3, float lineWidth, JoinType joinType, float color) {
         float c = setColor(color);
         if (joinType == JoinType.NONE) {
-            line(x1, y1, x2, y2);
-            line(x2, y2, x3, y3);
-            line(x3, y3, x1, y1);
+            line(x1, y1, x2, y2, lineWidth);
+            line(x2, y2, x3, y3, lineWidth);
+            line(x3, y3, x1, y1, lineWidth);
         } else {
             trianglePathPoints[0] = x1;
             trianglePathPoints[1] = y1;
