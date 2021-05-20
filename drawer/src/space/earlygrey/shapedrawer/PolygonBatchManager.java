@@ -11,8 +11,8 @@ class PolygonBatchManager extends BatchManager {
     protected short[] triangles;
     protected int triangleCount = 0;
 
-    PolygonBatchManager(PolygonBatch batch, TextureRegion region) {
-        super(batch, region);
+    PolygonBatchManager(PolygonBatch batch, TextureRegion region, int vertexCacheSize) {
+        super(batch, region, vertexCacheSize);
         //need at least (3 * vxs) triangles
         //n quads arranged in a loop, each sharing 2 vxs with the next requires 2n vertices
         // and 2n triangles (so 2n*3 indices)

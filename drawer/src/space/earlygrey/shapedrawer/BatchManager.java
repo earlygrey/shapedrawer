@@ -38,9 +38,9 @@ class BatchManager {
     static final int DEFAULT_VERTEX_CACHE_SIZE = 2000;
     static final int VERTEX_SIZE = 5, QUAD_PUSH_SIZE = 4 * VERTEX_SIZE;
 
-    BatchManager (Batch batch, TextureRegion region) {
+    BatchManager(Batch batch, TextureRegion region, int vertexCacheSize) {
         this.batch = batch;
-        verts = new float[DEFAULT_VERTEX_CACHE_SIZE];
+        verts = new float[vertexCacheSize];
         setTextureRegion(region);
         setColor(Color.WHITE);
     }

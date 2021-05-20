@@ -46,13 +46,13 @@ public abstract class AbstractShapeDrawer {
      * @param region the texture region used for drawing. Can be changed later.
      */
 
-    AbstractShapeDrawer(Batch batch, TextureRegion region) {
+    AbstractShapeDrawer(Batch batch, TextureRegion region, int vertexCacheSize) {
         if (batch instanceof PolygonBatch) {
-            PolygonBatchManager manager = new PolygonBatchManager((PolygonBatch) batch, region);
+            PolygonBatchManager manager = new PolygonBatchManager((PolygonBatch) batch, region, vertexCacheSize);
             filledPolygonDrawer = new PolygonBatchFilledPolygonDrawer(manager, this);
             batchManager = manager;
         } else {
-            batchManager = new BatchManager(batch, region);
+            batchManager = new BatchManager(batch, region, vertexCacheSize);
             filledPolygonDrawer = new BatchFilledPolygonDrawer(batchManager, this);
         }
 

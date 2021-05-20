@@ -37,7 +37,11 @@ public class ShapeDrawer extends AbstractShapeDrawer {
     }
 
     public ShapeDrawer(Batch batch, TextureRegion region) {
-        super(batch, region);
+        this(batch, region, BatchManager.DEFAULT_VERTEX_CACHE_SIZE);
+    }
+    
+    public ShapeDrawer(Batch batch, TextureRegion region, int vertexCacheSize) {
+        super(batch, region, vertexCacheSize);
     }
 
 
