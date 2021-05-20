@@ -6,7 +6,6 @@ import com.badlogic.gdx.graphics.g2d.Batch;
 import com.badlogic.gdx.graphics.g2d.PolygonBatch;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.math.Matrix4;
-
 import space.earlygrey.shapedrawer.FilledPolygonDrawer.BatchFilledPolygonDrawer;
 import space.earlygrey.shapedrawer.FilledPolygonDrawer.PolygonBatchFilledPolygonDrawer;
 
@@ -22,7 +21,7 @@ public abstract class AbstractShapeDrawer {
     // MEMBERS
     //================================================================================
 
-    protected final BatchManager batchManager;
+    final BatchManager batchManager;
     float defaultLineWidth = 1;
     boolean defaultSnap = false;
 
@@ -279,4 +278,7 @@ public abstract class AbstractShapeDrawer {
         return setColor(Color.toFloatBits(r, g, b, a));
     }
 
+    public int getBatchManagerCacheSize() {
+        return batchManager.getCacheSize();
+    }    
 }
