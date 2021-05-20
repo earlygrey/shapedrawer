@@ -22,7 +22,7 @@ public abstract class AbstractShapeDrawer {
     // MEMBERS
     //================================================================================
 
-    final BatchManager batchManager;
+    protected final BatchManager batchManager;
     float defaultLineWidth = 1;
     boolean defaultSnap = false;
 

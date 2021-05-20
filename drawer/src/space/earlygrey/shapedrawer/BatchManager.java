@@ -220,6 +220,10 @@ class BatchManager {
         verts = new float[newSize];
     }
 
+    public final int getCacheSize() {
+        return verts.length;
+    }
+
     int verticesRemaining() {
         return (verts.length - QUAD_PUSH_SIZE * vertexCount) / VERTEX_SIZE;
     }
