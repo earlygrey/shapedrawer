@@ -75,17 +75,20 @@ class BatchManager {
     public TextureRegion setTextureRegion(TextureRegion region) {
         TextureRegion oldRegion = this.r;
         this.r = region;
-        if (region != null) {
+        setTextureRegionUV();
+        return oldRegion;
+    }
+
+    private void setTextureRegionUV() {
+        if (r != null) {
             float u = 0.5f * (r.getU() + r.getU2());
             float v = 0.5f * (r.getV() + r.getV2());
-            for (int i = 0; i < verts.length; i+=VERTEX_SIZE) {
+            for (int i = 0; i < verts.length; i += VERTEX_SIZE) {
                 verts[i + SpriteBatch.U1] = u;
                 verts[i + SpriteBatch.V1] = v;
             }
         }
-        return oldRegion;
     }
-
 
     public float setColor(Color color) {
         return setColor(color.toFloatBits());
@@ -218,6 +221,7 @@ class BatchManager {
             newSize *= 2;
         }
         verts = new float[newSize];
+        setTextureRegionUV();
     }
 
     int verticesRemaining() {
