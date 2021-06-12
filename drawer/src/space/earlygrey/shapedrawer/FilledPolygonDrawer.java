@@ -177,7 +177,7 @@ abstract class FilledPolygonDrawer<T extends BatchManager> extends DrawerTemplat
         }
     }
 
-        static class PolygonBatchFilledPolygonDrawer extends FilledPolygonDrawer<PolygonBatchManager> {
+    static class PolygonBatchFilledPolygonDrawer extends FilledPolygonDrawer<PolygonBatchManager> {
 
         PolygonBatchFilledPolygonDrawer(PolygonBatchManager batchManager, AbstractShapeDrawer drawer) {
             super(batchManager, drawer);

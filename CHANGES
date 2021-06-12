@@ -1,4 +1,7 @@
-[UNRELEASED]
+[2.5.0]
+- fixed rotated rectangles
+- add setTextureRegion() method and ShapeDrawer(Batch batch) constructor
+- fixed line width argument for triangles
 
 [2.4.0]
 - fixed compatibility with libGDX 1.9.12
