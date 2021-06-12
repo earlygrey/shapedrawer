@@ -4,6 +4,7 @@ package space.earlygrey.shapedrawer;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.g2d.Batch;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
+import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.math.Polygon;
 import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.math.Vector2;
@@ -1344,6 +1345,19 @@ public class ShapeDrawer extends AbstractShapeDrawer {
     }
 
     /**
+     * <p>Calls {@link #rectangle(float, float, float, float, float, float, JoinType)} with rotation set to 0.</p>
+     * @param x the x-coordinate of the bottom left corner of the rectangle
+     * @param y the y-coordinate of the bottom left corner of the rectangle
+     * @param width the width of the rectangle
+     * @param height the height of the rectangle
+     * @param lineWidth the width of the line in world units
+     * @param rotation the anticlockwise rotation in radians
+     */
+    public void rectangle(float x, float y, float width, float height, float lineWidth, float rotation) {
+        rectangle(x, y, width, height, lineWidth, rotation, JoinType.POINTY);
+    }
+
+    /**
      * Draws a rectangle. See {@link JoinType} for join types.
      * @param x the x-coordinate of the bottom left corner of the rectangle
      * @param y the y-coordinate of the bottom left corner of the rectangle
@@ -1353,8 +1367,11 @@ public class ShapeDrawer extends AbstractShapeDrawer {
      * @param rotation the anticlockwise rotation in radians
      * @param joinType see {@link JoinType}
      */
+    private final float[] rectangleCorners = new float[8];
     public void rectangle(float x, float y, float width, float height, float lineWidth, float rotation, JoinType joinType) {
-        if (joinType==JoinType.POINTY && rotation==0) {
+
+        // consider this case separately to take advantage of line snapping
+        if (joinType == JoinType.POINTY && Math.abs(rotation) < MathUtils.FLOAT_ROUNDING_ERROR) {
             float halfWidth = 0.5f*lineWidth;
             float X = x+width, Y = y+height;
             boolean caching = batchManager.isCachingDraws();
@@ -1363,9 +1380,35 @@ public class ShapeDrawer extends AbstractShapeDrawer {
             lineDrawer.pushLine(x, y-halfWidth, x, Y+halfWidth, lineWidth, false);//left
             lineDrawer.pushLine(X, y-halfWidth, X, Y+halfWidth, lineWidth, false);//right
             if (!caching) batchManager.pushToBatch();
-        } else {
-            polygon(x + 0.5f*width, y + 0.5f*height, 4, lineWidth, rotation + ShapeUtils.PI_4, width, height, joinType);
+            return;
         }
+
+        int i = 0;
+        rectangleCorners[i++] = x;
+        rectangleCorners[i++] = y;
+        rectangleCorners[i++] = x + width;
+        rectangleCorners[i++] = y;
+        rectangleCorners[i++] = x + width;
+        rectangleCorners[i++] = y + height;
+        rectangleCorners[i++] = x;
+        rectangleCorners[i++] = y + height;
+
+        if (Math.abs(rotation) > MathUtils.FLOAT_ROUNDING_ERROR) {
+            float centreX = x + width / 2f, centreY = y + height / 2f;
+            float cos = MathUtils.cos(rotation), sin = MathUtils.sin(rotation);
+            for (int j = 0; j < 8; j+=2) {
+                rectangleCorners[j] -= centreX;
+                rectangleCorners[j+1] -= centreY;
+
+                float rotatedX = rectangleCorners[j] * cos - rectangleCorners[j+1] * sin;
+                float rotatedY = rectangleCorners[j] * sin + rectangleCorners[j+1] * cos;
+
+                rectangleCorners[j] = rotatedX + centreX;
+                rectangleCorners[j+1] = rotatedY + centreY;
+            }
+        }
+
+        path(rectangleCorners, lineWidth, joinType, false);
     }
 
 
