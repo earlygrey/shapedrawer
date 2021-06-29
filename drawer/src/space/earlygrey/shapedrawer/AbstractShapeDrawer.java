@@ -149,7 +149,7 @@ public abstract class AbstractShapeDrawer {
         float a = Math.min(radiusX, radiusY), b = Math.max(radiusX, radiusY);
         float eccentricity = (float) Math.sqrt(1-((a*a) / (b*b)));
         sides += (sides * eccentricity) / 16;
-        return Math.max(sides, 20);
+        return 4 * Math.max(sides, 20);
     }
 
     //================================================================================
