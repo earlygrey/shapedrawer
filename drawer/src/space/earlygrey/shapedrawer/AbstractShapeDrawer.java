@@ -155,11 +155,14 @@ public abstract class AbstractShapeDrawer {
     //================================================================================
 
     /**
-     * <p>Sets a new {@link ISideEstimator}.</p>
+     * <p>Sets a new {@link ISideEstimator} and returns the old {@link ISideEstimator}.</p>
      * @param sideEstimator
+     * @return the old {@link ISideEstimator}
      */
-    public void setSideEstimator(ISideEstimator sideEstimator) {
+    public ISideEstimator setSideEstimator(ISideEstimator sideEstimator) {
+        final ISideEstimator oldSideEstimator = this.sideEstimator;
         this.sideEstimator = sideEstimator;
+        return oldSideEstimator;
     }
 
     /**
