@@ -155,6 +155,14 @@ public abstract class AbstractShapeDrawer {
     //================================================================================
 
     /**
+     *
+     * @return the current {@link ISideEstimator}
+     */
+    public final ISideEstimator getSideEstimator() {
+        return sideEstimator;
+    }
+
+    /**
      * <p>Sets a new {@link ISideEstimator} and returns the old {@link ISideEstimator}.</p>
      * @param sideEstimator
      * @return the old {@link ISideEstimator}
