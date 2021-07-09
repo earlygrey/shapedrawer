@@ -1,5 +1,7 @@
 package space.earlygrey.shapedrawer;
 
+import com.badlogic.gdx.math.MathUtils;
+
 public class DefaultSideEstimator implements ISideEstimator {
 
 	/**
@@ -31,6 +33,6 @@ public class DefaultSideEstimator implements ISideEstimator {
 		float a = Math.min(radiusX, radiusY), b = Math.max(radiusX, radiusY);
 		float eccentricity = (float) Math.sqrt(1 - ((a * a) / (b * b)));
 		sides += (sides * eccentricity * sideMultiplicator) / 16;
-		return Math.min(Math.max(sides, minimumSides), maximumSides);
+		return MathUtils.clamp(sides, minimumSides, maximumSides);
 	}
 }
