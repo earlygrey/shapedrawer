@@ -35,4 +35,32 @@ public class DefaultSideEstimator implements ISideEstimator {
 		sides += (sides * eccentricity * sideMultiplicator) / 16;
 		return MathUtils.clamp(sides, minimumSides, maximumSides);
 	}
+
+	//================================================================================
+	// GETTERS AND SETTERS
+	//================================================================================
+
+	public int getMinimumSides() {
+		return minimumSides;
+	}
+
+	public void setMinimumSides(int minimumSides) {
+		this.minimumSides = minimumSides;
+	}
+
+	public int getMaximumSides() {
+		return maximumSides;
+	}
+
+	public void setMaximumSides(int maximumSides) {
+		this.maximumSides = maximumSides;
+	}
+
+	public float getSideMultiplicator() {
+		return sideMultiplicator;
+	}
+
+	public void setSideMultiplicator(float sideMultiplicator) {
+		this.sideMultiplicator = sideMultiplicator;
+	}
 }
