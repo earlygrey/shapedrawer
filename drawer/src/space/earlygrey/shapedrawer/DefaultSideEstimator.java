@@ -18,7 +18,7 @@ public class DefaultSideEstimator implements ISideEstimator {
 	protected float sideMultiplicator;
 
 	public DefaultSideEstimator() {
-		this(20, 16000, 1f);
+		this(20, 4000, 1f);
 	}
 
 	public DefaultSideEstimator(int minimumSides, int maximumSides, float sideMultiplicator) {
