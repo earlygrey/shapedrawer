@@ -1,6 +1,6 @@
 package space.earlygrey.shapedrawer;
 
-public interface ISideEstimator {
+public interface SideEstimator {
 
 	int estimateSidesRequired(float pixelSize, float radiusX, float radiusY);
 }

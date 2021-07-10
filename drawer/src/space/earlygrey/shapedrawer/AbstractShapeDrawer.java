@@ -35,7 +35,7 @@ public abstract class AbstractShapeDrawer {
     protected final PolygonDrawer polygonDrawer;
     protected final FilledPolygonDrawer filledPolygonDrawer;
 
-    private ISideEstimator sideEstimator;
+    private SideEstimator sideEstimator;
 
 
     //================================================================================
@@ -48,7 +48,7 @@ public abstract class AbstractShapeDrawer {
      * @param region the texture region used for drawing. Can be changed later.
      */
 
-    AbstractShapeDrawer(Batch batch, TextureRegion region, ISideEstimator sideEstimator) {
+    AbstractShapeDrawer(Batch batch, TextureRegion region, SideEstimator sideEstimator) {
         if (batch instanceof PolygonBatch) {
             PolygonBatchManager manager = new PolygonBatchManager((PolygonBatch) batch, region);
             filledPolygonDrawer = new PolygonBatchFilledPolygonDrawer(manager, this);
@@ -156,19 +156,19 @@ public abstract class AbstractShapeDrawer {
 
     /**
      *
-     * @return the current {@link ISideEstimator}
+     * @return the current {@link SideEstimator}
      */
-    public final ISideEstimator getSideEstimator() {
+    public final SideEstimator getSideEstimator() {
         return sideEstimator;
     }
 
     /**
-     * <p>Sets a new {@link ISideEstimator} and returns the old {@link ISideEstimator}.</p>
+     * <p>Sets a new {@link SideEstimator} and returns the old {@link SideEstimator}.</p>
      * @param sideEstimator
-     * @return the old {@link ISideEstimator}
+     * @return the old {@link SideEstimator}
      */
-    public ISideEstimator setSideEstimator(ISideEstimator sideEstimator) {
-        final ISideEstimator oldSideEstimator = this.sideEstimator;
+    public SideEstimator setSideEstimator(SideEstimator sideEstimator) {
+        final SideEstimator oldSideEstimator = this.sideEstimator;
         this.sideEstimator = sideEstimator;
         return oldSideEstimator;
     }
