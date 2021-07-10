@@ -35,6 +35,8 @@ public abstract class AbstractShapeDrawer {
     protected final PolygonDrawer polygonDrawer;
     protected final FilledPolygonDrawer filledPolygonDrawer;
 
+    private SideEstimator sideEstimator;
+
 
     //================================================================================
     // CONSTRUCTOR
@@ -46,7 +48,7 @@ public abstract class AbstractShapeDrawer {
      * @param region the texture region used for drawing. Can be changed later.
      */
 
-    AbstractShapeDrawer(Batch batch, TextureRegion region) {
+    AbstractShapeDrawer(Batch batch, TextureRegion region, SideEstimator sideEstimator) {
         if (batch instanceof PolygonBatch) {
             PolygonBatchManager manager = new PolygonBatchManager((PolygonBatch) batch, region);
             filledPolygonDrawer = new PolygonBatchFilledPolygonDrawer(manager, this);
@@ -60,6 +62,7 @@ public abstract class AbstractShapeDrawer {
         pathDrawer = new PathDrawer(batchManager, this);
         polygonDrawer = new PolygonDrawer(batchManager, this);
 
+        this.sideEstimator = sideEstimator;
     }
 
     /**
@@ -144,17 +147,31 @@ public abstract class AbstractShapeDrawer {
     }
 
     protected int estimateSidesRequired(float radiusX, float radiusY) {
-        float circumference = (float) (ShapeUtils.PI2 * Math.sqrt((radiusX*radiusX + radiusY*radiusY)/2f));
-        int sides = (int) (circumference / (16 * getPixelSize()));
-        float a = Math.min(radiusX, radiusY), b = Math.max(radiusX, radiusY);
-        float eccentricity = (float) Math.sqrt(1-((a*a) / (b*b)));
-        sides += (sides * eccentricity) / 16;
-        return Math.max(sides, 20);
+        return sideEstimator.estimateSidesRequired(getPixelSize(), radiusX, radiusY);
     }
 
     //================================================================================
     // GETTERS AND SETTERS
     //================================================================================
+
+    /**
+     *
+     * @return the current {@link SideEstimator}
+     */
+    public final SideEstimator getSideEstimator() {
+        return sideEstimator;
+    }
+
+    /**
+     * <p>Sets a new {@link SideEstimator} and returns the old {@link SideEstimator}.</p>
+     * @param sideEstimator
+     * @return the old {@link SideEstimator}
+     */
+    public SideEstimator setSideEstimator(SideEstimator sideEstimator) {
+        final SideEstimator oldSideEstimator = this.sideEstimator;
+        this.sideEstimator = sideEstimator;
+        return oldSideEstimator;
+    }
 
     /**
      * <p>This is used internally to make estimates about how things will appear on screen. It affects
