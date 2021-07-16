@@ -334,6 +334,31 @@ public class ShapeDrawer extends AbstractShapeDrawer {
         pathDrawer.path(path, lineWidth, joinType, open);
     }
 
+    /**
+     * <p>Draws a path by drawing a line between each point and the next. See {@link #path(Array, float, JoinType, boolean)} for details.</p>
+     * @param path an {@code float[]} containing the ordered points in the path
+     * @param start the index of {@code path} which represents the first point to draw, inclusive
+     * @param end the index of {@code path} which represents the last point to draw, exclusive
+     * @param lineWidth the width of each line in world units
+     * @param open if false then the first and last points are connected
+     */
+    public void path(float[] path, int start, int end, float lineWidth, boolean open) {
+        path(path, start, end, lineWidth, isJoinNecessary(lineWidth)?JoinType.SMOOTH:JoinType.NONE, open);
+    }
+
+    /**
+     * <p>Draws a path by drawing a line between each point and the next. See {@link #path(Array, float, JoinType, boolean)} for details.</p>
+     * @param path an {@code float[]} containing the ordered points in the path
+     * @param start the index of {@code path} which represents the first point to draw, inclusive
+     * @param end the index of {@code path} which represents the last point to draw, exclusive
+     * @param lineWidth the width of each line in world units
+     * @param joinType see {@link JoinType} the type of join, see method description
+     * @param open if false then the first and last points are connected
+     */
+    public void path(float[] path, int start, int end, float lineWidth, JoinType joinType, boolean open) {
+        pathDrawer.path(path, start, end, lineWidth, joinType, open);
+    }
+
     //=======================================
     //          CIRCLES AND ELLIPSES
     //=======================================
@@ -892,9 +917,33 @@ public class ShapeDrawer extends AbstractShapeDrawer {
      * @param joinType the type of join, see {@link JoinType}
      */
     public void polygon(float[] vertices, float lineWidth, JoinType joinType) {
-        pathDrawer.path(vertices, 0, vertices.length, lineWidth, joinType, false);
+        polygon(vertices, 0, vertices.length, lineWidth, joinType);
     }
 
+    /**
+     * <p>Draws the boundary of the polygon with the given line width and join type.</p>
+     * <p>This calls {@link PathDrawer#path(float[], int, int, float, JoinType, boolean)} with {@code open} set to false.</p>
+     * @param vertices consecutive ordered pairs of the x-y coordinates of the vertices of the polygon
+     * @param start the index of {@code vertices} which represents the first vertex to draw, inclusive
+     * @param end the index of {@code vertices} which represents the last vertex to draw, exclusive
+     * @param lineWidth the line width
+     */
+    public void polygon(float[] vertices, int start, int end, float lineWidth) {
+        polygon(vertices, 0, vertices.length, lineWidth, isJoinNecessary(defaultLineWidth)?JoinType.POINTY:JoinType.NONE);
+    }
+
+    /**
+     * <p>Draws the boundary of the polygon with the given line width and join type.</p>
+     * <p>This calls {@link PathDrawer#path(float[], int, int, float, JoinType, boolean)} with {@code open} set to false.</p>
+     * @param vertices consecutive ordered pairs of the x-y coordinates of the vertices of the polygon
+     * @param start the index of {@code vertices} which represents the first vertex to draw, inclusive
+     * @param end the index of {@code vertices} which represents the last vertex to draw, exclusive
+     * @param lineWidth the line width
+     * @param joinType the type of join, see {@link JoinType}
+     */
+    public void polygon(float[] vertices, int start, int end, float lineWidth, JoinType joinType) {
+        pathDrawer.path(vertices, start, end, lineWidth, joinType, false);
+    }
 
     //====================
     //     FILLED
