@@ -34,11 +34,15 @@ public class ShapeDrawer extends AbstractShapeDrawer {
     //================================================================================
 
     public ShapeDrawer(Batch batch) {
-        this(batch, null);
+        this(batch, null, new DefaultSideEstimator());
     }
 
     public ShapeDrawer(Batch batch, TextureRegion region) {
-        super(batch, region);
+        super(batch, region, new DefaultSideEstimator());
+    }
+    
+    public ShapeDrawer(Batch batch, TextureRegion region, SideEstimator sideEstimator) {
+        super(batch, region, sideEstimator);
     }
 
 
