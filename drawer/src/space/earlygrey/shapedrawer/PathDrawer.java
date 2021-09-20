@@ -67,12 +67,46 @@ class PathDrawer extends DrawerTemplate<BatchManager> {
             path.clear();
             return;
         }
+
+        boolean wasCaching = batchManager.startCaching();
+        
         if (path.size == 4) {
-            drawer.lineDrawer.line(path.items[0], path.items[1], path.items[2], path.items[3], (startWidth + endWidth) * 0.5f, false);
+            float c = batchManager.floatBits;
+
+            batchManager.ensureSpaceForQuad();
+
+//            A.set(path.items[0], path.items[1]);
+            B.set(path.items[0], path.items[1]);
+            C.set(path.items[2], path.items[3]);
+            vert3(E);
+            vert4(D);
+
+            Joiner.prepareFlatEndpoint(C, B, D, E, startWidth * 0.5f);
+            vert1(E);
+            vert2(D);
+
+            float x3 = x3();
+            float y3 = y3();
+            float x4 = x4();
+            float y4 = y4();
+
+            color(c,c,c,c);
+            batchManager.pushQuad();
+
+            batchManager.ensureSpaceForQuad();
+            vert1(x4, y4);
+            vert2(x3, y3);
+
+            Joiner.prepareFlatEndpoint(B, C, D, E, endWidth * 0.5f);
+            vert3(E);
+            vert4(D);
+            color(c,c,c,c);
+            batchManager.pushQuad();
+
             path.clear();
             return;
         }
-        boolean wasCaching = batchManager.startCaching();
+
         if (joinType==JoinType.NONE) {
             drawPathNoJoin(path.items, path.size, startWidth, endWidth, open);
         } else {
