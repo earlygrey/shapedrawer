@@ -238,14 +238,24 @@ public class ShapeDrawerTest extends ApplicationAdapter {
 		});
 
 
-		final Slider widthSlider = new Slider(1f, 100f, 1f, false, skin);
-		final Label widthLabel = new Label("", skin);
-		widthSlider.addListener(new ChangeListener() {
+		final Slider startWidthSlider = new Slider(1f, 100f, 1f, false, skin);
+		final Label startWidthLabel = new Label("", skin);
+		startWidthSlider.addListener(new ChangeListener() {
 			@Override
 			public void changed(ChangeEvent event, Actor actor) {
-				drawer.setDefaultLineWidth(widthSlider.getValue());
-				widthLabel.setText(String.valueOf(drawer.getDefaultLineWidth()));
-				Gdx.gl.glLineWidth(widthSlider.getValue());
+				drawer.setDefaultLineWidth(startWidthSlider.getValue());
+				startWidthLabel.setText(String.valueOf(drawer.getDefaultLineWidth()));
+				Gdx.gl.glLineWidth(startWidthSlider.getValue());
+			}
+		});
+
+		final Slider endWidthSlider = new Slider(1f, 100f, 1f, false, skin);
+		final Label endWidthLabel = new Label("", skin);
+		endWidthSlider.addListener(new ChangeListener() {
+			@Override
+			public void changed(ChangeEvent event, Actor actor) {
+				drawer.setEndLineWidth(endWidthSlider.getValue());
+				endWidthLabel.setText(String.valueOf(drawer.getEndLineWidth()));
 			}
 		});
 
@@ -295,12 +305,17 @@ public class ShapeDrawerTest extends ApplicationAdapter {
 		joinSelectorTable.row();
 		joinSelectorTable.add(selectBoxJoin);
 
-		Table widthLabelTable = new Table();
-		widthLabelTable.add(new Label("Line Width: ", skin)).padBottom(4);
-		widthLabelTable.add(widthLabel);
-		widthSelectorTable.add(widthLabelTable);
+		Table startWidthLabelTable = new Table();
+		Table endWidthLabelTable = new Table();
+		startWidthLabelTable.add(new Label("Start Width: ", skin)).padBottom(4);
+		startWidthLabelTable.add(startWidthLabel);
+		endWidthLabelTable.add(new Label("End Width: ", skin)).padBottom(4);
+		endWidthLabelTable.add(endWidthLabel);
+		widthSelectorTable.add(startWidthLabelTable).width(300).padRight(2);
+		widthSelectorTable.add(endWidthLabelTable).width(300).padLeft(2);
 		widthSelectorTable.row();
-		widthSelectorTable.add(widthSlider).width(400);
+		widthSelectorTable.add(startWidthSlider).width(300).padRight(2);
+		widthSelectorTable.add(endWidthSlider).width(300).padLeft(2);
 
 		Table sidesLabelTable = new Table();
 		sidesLabelTable.add(new Label("Sides: ", skin)).padBottom(4);
@@ -392,7 +407,8 @@ public class ShapeDrawerTest extends ApplicationAdapter {
 		Gdx.input.setInputProcessor(stage);
 
 		selectBoxShape.setSelected(ShapeMode.LINE);
-		widthSlider.setValue(20);
+		startWidthSlider.setValue(20);
+		endWidthSlider.setValue(20);
 		sidesSlider.setValue(6);
 		selectBoxJoin.setSelected(JoinType.NONE);
 		joinSelectorTable.setVisible(false);

@@ -24,6 +24,7 @@ public abstract class AbstractShapeDrawer {
 
     final BatchManager batchManager;
     float defaultLineWidth = 1;
+    float endLineWidth = 1;
     boolean defaultSnap = false;
 
 
@@ -225,6 +226,25 @@ public abstract class AbstractShapeDrawer {
     public float setDefaultLineWidth(float defaultLineWidth) {
         float oldWidth = this.defaultLineWidth;
         this.defaultLineWidth = defaultLineWidth;
+        return oldWidth;
+    }
+
+    /**
+     *
+     * @return the end line width used if one is not specified in the method signature
+     */
+    public float getEndLineWidth() {
+        return endLineWidth;
+    }
+
+    /**
+     * <p>Sets the end line width used if one is not specified in the method signature.</p>
+     * @param endLineWidth the line width to be used as default end
+     * @return the previous end line width
+     */
+    public float setEndLineWidth(float endLineWidth) {
+        float oldWidth = this.endLineWidth;
+        this.endLineWidth = endLineWidth;
         return oldWidth;
     }
 
