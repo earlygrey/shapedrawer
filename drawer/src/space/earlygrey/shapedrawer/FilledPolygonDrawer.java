@@ -101,7 +101,7 @@ abstract class FilledPolygonDrawer<T extends BatchManager> extends DrawerTemplat
             B.set(1, 0).rotateRad(startAngle).scl(radiusX, radiusY);
 
 
-            int n = end-start;
+            int n = end-start+1;
             if (n<2) {
                 // there are no "regular" segments, will never enter loop,
                 // so just push the one triangle from start angle to end angle
@@ -201,7 +201,7 @@ abstract class FilledPolygonDrawer<T extends BatchManager> extends DrawerTemplat
 
             if (ShapeUtils.epsilonEquals(start * angleInterval, startAngle)) start++;
 
-            int n = end-start;
+            int n = end-start+1;
             batchManager.ensureSpace(n + 2);
             int vertexOffset = batchManager.getVerticesArrayIndex();
 
