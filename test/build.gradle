@@ -1,8 +1,9 @@
 apply plugin: "java"
 
-sourceCompatibility = 1.6
+sourceCompatibility = 1.8
 sourceSets.main.java.srcDirs = [ "src/" ]
 sourceSets.main.resources.srcDirs = ["assets"]
+targetCompatibility = JavaVersion.VERSION_1_8
 
 project.ext.mainClassName = "space.earlygrey.shapedrawer.test.DesktopLauncher"
 project.ext.assetsDir = new File("assets")
