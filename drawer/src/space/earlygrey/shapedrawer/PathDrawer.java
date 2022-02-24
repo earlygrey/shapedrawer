@@ -118,7 +118,7 @@ class PathDrawer extends DrawerTemplate<BatchManager> {
             lineWidths.add(lineWidth.getWidth(i, t));
             lengthDrawn += Vector2.dst(path[2*i], path[2*i+1], path[2*i+2], path[2*i+3]);
         }
-        lineWidths.add(lineWidth.getWidth(size / 2 - 2, 1));
+        lineWidths.add(lineWidth.getWidth(size - 1, 1));
     }
 
 
