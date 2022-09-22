@@ -947,6 +947,13 @@ public class ShapeDrawer extends AbstractShapeDrawer {
     public void polygon(float[] vertices, int start, int end, float lineWidth, JoinType joinType) {
         pathDrawer.path(vertices, start, end, lineWidth, joinType, false);
     }
+    
+    /**
+     * <p>Draws the wireframe model of the given polygon triangles</p>
+     */
+    public void polygonWireframe(float[] vertices, short[] triangles, float offsetX, float offsetY) {
+        polygonDrawer.polygonWireframe(vertices, triangles, offsetX, offsetY);
+    }
 
     //====================
     //     FILLED
@@ -1030,6 +1037,10 @@ public class ShapeDrawer extends AbstractShapeDrawer {
      */
     public void filledPolygon(float[] vertices, ShortArray triangles) {
         filledPolygonDrawer.polygon(vertices, triangles);
+    }
+    
+    public void filledPolygon(float[] vertices, short[] triangles, float offsetX, float offsetY) {
+        filledPolygonDrawer.polygon(vertices, triangles, offsetX, offsetY);
     }
 
 
