@@ -21,9 +21,11 @@ abstract class FilledPolygonDrawer<T extends BatchManager> extends DrawerTemplat
 
     abstract void polygon(float centreX, float centreY, int sides, float radiusX, float radiusY, float rotation, float startAngle, float radians, float innerColor, float outerColor);
 
-    abstract void polygon(float[] vertices, short[] triangles, int trianglesCount);
-    
     abstract void polygon(float[] vertices, short[] triangles, int trianglesCount, float offsetX, float offsetY);
+
+    void polygon(float[] vertices, short[] triangles, int trianglesCount) {
+        polygon(vertices, triangles, trianglesCount, 0, 0);
+    }
 
     void polygon(float[] vertices) {
         polygon(vertices, 0, vertices.length);
@@ -41,7 +43,7 @@ abstract class FilledPolygonDrawer<T extends BatchManager> extends DrawerTemplat
     void polygon(float[] vertices, short[] triangles) {
         polygon(vertices, triangles, triangles.length);
     }
-    
+
     void polygon(float[] vertices, short[] triangles, float offsetX, float offsetY) {
         polygon(vertices, triangles, triangles.length, offsetX, offsetY);
     }
@@ -169,20 +171,6 @@ abstract class FilledPolygonDrawer<T extends BatchManager> extends DrawerTemplat
         }
 
         @Override
-        void polygon(float[] vertices, short[] triangles, int trianglesCount) {
-            float c = batchManager.floatBits;
-            for (int i = 0; i < trianglesCount; i+=3) {
-                batchManager.ensureSpaceForTriangle();
-                vert1(vertices[2*triangles[i]], vertices[2*triangles[i]+1]);
-                vert2(vertices[2*triangles[i+1]], vertices[2*triangles[i+1]+1]);
-                vert3(vertices[2*triangles[i+2]], vertices[2*triangles[i+2]+1]);
-                color(c,c,c);
-                batchManager.pushTriangle();
-            }
-            batchManager.pushToBatch();
-        }
-        
-        @Override
         void polygon(float[] vertices, short[] triangles, int trianglesCount, float x, float y) {
             float c = batchManager.floatBits;
             for (int i = 0; i < trianglesCount; i += 3) {
@@ -260,14 +248,6 @@ abstract class FilledPolygonDrawer<T extends BatchManager> extends DrawerTemplat
             batchManager.pushVertex();
 
             if (!wasCaching) batchManager.endCaching();
-        }
-
-        @Override
-        void polygon(float[] vertices, short[] triangles, int trianglesCount) {
-            int n = vertices.length / 2;
-            batchManager.ensureSpace(n);
-            batchManager.pushVertexData(vertices, triangles, trianglesCount, batchManager.floatBits);
-            batchManager.pushToBatch();
         }
 
         @Override
