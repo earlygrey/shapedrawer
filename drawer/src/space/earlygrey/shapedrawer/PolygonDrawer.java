@@ -27,22 +27,6 @@ class PolygonDrawer extends DrawerTemplate<BatchManager> {
         }
         if (!wasCaching) batchManager.endCaching();
     }
-    
-    void polygonWireframe(float[] vertices, short[] triangles, float offsetX, float offsetY) {
-        if (triangles.length == 0) return;
-        float[] v = vertices;
-        short[] t = triangles;
-        boolean wasCaching = batchManager.startCaching();
-        for (int i = 0; i < t.length; i += 3) {
-            drawer.lineDrawer.pushLine(offsetX + v[2 * t[i]], offsetY + v[2 * t[i] + 1],
-                    offsetX + v[2 * t[i + 1]], offsetY + v[2 * t[i + 1] + 1], 1f, false);
-            drawer.lineDrawer.pushLine(offsetX + v[2 * t[i + 1]], offsetY + v[2 * t[i + 1] + 1],
-                    offsetX + v[2 * t[i + 2]], offsetY + v[2 * t[i + 2] + 1], 1f, false);
-            drawer.lineDrawer.pushLine(offsetX + v[2 * t[i]], offsetY + v[2 * t[i] + 1],
-                    offsetX + v[2 * t[i + 2]], offsetY + v[2 * t[i + 2] + 1], 1f, false);
-        }
-        if (!wasCaching) batchManager.endCaching();
-    }
 
     void drawPolygonNoJoin(Vector2 centre, int sides, float lineWidth, float rotation, Vector2 radius, float startAngle, float radians) {
         float angleInterval = MathUtils.PI2 / sides;

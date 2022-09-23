@@ -40,7 +40,7 @@ public class ShapeDrawer extends AbstractShapeDrawer {
     public ShapeDrawer(Batch batch, TextureRegion region) {
         super(batch, region, new DefaultSideEstimator());
     }
-    
+
     public ShapeDrawer(Batch batch, TextureRegion region, SideEstimator sideEstimator) {
         super(batch, region, sideEstimator);
     }
@@ -947,13 +947,7 @@ public class ShapeDrawer extends AbstractShapeDrawer {
     public void polygon(float[] vertices, int start, int end, float lineWidth, JoinType joinType) {
         pathDrawer.path(vertices, start, end, lineWidth, joinType, false);
     }
-    
-    /**
-     * <p>Draws the wireframe model of the given polygon triangles</p>
-     */
-    public void polygonWireframe(float[] vertices, short[] triangles, float offsetX, float offsetY) {
-        polygonDrawer.polygonWireframe(vertices, triangles, offsetX, offsetY);
-    }
+
 
     //====================
     //     FILLED
@@ -1038,7 +1032,16 @@ public class ShapeDrawer extends AbstractShapeDrawer {
     public void filledPolygon(float[] vertices, ShortArray triangles) {
         filledPolygonDrawer.polygon(vertices, triangles);
     }
-    
+
+    /**
+     * <p>Draws a filled polygon using the specified vertices.</p>
+     * @param vertices consecutive ordered pairs of the x-y coordinates of the vertices of the polygon
+     * @param triangles ordered triples of the indices of the float[] defining the polygon vertices corresponding to triangles.
+     *                  You can use something like {@link com.badlogic.gdx.math.EarClippingTriangulator#computeTriangles(float[])} to
+     *                  calculate them.
+     * @param offsetX the x-offset of the vertices
+     * @param offsetY the y-offset of the vertices
+     */
     public void filledPolygon(float[] vertices, short[] triangles, float offsetX, float offsetY) {
         filledPolygonDrawer.polygon(vertices, triangles, offsetX, offsetY);
     }
@@ -1194,6 +1197,31 @@ public class ShapeDrawer extends AbstractShapeDrawer {
         }
         setColor(c);
     }
+
+
+    /**
+     * Draw the triangles defined by the specified vertices.
+     * @param vertices consecutive ordered pairs of the x-y coordinates of the vertices of the polygon
+     * @param triangles ordered triples of the indices of the float[] defining the polygon vertices corresponding to triangles.
+     *                  You can use something like {@link com.badlogic.gdx.math.EarClippingTriangulator#computeTriangles(float[])} to
+     *                  calculate them.
+     * @param offsetX the x-offset of the vertices
+     * @param offsetY the y-offset of the vertices
+     */
+    public void triangles(float[] vertices, short[] triangles, float offsetX, float offsetY) {
+        float[] v = vertices;
+        short[] t = triangles;
+        for (int i = 0; i < t.length; i += 3) {
+            float x1 = offsetX + v[2 * t[i]];
+            float y1 = offsetY + v[2 * t[i] + 1];
+            float x2 = offsetX + v[2 * t[i + 1]];
+            float y2 = offsetY + v[2 * t[i + 1] + 1];
+            float x3 = offsetX + v[2 * t[i + 2]];
+            float y3 = offsetY + v[2 * t[i + 2] + 1];
+            triangle(x1, y1, x2, y2, x3, y3, getDefaultLineWidth(), JoinType.NONE, getPackedColor());
+        }
+    }
+
 
     //====================
     //      FILLED
