@@ -1,3 +1,7 @@
+[2.6.0]
+- add method for drawing polygons with an offset
+- add triangles method
+
 [2.5.0]
 - fixed rotated rectangles
 - add setTextureRegion() method and ShapeDrawer(Batch batch) constructor
