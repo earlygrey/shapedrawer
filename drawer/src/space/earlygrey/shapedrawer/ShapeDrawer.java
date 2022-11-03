@@ -12,6 +12,8 @@ import com.badlogic.gdx.utils.Array;
 import com.badlogic.gdx.utils.FloatArray;
 import com.badlogic.gdx.utils.ShortArray;
 
+import space.earlygrey.shapedrawer.ShapeUtils.LineWidthFunction;
+
 /**
  * <p>Uses a Batch to draw lines, outlined shapes and paths. Meant to be an analogue of {@link com.badlogic.gdx.graphics.glutils.ShapeRenderer}
  * but uses a Batch instead of an {@link com.badlogic.gdx.graphics.glutils.ImmediateModeRenderer}, so that it can be used
@@ -286,6 +288,7 @@ public class ShapeDrawer extends AbstractShapeDrawer {
         path(path, defaultLineWidth, joinType, open);
     }
 
+
     /**
      * <p>Calls {@link #path(Array, float, JoinType, boolean)} with {@code joinType} set to {@link JoinType#SMOOTH}
      *  (also see {@link #isJoinNecessary(float)}).</p>
@@ -315,6 +318,10 @@ public class ShapeDrawer extends AbstractShapeDrawer {
         pathDrawer.path(path, lineWidth, joinType, open);
     }
 
+    public void path(Array<Vector2> path, JoinType joinType, boolean open, LineWidthFunction lineWidth) {
+        pathDrawer.path(path, joinType, open, lineWidth);
+    }
+
     /**
      * <p>Draws a path by drawing a line between each point and the next. See {@link #path(Array, float, JoinType, boolean)} for details.</p>
      * @param path an {@link FloatArray} containing the ordered points in the path
@@ -323,9 +330,8 @@ public class ShapeDrawer extends AbstractShapeDrawer {
      * @param open if false then the first and last points are connected
      */
     public void path(FloatArray path, float lineWidth, JoinType joinType, boolean open) {
-        pathDrawer.path(path, lineWidth, joinType, open);
+        pathDrawer.path(path, (i, t) -> lineWidth, joinType, open);
     }
-
 
     /**
      * <p>Draws a path by drawing a line between each point and the next. See {@link #path(Array, float, JoinType, boolean)} for details.</p>
@@ -360,6 +366,10 @@ public class ShapeDrawer extends AbstractShapeDrawer {
      * @param open if false then the first and last points are connected
      */
     public void path(float[] path, int start, int end, float lineWidth, JoinType joinType, boolean open) {
+        pathDrawer.path(path, start, end, lineWidth, joinType, open);
+    }
+
+    public void path(float[] path, int start, int end, LineWidthFunction lineWidth, JoinType joinType, boolean open) {
         pathDrawer.path(path, start, end, lineWidth, joinType, open);
     }
 

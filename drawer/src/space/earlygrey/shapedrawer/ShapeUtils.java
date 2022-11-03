@@ -13,6 +13,10 @@ public class ShapeUtils {
     public static final float SQRT2 = (float) Math.sqrt(2.);
     public static final float SQRT3 = (float) Math.sqrt(3.);
 
+    public interface LineWidthFunction {
+        float getWidth(int i, float t);
+    }
+
     public static float snap(float a, float pixelSize, float halfPixelSize) {
         return  (Math.round(a / pixelSize) * pixelSize) + halfPixelSize;
     }
@@ -37,6 +41,15 @@ public class ShapeUtils {
 
     public static float angleRad (Vector2 v, Vector2 reference) {
         return (float) Math.atan2(reference.x * v.y - reference.y * v.x, v.x * reference.x + v.y * reference.y);
+    }
+
+    static float pathLength(float[] path) {
+        if (path.length < 4) return 0;
+        float l = 0;
+        for (int i = 0; i < path.length-4; i+=2) {
+            l += Vector2.dst(path[i], path[i+1], path[i+2], path[i+3]);
+        }
+        return l;
     }
 
 }
