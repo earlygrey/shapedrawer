@@ -20,6 +20,23 @@ class PathDrawer extends DrawerTemplate<BatchManager> {
 
     private final Vector2 D0 = new Vector2(), E0 = new Vector2();
 
+    private static class ConstantLineWidth implements LineWidthFunction {
+
+        float width;
+
+        @Override
+        public float getWidth(int i, float t) {
+            return width;
+        }
+
+        ConstantLineWidth width(float width) {
+            this.width = width;
+            return this;
+        }
+    }
+
+    private static final ConstantLineWidth CONSTANT_LINE_WIDTH = new ConstantLineWidth();
+
     PathDrawer(BatchManager batchManager, AbstractShapeDrawer drawer) {
         super(batchManager, drawer);
     }
@@ -65,7 +82,7 @@ class PathDrawer extends DrawerTemplate<BatchManager> {
     }
 
     void path (float[] userPath, int start, int end, final float lineWidth, JoinType joinType, boolean open) {
-        path(userPath, start, end, (i, t) -> lineWidth, joinType, open);
+        path(userPath, start, end, CONSTANT_LINE_WIDTH.width(lineWidth), joinType, open);
     }
 
     void path (float[] userPath, int start, int end, LineWidthFunction lineWidth, JoinType joinType, boolean open) {
@@ -111,6 +128,14 @@ class PathDrawer extends DrawerTemplate<BatchManager> {
     }
 
     private void setLineWidths(float[] path, int size, LineWidthFunction lineWidth) {
+        if (lineWidth == CONSTANT_LINE_WIDTH) {
+            float w = lineWidth.getWidth(0, 0);
+            for (int i = 0; i < size - 1; i++) {
+                lineWidths.add(w);
+            }
+            return;
+        }
+
         float totalPathLength = ShapeUtils.pathLength(path);
         float lengthDrawn = 0;
         for (int i = 0; i < size - 1; i++) {
