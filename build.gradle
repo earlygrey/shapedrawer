@@ -39,6 +39,15 @@ allprojects {
     }
 }
 
+if(JavaVersion.current().isJava9Compatible()) {
+    compileJava.targetCompatibility = 8
+    allprojects {
+        tasks.withType(JavaCompile) {
+            options.release.set(8)
+        }
+    }
+}
+
 
 project(":drawer") {
     apply plugin: "java-library"
