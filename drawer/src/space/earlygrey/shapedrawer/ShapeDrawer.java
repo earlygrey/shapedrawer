@@ -8,7 +8,6 @@ import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.math.Polygon;
 import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.math.Vector2;
-import com.badlogic.gdx.utils.Array;
 import com.badlogic.gdx.utils.FloatArray;
 import com.badlogic.gdx.utils.ShortArray;
 
@@ -245,7 +244,7 @@ public class ShapeDrawer extends AbstractShapeDrawer {
      * <p>Calls {@link #path(Iterable, float)} with {@code lineWidth} set to the current default.</p>
      * @param path an ordered Iterable of Vector2s representing path points
      */
-    public void path(Iterable<Vector2> path) {
+    public <T extends Vector2> void path(Iterable<T> path) {
         path(path, defaultLineWidth);
     }
 
@@ -255,7 +254,7 @@ public class ShapeDrawer extends AbstractShapeDrawer {
      * @param path an ordered Iterable of Vector2s representing path points
      * @param joinType the type of join, see {@link JoinType}
      */
-    public void path(Iterable<Vector2> path, JoinType joinType) {
+    public <T extends Vector2> void path(Iterable<T> path, JoinType joinType) {
         path(path, defaultLineWidth, joinType, true);
     }
 
@@ -264,7 +263,7 @@ public class ShapeDrawer extends AbstractShapeDrawer {
      * @param path an ordered Iterable of Vector2s representing path points
      * @param lineWidth the width of each line in world units
      */
-    public void path(Iterable<Vector2> path, float lineWidth) {
+    public <T extends Vector2> void path(Iterable<T> path, float lineWidth) {
         path(path, lineWidth, true);
     }
 
@@ -273,7 +272,7 @@ public class ShapeDrawer extends AbstractShapeDrawer {
      * @param path an ordered Iterable of Vector2s representing path points
      * @param open if false then the first and last points are connected
      */
-    public void path(Iterable<Vector2> path, boolean open) {
+    public <T extends Vector2> void path(Iterable<T> path, boolean open) {
         path(path, defaultLineWidth, open);
     }
 
@@ -284,7 +283,7 @@ public class ShapeDrawer extends AbstractShapeDrawer {
      * @param open if false then the first and last points are connected
      *
      */
-    public void path(Iterable<Vector2> path,JoinType joinType, boolean open) {
+    public <T extends Vector2> void path(Iterable<T> path,JoinType joinType, boolean open) {
         path(path, defaultLineWidth, joinType, open);
     }
 
@@ -296,7 +295,7 @@ public class ShapeDrawer extends AbstractShapeDrawer {
      * @param lineWidth the width of each line in world units
      * @param open if false then the first and last points are connected
      */
-    public void path(Iterable<Vector2> path, float lineWidth, boolean open) {
+    public <T extends Vector2> void path(Iterable<T> path, float lineWidth, boolean open) {
         path(path, lineWidth, isJoinNecessary(lineWidth)?JoinType.SMOOTH:JoinType.NONE, open);
     }
 
@@ -309,12 +308,12 @@ public class ShapeDrawer extends AbstractShapeDrawer {
      * For example, the paths [(0,0), (1.0001,1), (1,1), (2,2)] and [(0,0), (1,1), (2,2)] will be drawn identically. </p>
      * <p>If {@code path} is empty nothing will be drawn, if it contains two points {@link #line(float, float, float, float, float, boolean)}
      * will be used.</p>
-     * @param path an {@code Iterable<Vector2>} containing the ordered points in the path
+     * @param path an {@code Iterable<T>} containing the ordered points in the path
      * @param lineWidth the width of each line in world units
      * @param joinType see {@link JoinType} the type of join, see method description
      * @param open if false then the first and last points are connected
      */
-    public void path(Iterable<Vector2> path, float lineWidth, JoinType joinType, boolean open) {
+    public <T extends Vector2> void path(Iterable<T> path, float lineWidth, JoinType joinType, boolean open) {
         pathDrawer.path(path, lineWidth, joinType, open);
     }
 
