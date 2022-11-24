@@ -242,61 +242,61 @@ public class ShapeDrawer extends AbstractShapeDrawer {
     //=======================================
 
     /**
-     * <p>Calls {@link #path(Array, float)} with {@code lineWidth} set to the current default.</p>
-     * @param path an ordered Array of Vector2s representing path points
+     * <p>Calls {@link #path(Iterable, float)} with {@code lineWidth} set to the current default.</p>
+     * @param path an ordered Iterable of Vector2s representing path points
      */
-    public void path(Array<Vector2> path) {
+    public void path(Iterable<Vector2> path) {
         path(path, defaultLineWidth);
     }
 
     /**
-     * <p>Calls {@link #path(Array, float, JoinType, boolean)} with open set to true and {@code lineWidth}
+     * <p>Calls {@link #path(Iterable, float, JoinType, boolean)} with open set to true and {@code lineWidth}
      * set to the current default.</p>
-     * @param path an ordered Array of Vector2s representing path points
+     * @param path an ordered Iterable of Vector2s representing path points
      * @param joinType the type of join, see {@link JoinType}
      */
-    public void path(Array<Vector2> path, JoinType joinType) {
-        path(path, defaultLineWidth, joinType, false);
+    public void path(Iterable<Vector2> path, JoinType joinType) {
+        path(path, defaultLineWidth, joinType, true);
     }
 
     /**
-     * <p>Calls {@link #path(Array, float, boolean)} with open set to true.</p>
-     * @param path an ordered Array of Vector2s representing path points
+     * <p>Calls {@link #path(Iterable, float, boolean)} with open set to true.</p>
+     * @param path an ordered Iterable of Vector2s representing path points
      * @param lineWidth the width of each line in world units
      */
-    public void path(Array<Vector2> path, float lineWidth) {
-        path(path, lineWidth, false);
+    public void path(Iterable<Vector2> path, float lineWidth) {
+        path(path, lineWidth, true);
     }
 
     /**
-     * <p>Calls {@link #path(Array, float, boolean)} with {@code lineWidth} set to the default.</p>
-     * @param path an ordered Array of Vector2s representing path points
+     * <p>Calls {@link #path(Iterable, float, boolean)} with {@code lineWidth} set to the default.</p>
+     * @param path an ordered Iterable of Vector2s representing path points
      * @param open if false then the first and last points are connected
      */
-    public void path(Array<Vector2> path, boolean open) {
+    public void path(Iterable<Vector2> path, boolean open) {
         path(path, defaultLineWidth, open);
     }
 
     /**
      *
-     * @param path an ordered Array of Vector2s representing path points
+     * @param path an ordered Iterable of Vector2s representing path points
      * @param joinType the type of join, see {@link JoinType}
      * @param open if false then the first and last points are connected
      *
      */
-    public void path(Array<Vector2> path,JoinType joinType, boolean open) {
+    public void path(Iterable<Vector2> path,JoinType joinType, boolean open) {
         path(path, defaultLineWidth, joinType, open);
     }
 
 
     /**
-     * <p>Calls {@link #path(Array, float, JoinType, boolean)} with {@code joinType} set to {@link JoinType#SMOOTH}
+     * <p>Calls {@link #path(Iterable, float, JoinType, boolean)} with {@code joinType} set to {@link JoinType#SMOOTH}
      *  (also see {@link #isJoinNecessary(float)}).</p>
-     * @param path an ordered Array of Vector2s representing path points
+     * @param path an ordered Iterable of Vector2s representing path points
      * @param lineWidth the width of each line in world units
      * @param open if false then the first and last points are connected
      */
-    public void path(Array<Vector2> path, float lineWidth, boolean open) {
+    public void path(Iterable<Vector2> path, float lineWidth, boolean open) {
         path(path, lineWidth, isJoinNecessary(lineWidth)?JoinType.SMOOTH:JoinType.NONE, open);
     }
 
@@ -309,21 +309,17 @@ public class ShapeDrawer extends AbstractShapeDrawer {
      * For example, the paths [(0,0), (1.0001,1), (1,1), (2,2)] and [(0,0), (1,1), (2,2)] will be drawn identically. </p>
      * <p>If {@code path} is empty nothing will be drawn, if it contains two points {@link #line(float, float, float, float, float, boolean)}
      * will be used.</p>
-     * @param path an {@code Array<Vector2>} containing the ordered points in the path
+     * @param path an {@code Iterable<Vector2>} containing the ordered points in the path
      * @param lineWidth the width of each line in world units
      * @param joinType see {@link JoinType} the type of join, see method description
      * @param open if false then the first and last points are connected
      */
-    public void path(Array<Vector2> path, float lineWidth, JoinType joinType, boolean open) {
+    public void path(Iterable<Vector2> path, float lineWidth, JoinType joinType, boolean open) {
         pathDrawer.path(path, lineWidth, joinType, open);
     }
 
-    public void path(Array<Vector2> path, JoinType joinType, boolean open, LineWidthFunction lineWidth) {
-        pathDrawer.path(path, joinType, open, lineWidth);
-    }
-
     /**
-     * <p>Draws a path by drawing a line between each point and the next. See {@link #path(Array, float, JoinType, boolean)} for details.</p>
+     * <p>Draws a path by drawing a line between each point and the next. See {@link #path(Iterable, float, JoinType, boolean)} for details.</p>
      * @param path an {@link FloatArray} containing the ordered points in the path
      * @param lineWidth the width of each line in world units
      * @param joinType see {@link JoinType} the type of join, see method description
@@ -334,7 +330,7 @@ public class ShapeDrawer extends AbstractShapeDrawer {
     }
 
     /**
-     * <p>Draws a path by drawing a line between each point and the next. See {@link #path(Array, float, JoinType, boolean)} for details.</p>
+     * <p>Draws a path by drawing a line between each point and the next. See {@link #path(Iterable, float, JoinType, boolean)} for details.</p>
      * @param path an {@code float[]} containing the ordered points in the path
      * @param lineWidth the width of each line in world units
      * @param joinType see {@link JoinType} the type of join, see method description
@@ -643,6 +639,21 @@ public class ShapeDrawer extends AbstractShapeDrawer {
      */
     public void arc(float centreX, float centreY, float radius, float startAngle, float radians, float lineWidth, boolean useJoin, int sides) {
         JoinType joinType = (useJoin && isJoinNecessary(lineWidth))?JoinType.POINTY:JoinType.NONE;
+        polygonDrawer.polygon(centreX, centreY, sides, radius, radius, 0, lineWidth, joinType, startAngle, radians);
+    }
+
+    /**
+     * <p>Draws an arc from {@code startAngle} anti-clockwise that subtends the specified angle.</p>
+     * @param centreX the x-coordinate of the centre point
+     * @param centreY the y-coordinate of the centre point
+     * @param radius the radius of the circle that this arc is a part of
+     * @param startAngle the angle in radians at which the arc starts
+     * @param radians the angle in radians subtended by the arc
+     * @param lineWidth the width of the line
+     * @param joinType the type of join, see {@link JoinType}
+     * @param sides the number of straight line segments to draw the arc with
+     */
+    public void arc(float centreX, float centreY, float radius, float startAngle, float radians, float lineWidth, JoinType joinType, int sides) {
         polygonDrawer.polygon(centreX, centreY, sides, radius, radius, 0, lineWidth, joinType, startAngle, radians);
     }
 

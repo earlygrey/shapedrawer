@@ -4,6 +4,7 @@ import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.utils.Array;
 import com.badlogic.gdx.utils.FloatArray;
 
+import space.earlygrey.shapedrawer.ShapeUtils.ConstantLineWidth;
 import space.earlygrey.shapedrawer.ShapeUtils.LineWidthFunction;
 
 /**
@@ -20,34 +21,18 @@ class PathDrawer extends DrawerTemplate<BatchManager> {
 
     private final Vector2 D0 = new Vector2(), E0 = new Vector2();
 
-    private static class ConstantLineWidth implements LineWidthFunction {
-
-        float width;
-
-        @Override
-        public float getWidth(int i, float t) {
-            return width;
-        }
-
-        ConstantLineWidth width(float width) {
-            this.width = width;
-            return this;
-        }
-    }
-
     private static final ConstantLineWidth CONSTANT_LINE_WIDTH = new ConstantLineWidth();
 
     PathDrawer(BatchManager batchManager, AbstractShapeDrawer drawer) {
         super(batchManager, drawer);
     }
 
-    <T extends Vector2> void path(Array<T> userPath, float lineWidth, JoinType joinType) {
+    <T extends Vector2> void path(Iterable<T> userPath, float lineWidth, JoinType joinType) {
         path(userPath, lineWidth, joinType, true);
     }
 
-    <T extends Vector2> void path(Array<T> userPath, float lineWidth, JoinType joinType, boolean open) {
-        for (int i = 0; i < userPath.size; i++) {
-            Vector2 v = userPath.get(i);
+    <T extends Vector2> void path(Iterable<T> userPath, float lineWidth, JoinType joinType, boolean open) {
+        for (Vector2 v : userPath) {
             tempPath.add(v.x, v.y);
         }
 
@@ -55,9 +40,8 @@ class PathDrawer extends DrawerTemplate<BatchManager> {
         tempPath.clear();
     }
 
-    <T extends Vector2> void path(Array<T> userPath, JoinType joinType, boolean open, LineWidthFunction lineWidth) {
-        for (int i = 0; i < userPath.size; i++) {
-            Vector2 v = userPath.get(i);
+    <T extends Vector2> void path(Iterable<T> userPath, JoinType joinType, boolean open, LineWidthFunction lineWidth) {
+        for (Vector2 v : userPath) {
             tempPath.add(v.x, v.y);
         }
 

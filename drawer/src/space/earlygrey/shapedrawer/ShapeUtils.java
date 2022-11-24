@@ -17,6 +17,23 @@ public class ShapeUtils {
         float getWidth(int i, float t);
     }
 
+    public static class ConstantLineWidth implements LineWidthFunction {
+
+        float width;
+
+        @Override
+        public float getWidth(int i, float t) {
+            return width;
+        }
+
+        public ConstantLineWidth width(float width) {
+            this.width = width;
+            return this;
+        }
+
+    }
+
+
     public static float snap(float a, float pixelSize, float halfPixelSize) {
         return  (Math.round(a / pixelSize) * pixelSize) + halfPixelSize;
     }
