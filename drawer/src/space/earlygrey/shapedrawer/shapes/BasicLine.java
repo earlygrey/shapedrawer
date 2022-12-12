@@ -5,12 +5,12 @@ import com.badlogic.gdx.math.Vector2;
 
 import space.earlygrey.shapedrawer.JoinType;
 import space.earlygrey.shapedrawer.ShapeDrawer;
+import space.earlygrey.shapedrawer.ShapeUtils.LineWidthFunction;
 import space.earlygrey.shapedrawer.shapes.Shape.Line;
 
 public class BasicLine extends BasicShape<BasicLine> implements Line {
 
     private Vector2 from, to;
-    private float width;
     private float startColor, endColor;
     boolean snap;
 
@@ -28,24 +28,27 @@ public class BasicLine extends BasicShape<BasicLine> implements Line {
         startColor = drawer.getPackedColor();
         endColor = drawer.getPackedColor();
         snap = drawer.isDefaultSnap();
-        width = drawer.getDefaultLineWidth();
     }
 
+    @Override
     public BasicLine from(float x, float y) {
         from.set(x, y);
         return this;
     }
 
+    @Override
     public BasicLine to(float x, float y) {
         to.set(x, y);
         return this;
     }
 
+    @Override
     public BasicLine from(Vector2 from) {
         this.from.set(from);
         return this;
     }
 
+    @Override
     public BasicLine to(Vector2 to) {
         this.to.set(to);
         return this;
@@ -63,28 +66,26 @@ public class BasicLine extends BasicShape<BasicLine> implements Line {
         return this;
     }
 
-
-    public BasicLine width(float width) {
-        this.width = width;
-        return this;
-    }
-
+    @Override
     public BasicLine color(Color color) {
         startColor(color);
         endColor(color);
         return this;
     }
 
+    @Override
     public BasicLine startColor(Color startColor) {
         this.startColor = startColor.toFloatBits();
         return this;
     }
 
+    @Override
     public BasicLine endColor(Color endColor) {
         this.endColor = endColor.toFloatBits();
         return this;
     }
 
+    @Override
     public BasicLine snap(boolean snap) {
         this.snap = snap;
         return this;
@@ -92,7 +93,7 @@ public class BasicLine extends BasicShape<BasicLine> implements Line {
 
     @Override
     public void draw() {
-        drawer.line(from.x, from.y, to.x, to.y, width, snap, startColor, endColor);
+        drawer.line(from.x, from.y, to.x, to.y, lineWidth.getWidth(0, 0), snap, startColor, endColor);
     }
 
 

@@ -8,9 +8,10 @@ import com.badlogic.gdx.utils.ShortArray;
 
 import space.earlygrey.shapedrawer.JoinType;
 import space.earlygrey.shapedrawer.ShapeDrawer;
+import space.earlygrey.shapedrawer.ShapeUtils.LineWidthFunction;
 import space.earlygrey.shapedrawer.shapes.Shape.PolyLine;
 
-public class BasicPolygon extends BasicShape<BasicPolygon> implements PolyLine {
+public class BasicPolyline extends BasicShape<BasicPolyline> implements PolyLine {
 
     FloatArray vertices;
 
@@ -20,7 +21,7 @@ public class BasicPolygon extends BasicShape<BasicPolygon> implements PolyLine {
 
     EarClippingTriangulator triangulator = new EarClippingTriangulator();
 
-    BasicPolygon(ShapeDrawer drawer) {
+    BasicPolyline(ShapeDrawer drawer) {
         super(drawer);
         vertices = new FloatArray();
     }
@@ -36,70 +37,76 @@ public class BasicPolygon extends BasicShape<BasicPolygon> implements PolyLine {
         scaleY = 1;
     }
 
-    public BasicPolygon setOpen(boolean open) {
+    public BasicPolyline setOpen(boolean open) {
         this.open = open;
         return this;
     }
 
     @Override
-    public BasicPolygon color(Color color) {
+    public BasicPolyline color(Color color) {
         this.color = color.toFloatBits();
         return this;
     }
 
     @Override
-    public BasicPolygon joinType(JoinType joinType) {
+    public BasicPolyline joinType(JoinType joinType) {
         this.joinType = joinType;
         return this;
     }
 
     @Override
-    public BasicPolygon lineWidth(float width) {
+    public BasicPolyline lineWidth(float width) {
         setLineWidth(width);
         return this;
     }
 
     @Override
-    public <T extends Vector2> BasicPolygon vertices(Iterable<T> points) {
+    public BasicPolyline lineWidth(LineWidthFunction width) {
+        this.lineWidth = width;
+        return this;
+    }
+
+    @Override
+    public <T extends Vector2> BasicPolyline vertices(Iterable<T> points) {
         this.vertices.clear();
         points.forEach(p -> this.vertices.add(p.x, p.y));
         return this;
     }
 
     @Override
-    public BasicPolygon vertices(FloatArray points) {
+    public BasicPolyline vertices(FloatArray points) {
         this.vertices.clear();
         this.vertices.addAll(points);
         return this;
     }
 
     @Override
-    public BasicPolygon vertices(float[] points) {
+    public BasicPolyline vertices(float[] points) {
         this.vertices.clear();
         this.vertices.addAll(points, 0, points.length);
         return this;
     }
 
     @Override
-    public BasicPolygon addVertex(float x, float y) {
+    public BasicPolyline addVertex(float x, float y) {
         this.vertices.add(x, y);
         return this;
     }
 
     @Override
-    public BasicPolygon addVertex(Vector2 vertex) {
+    public BasicPolyline addVertex(Vector2 vertex) {
         return addVertex(vertex.x, vertex.y);
     }
 
     @Override
-    public BasicPolygon offset(float x, float y) {
+    public BasicPolyline offset(float x, float y) {
         offsetX = x;
         offsetY = y;
         return this;
     }
 
     @Override
-    public BasicPolygon scale(float x, float y) {
+    public BasicPolyline scale(float x, float y) {
         scaleX = x;
         scaleY = y;
         return this;

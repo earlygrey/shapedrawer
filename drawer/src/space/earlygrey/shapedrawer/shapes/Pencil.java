@@ -30,16 +30,16 @@ public class Pencil extends Utensil {
         return LINE;
     }
 
-    public PolyLine path() {
-        POLYGON.reset(false);
-        POLYGON.setOpen(true);
-        return POLYGON;
+    public PolyLine polyLine() {
+        POLYLINE.reset(false);
+        POLYLINE.setOpen(true);
+        return POLYLINE;
     }
 
     @Override
     public OutlinedPolygon<?> polygon() {
-        POLYGON.reset(filled());
-        return POLYGON;
+        POLYLINE.reset(filled());
+        return POLYLINE;
     }
 
     @Override

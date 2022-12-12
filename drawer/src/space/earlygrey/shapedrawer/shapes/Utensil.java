@@ -11,7 +11,7 @@ import space.earlygrey.shapedrawer.shapes.Shape.FilledTriangle;
 abstract class Utensil {
 
    ShapeDrawer drawer;
-   final BasicPolygon POLYGON;
+   final BasicPolyline POLYLINE;
 
    final BasicRegularPolygon REGULAR_POLYGON;
 
@@ -27,7 +27,7 @@ abstract class Utensil {
 
    Utensil(ShapeDrawer drawer) {
       this.drawer = drawer;
-      POLYGON = new BasicPolygon(drawer);
+      POLYLINE = new BasicPolyline(drawer);
       REGULAR_POLYGON = new BasicRegularPolygon(drawer);
       CIRCLE = new BasicCircle(drawer);
       ELLIPSE = new BasicEllipse(drawer);
@@ -39,8 +39,8 @@ abstract class Utensil {
    abstract boolean filled();
 
    public FilledPolygon polygon() {
-      POLYGON.reset(filled());
-      return POLYGON;
+      POLYLINE.reset(filled());
+      return POLYLINE;
    }
 
    public FilledRegularPolygon regularPolygon() {

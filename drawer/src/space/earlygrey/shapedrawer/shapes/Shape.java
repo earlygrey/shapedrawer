@@ -5,6 +5,7 @@ import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.utils.FloatArray;
 
 import space.earlygrey.shapedrawer.JoinType;
+import space.earlygrey.shapedrawer.ShapeUtils.LineWidthFunction;
 
 public interface Shape<T extends Shape> {
 
@@ -124,7 +125,7 @@ public interface Shape<T extends Shape> {
     }
 
     interface PolyLine extends OutlinedPolygon<PolyLine> {
-
+        PolyLine lineWidth(LineWidthFunction width);
     }
 
     interface FilledRegularPolygon<T extends FilledRegularPolygon> extends Shape<T> {
