@@ -35,6 +35,7 @@ public abstract class AbstractShapeDrawer {
     protected final PolygonDrawer polygonDrawer;
     protected final FilledPolygonDrawer filledPolygonDrawer;
 
+
     private SideEstimator sideEstimator;
 
 
@@ -44,7 +45,8 @@ public abstract class AbstractShapeDrawer {
 
     /**
      * <p>Creates a new ShapeDrawer with the given batch and region.</p>
-     * @param batch the batch used for drawing. Cannot be changed.
+     *
+     * @param batch  the batch used for drawing. Cannot be changed.
      * @param region the texture region used for drawing. Can be changed later.
      */
 
@@ -91,7 +93,6 @@ public abstract class AbstractShapeDrawer {
      * Calls {@link #update(boolean)} with {@code updatePixelSize} set to true.</p>
      * <p>NOTE: if you are not using an orthographic projection, you should call
      * {@link #update(boolean)} with {@code updatePixelSize} set to false.</p>
-     *
      */
     public void update() {
         update(true);
@@ -101,6 +102,7 @@ public abstract class AbstractShapeDrawer {
      * <p>Call this when the batch projection or transformation matrices are changed.
      * Currently just calculates and updates the pixel size (see {@link #updatePixelSize()},
      * and only if {@code updatePixelSize} is set to true.</p>
+     *
      * @param updatePixelSize whether to call {@link #updatePixelSize()}
      */
     public void update(boolean updatePixelSize) {
@@ -113,6 +115,7 @@ public abstract class AbstractShapeDrawer {
      * that value. You should use this if you have changed the batch projection or transformation matrices,
      * or more generally can just call {@link #update()}.</p>
      * <p>NOTE: this only works when the projection is orthographic!</p>
+     *
      * @return the previous screen pixel size in world units
      */
     public float updatePixelSize() {
@@ -132,6 +135,7 @@ public abstract class AbstractShapeDrawer {
      * <p>Makes a guess as to whether joins will be discernible on the screen on based on the thickness of the line.
      * This affects the default behaviour when a {@link JoinType} is unspecified.</p>
      * <p>You can override this if you want to change this behaviour.</p>
+     *
      * @param lineWidth the width of the line in world units
      * @return whether drawing joins will likely be discernible
      */
@@ -154,8 +158,8 @@ public abstract class AbstractShapeDrawer {
     // GETTERS AND SETTERS
     //================================================================================
 
+
     /**
-     *
      * @return the current {@link SideEstimator}
      */
     public final SideEstimator getSideEstimator() {
@@ -164,6 +168,7 @@ public abstract class AbstractShapeDrawer {
 
     /**
      * <p>Sets a new {@link SideEstimator} and returns the old {@link SideEstimator}.</p>
+     *
      * @param sideEstimator
      * @return the old {@link SideEstimator}
      */
@@ -178,6 +183,7 @@ public abstract class AbstractShapeDrawer {
      * line endpoint snapping (see {@link ShapeDrawer#line(float, float, float, float, float, boolean)}) and
      * estimating the number of sides required to draw an ellipse
      * (see {@link ShapeDrawer#ellipse(float, float, float, float, float, float)}).</p>
+     *
      * @param pixelSize the size of a screen pixel in world units
      * @return the previous screen pixel size in world units
      */
@@ -186,7 +192,6 @@ public abstract class AbstractShapeDrawer {
     }
 
     /**
-     *
      * @return the current setting for the pixel size in world units
      */
     public float getPixelSize() {
@@ -194,7 +199,6 @@ public abstract class AbstractShapeDrawer {
     }
 
     /**
-     *
      * @return the batch this ShapeDrawer was initialised with
      */
     public Batch getBatch() {
@@ -202,7 +206,6 @@ public abstract class AbstractShapeDrawer {
     }
 
     /**
-     *
      * @return the current TextureRegion used for drawing
      */
     public TextureRegion getRegion() {
@@ -210,7 +213,6 @@ public abstract class AbstractShapeDrawer {
     }
 
     /**
-     *
      * @return the default line width used if one is not specified in the method signature
      */
     public float getDefaultLineWidth() {
@@ -219,6 +221,7 @@ public abstract class AbstractShapeDrawer {
 
     /**
      * <p>Sets the default line width used if one is not specified in the method signature.</p>
+     *
      * @param defaultLineWidth the line width to be used as a default
      * @return the previous default line width
      */
@@ -229,7 +232,6 @@ public abstract class AbstractShapeDrawer {
     }
 
     /**
-     *
      * @return whether lines are snapped to the centre of pixels if it is not specified in the method signature
      */
     public boolean isDefaultSnap() {
@@ -238,6 +240,7 @@ public abstract class AbstractShapeDrawer {
 
     /**
      * <p>Sets whether line endpoints are snapped to the centre of pixels if it is not specified in the method signature.</p>
+     *
      * @param defaultSnap whether to snap
      * @return the previous default snap setting
      */
@@ -249,6 +252,7 @@ public abstract class AbstractShapeDrawer {
 
     /**
      * <p>Sets the TextureRegion used to draw.</p>
+     *
      * @param region the region to use
      * @return the previous texture region
      */
@@ -259,6 +263,7 @@ public abstract class AbstractShapeDrawer {
     /**
      * <p>Sets the colour of the ShapeDrawer. This works like {@link Batch#setColor(Color)} though drawing is not affected by
      * the colour of the Batch. Internally only the packed float value is stored, see {@link Color#toFloatBits()}.</p>
+     *
      * @param color the colour to use
      * @return the previous packed float value of the ShapeDrawer's colour
      */
@@ -269,6 +274,7 @@ public abstract class AbstractShapeDrawer {
     /**
      * <p>Sets the colour of the ShapeDrawer. This works just like {@link Batch#setColor(Color)} though drawing is not affected by
      * the colour of the Batch.</p>
+     *
      * @param floatBits the packed float value of the colour, see {@link Color#toFloatBits()}.
      * @return the previous packed float value of the ShapeDrawer's colour
      */
@@ -277,7 +283,6 @@ public abstract class AbstractShapeDrawer {
     }
 
     /**
-     *
      * @return the packed colour of this ShapeDrawer
      */
     public float getPackedColor() {
@@ -286,13 +291,14 @@ public abstract class AbstractShapeDrawer {
 
     /**
      * <p>Sets the packed colour using {@link Color#toFloatBits(float, float, float, float)}.</p>
+     *
      * @param r
      * @param g
      * @param b
      * @param a
      * @return the packed colour of this ShapeDrawer
      */
-    public float setColor (float r, float g, float b, float a) {
+    public float setColor(float r, float g, float b, float a) {
         return setColor(Color.toFloatBits(r, g, b, a));
     }
 

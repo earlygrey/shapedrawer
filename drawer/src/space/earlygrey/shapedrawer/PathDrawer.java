@@ -70,6 +70,10 @@ class PathDrawer extends DrawerTemplate<BatchManager> {
     }
 
     void path (float[] userPath, int start, int end, LineWidthFunction lineWidth, JoinType joinType, boolean open) {
+        path(userPath, start, end, lineWidth, joinType, open, 0, 0, 1, 1);
+    }
+
+    void path (float[] userPath, int start, int end, LineWidthFunction lineWidth, JoinType joinType, boolean open, float offsetX, float offsetY, float scaleX, float scaleY) {
 
         if (userPath.length < 4) return;
 
@@ -78,7 +82,7 @@ class PathDrawer extends DrawerTemplate<BatchManager> {
         path.add(userPath[start+1]);
         for(int i = start+2; i < end; i+=2) {
             if (!ShapeUtils.epsilonEquals(userPath[i-2], userPath[i]) || !ShapeUtils.epsilonEquals(userPath[i-1], userPath[i+1])) {
-                path.add(userPath[i], userPath[i+1]);
+                path.add(offsetX + scaleX * userPath[i], offsetY + scaleY * userPath[i+1]);
             }
         }
         if (path.size < 4) {
@@ -114,7 +118,7 @@ class PathDrawer extends DrawerTemplate<BatchManager> {
     private void setLineWidths(float[] path, int size, LineWidthFunction lineWidth) {
         if (lineWidth == CONSTANT_LINE_WIDTH) {
             float w = lineWidth.getWidth(0, 0);
-            for (int i = 0; i < size - 1; i++) {
+            for (int i = 0; i < size; i++) {
                 lineWidths.add(w);
             }
             return;
