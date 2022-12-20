@@ -3,9 +3,9 @@ package space.earlygrey.shapedrawer.shapes;
 import space.earlygrey.shapedrawer.ShapeDrawer;
 import space.earlygrey.shapedrawer.shapes.Shape.Sector;
 
-public class PaintBrush extends Utensil {
+public class Brush extends Utensil {
 
-   public PaintBrush(ShapeDrawer drawer) {
+   public Brush(ShapeDrawer drawer) {
       super(drawer);
    }
 

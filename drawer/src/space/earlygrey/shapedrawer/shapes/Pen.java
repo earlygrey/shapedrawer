@@ -11,11 +11,11 @@ import space.earlygrey.shapedrawer.shapes.Shape.OutlinedRegularPolygon;
 import space.earlygrey.shapedrawer.shapes.Shape.OutlinedTriangle;
 import space.earlygrey.shapedrawer.shapes.Shape.PolyLine;
 
-public class Pencil extends Utensil {
+public class Pen extends Utensil {
 
     final BasicLine LINE;
 
-    public Pencil(ShapeDrawer drawer) {
+    public Pen(ShapeDrawer drawer) {
         super(drawer);
         LINE = new BasicLine(drawer);
     }

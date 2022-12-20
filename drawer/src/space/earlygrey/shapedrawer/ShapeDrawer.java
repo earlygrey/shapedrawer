@@ -12,8 +12,8 @@ import com.badlogic.gdx.utils.FloatArray;
 import com.badlogic.gdx.utils.ShortArray;
 
 import space.earlygrey.shapedrawer.ShapeUtils.LineWidthFunction;
-import space.earlygrey.shapedrawer.shapes.PaintBrush;
-import space.earlygrey.shapedrawer.shapes.Pencil;
+import space.earlygrey.shapedrawer.shapes.Brush;
+import space.earlygrey.shapedrawer.shapes.Pen;
 
 /**
  * <p>Uses a Batch to draw lines, outlined shapes and paths. Meant to be an analogue of {@link com.badlogic.gdx.graphics.glutils.ShapeRenderer}
@@ -32,8 +32,8 @@ import space.earlygrey.shapedrawer.shapes.Pencil;
 
 public class ShapeDrawer extends AbstractShapeDrawer {
 
-    protected Pencil pencil;
-    protected PaintBrush brush;
+    protected Pen pen;
+    protected Brush brush;
 
     //================================================================================
     // CONSTRUCTORS
@@ -49,19 +49,19 @@ public class ShapeDrawer extends AbstractShapeDrawer {
 
     public ShapeDrawer(Batch batch, TextureRegion region, SideEstimator sideEstimator) {
         super(batch, region, sideEstimator);
-        pencil = new Pencil(this);
-        brush = new PaintBrush(this);
+        pen = new Pen(this);
+        brush = new Brush(this);
     }
 
     //================================================================================
     // MISC
     // ======================================================
 
-    public Pencil getPencil() {
-        return pencil;
+    public Pen getPen() {
+        return pen;
     }
 
-    public PaintBrush getPaintBrush() {
+    public Brush getBrush() {
         return brush;
     }
 
