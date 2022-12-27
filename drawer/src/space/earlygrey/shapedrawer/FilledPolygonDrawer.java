@@ -21,10 +21,10 @@ abstract class FilledPolygonDrawer<T extends BatchManager> extends DrawerTemplat
 
     abstract void polygon(float centreX, float centreY, int sides, float radiusX, float radiusY, float rotation, float startAngle, float radians, float innerColor, float outerColor);
 
-    abstract void polygon(float[] vertices, short[] triangles, int trianglesCount, float offsetX, float offsetY);
+    abstract void polygon(float[] vertices, short[] triangles, int trianglesCount, float offsetX, float offsetY, float scaleX, float scaleY);
 
     void polygon(float[] vertices, short[] triangles, int trianglesCount) {
-        polygon(vertices, triangles, trianglesCount, 0, 0);
+        polygon(vertices, triangles, trianglesCount, 0, 0, 1, 1);
     }
 
     void polygon(float[] vertices) {
@@ -45,7 +45,7 @@ abstract class FilledPolygonDrawer<T extends BatchManager> extends DrawerTemplat
     }
 
     void polygon(float[] vertices, short[] triangles, float offsetX, float offsetY) {
-        polygon(vertices, triangles, triangles.length, offsetX, offsetY);
+        polygon(vertices, triangles, triangles.length, offsetX, offsetY, 1, 1);
     }
 
     void rectangle(float x, float y, float width, float height, float rotation) {
@@ -171,13 +171,13 @@ abstract class FilledPolygonDrawer<T extends BatchManager> extends DrawerTemplat
         }
 
         @Override
-        void polygon(float[] vertices, short[] triangles, int trianglesCount, float x, float y) {
+        void polygon(float[] vertices, short[] triangles, int trianglesCount, float x, float y, float scaleX, float scaleY) {
             float c = batchManager.floatBits;
             for (int i = 0; i < trianglesCount; i += 3) {
                 batchManager.ensureSpaceForTriangle();
-                vert1(vertices[2 * triangles[i]] + x, vertices[2 * triangles[i] + 1] + y);
-                vert2(vertices[2 * triangles[i + 1]] + x, vertices[2 * triangles[i + 1] + 1] + y);
-                vert3(vertices[2 * triangles[i + 2]] + x, vertices[2 * triangles[i + 2] + 1] + y);
+                vert1(scaleX * vertices[2 * triangles[i]] + x, scaleY * vertices[2 * triangles[i] + 1] + y);
+                vert2(scaleX * vertices[2 * triangles[i + 1]] + x, scaleY * vertices[2 * triangles[i + 1] + 1] + y);
+                vert3(scaleX * vertices[2 * triangles[i + 2]] + x, scaleY * vertices[2 * triangles[i + 2] + 1] + y);
                 color(c, c, c);
                 batchManager.pushTriangle();
             }
@@ -251,11 +251,11 @@ abstract class FilledPolygonDrawer<T extends BatchManager> extends DrawerTemplat
         }
 
         @Override
-        void polygon(float[] vertices, short[] triangles, int trianglesCount, float offsetX, float offsetY) {
+        void polygon(float[] vertices, short[] triangles, int trianglesCount, float offsetX, float offsetY, float scaleX, float scaleY) {
             int n = vertices.length / 2;
             batchManager.ensureSpace(n);
             batchManager.pushVertexData(vertices, triangles, trianglesCount, batchManager.floatBits,
-                    offsetX, offsetY);
+                    offsetX, offsetY, scaleX, scaleY);
             batchManager.pushToBatch();
         }
 

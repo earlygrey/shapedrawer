@@ -161,6 +161,7 @@ class BatchManager {
     }
 
     Drawing stopRecording() {
+        pushToBatch();
         drawing.finalise();
         Drawing returnVal = drawing;
         drawing = null;
@@ -234,7 +235,7 @@ class BatchManager {
     void pushToBatch() {
         if (vertexCount == 0) return;
         if (isRecording()) {
-            drawing.pushVertices();
+            drawing.pushVertices(verts, getVerticesArrayIndex());
         } else {
             if (r == null) throw new IllegalStateException("The texture region is null. Please set a texture region first (e.g. in the constructor or by calling setTextureRegion(TextureRegion region))");
             batch.draw(r.getTexture(), verts, 0, getVerticesArrayIndex());
