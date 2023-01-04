@@ -3,6 +3,7 @@ package space.earlygrey.shapedrawer;
 import com.badlogic.gdx.graphics.g2d.Batch;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.utils.Array;
+import com.badlogic.gdx.utils.FloatArray;
 
 /**
  * Holds a cache of shapes drawn with a {@link ShapeDrawer}, which can be drawn at any time without having to perform the shape calculations again.
@@ -106,6 +107,18 @@ public class Drawing {
 
     public float getScaleY() {
         return scaleY;
+    }
+    
+    public void getTransformedXYCoordinates(FloatArray floats) {
+        floats.clear();
+        for (int i = 0; i < vertexBatches.size; i++) {
+            float[] vertices = vertexBatches.get(i);
+            float[] transformed = applyTransformation(vertices, offsetX, offsetY, scaleX, scaleY);
+            for (int j = 0; j < vertices.length; j += BatchManager.VERTEX_SIZE) {
+                floats.add(transformed[i]);
+                floats.add(transformed[i + 1]);
+            }
+        }
     }
 
     static class PolygonDrawing extends Drawing {
