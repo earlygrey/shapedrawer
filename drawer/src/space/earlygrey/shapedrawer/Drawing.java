@@ -1,12 +1,14 @@
 package space.earlygrey.shapedrawer;
 
 import com.badlogic.gdx.graphics.g2d.Batch;
+import com.badlogic.gdx.graphics.g2d.RepeatablePolygonSprite;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.utils.Array;
 import com.badlogic.gdx.utils.FloatArray;
 
 /**
  * Holds a cache of shapes drawn with a {@link ShapeDrawer}, which can be drawn at any time without having to perform the shape calculations again.
+ *
  * @author earlygrey
  */
 
@@ -36,7 +38,8 @@ public class Drawing {
      * Draw the cached shapes to the screen. Must be used in between {@link Batch#begin()} and {@link Batch#end()}.
      */
     public void draw(float x, float y, float scaleX, float scaleY) {
-        if (batchManager.r == null) throw new IllegalStateException("The texture region is null. Please set a texture region first (e.g. in the constructor or by calling setTextureRegion(TextureRegion region))");
+        if (batchManager.r == null)
+            throw new IllegalStateException("The texture region is null. Please set a texture region first (e.g. in the constructor or by calling setTextureRegion(TextureRegion region))");
         for (int i = 0; i < vertexBatches.size; i++) {
             float[] vertices = vertexBatches.get(i);
             getBatchManager().getBatch().draw(batchManager.r.getTexture(), applyTransformation(vertices, x, y, scaleX, scaleY), 0, vertices.length);
@@ -65,18 +68,18 @@ public class Drawing {
         if (!needsTransforming(x, y, scaleX, scaleY)) {
             return vertices;
         }
-        for (int i = 0; i < vertices.length; i+= BatchManager.VERTEX_SIZE) {
+        for (int i = 0; i < vertices.length; i += BatchManager.VERTEX_SIZE) {
             tmpVertices[i] = x + scaleX * vertices[i];
-            tmpVertices[i+1] = y + scaleY * vertices[i+1];
-            tmpVertices[i+2] = vertices[i+2];
-            tmpVertices[i+3] = vertices[i+3];
-            tmpVertices[i+4] = vertices[i+4];
+            tmpVertices[i + 1] = y + scaleY * vertices[i + 1];
+            tmpVertices[i + 2] = vertices[i + 2];
+            tmpVertices[i + 3] = vertices[i + 3];
+            tmpVertices[i + 4] = vertices[i + 4];
         }
         return tmpVertices;
     }
 
     boolean needsTransforming(float x, float y, float scaleX, float scaleY) {
-        return x != 0 || y != 0 || scaleX != 1 ||scaleY != 1;
+        return x != 0 || y != 0 || scaleX != 1 || scaleY != 1;
     }
 
     BatchManager getBatchManager() {
@@ -108,15 +111,15 @@ public class Drawing {
     public float getScaleY() {
         return scaleY;
     }
-    
+
     public void getTransformedXYCoordinates(FloatArray floats) {
         floats.clear();
         for (int i = 0; i < vertexBatches.size; i++) {
             float[] vertices = vertexBatches.get(i);
             float[] transformed = applyTransformation(vertices, offsetX, offsetY, scaleX, scaleY);
             for (int j = 0; j < vertices.length; j += BatchManager.VERTEX_SIZE) {
-                floats.add(transformed[i]);
-                floats.add(transformed[i + 1]);
+                floats.add(transformed[j]);
+                floats.add(transformed[j + 1]);
             }
         }
     }
@@ -132,7 +135,8 @@ public class Drawing {
 
         @Override
         public void draw(float x, float y, float scaleX, float scaleY) {
-            if (batchManager.r == null) throw new IllegalStateException("The texture region is null. Please set a texture region first (e.g. in the constructor or by calling setTextureRegion(TextureRegion region))");
+            if (batchManager.r == null)
+                throw new IllegalStateException("The texture region is null. Please set a texture region first (e.g. in the constructor or by calling setTextureRegion(TextureRegion region))");
             for (int i = 0; i < vertexBatches.size; i++) {
                 float[] vertices = vertexBatches.get(i);
                 short[] triangles = triangleBatches.get(i);
