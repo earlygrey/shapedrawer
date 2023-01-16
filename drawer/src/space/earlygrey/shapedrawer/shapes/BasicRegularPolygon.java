@@ -67,6 +67,13 @@ class BasicRegularPolygon extends BasicShape<BasicRegularPolygon> implements Out
     }
 
     @Override
+    public BasicRegularPolygon radius(float radius) {
+        this.scaleX = radius;
+        this.scaleY = radius;
+        return this;
+    }
+
+    @Override
     public BasicRegularPolygon rotation(float rotation) {
         this.rotation = rotation;
         return this;

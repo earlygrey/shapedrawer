@@ -52,8 +52,8 @@ class BasicRectangle extends BasicShape<BasicRectangle> implements OutlinedRecta
     }
 
     @Override
-    public OutlinedRectangle position(Vector2 centre) {
-        return position(centre.x, centre.y);
+    public OutlinedRectangle position(Vector2 position) {
+        return position(position.x, position.y);
     }
 
     @Override

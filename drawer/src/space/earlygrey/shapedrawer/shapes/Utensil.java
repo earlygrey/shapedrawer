@@ -38,32 +38,32 @@ abstract class Utensil {
 
    abstract boolean filled();
 
-   public FilledPolygon polygon() {
+   public FilledPolygon<?> polygon() {
       POLYLINE.reset(filled());
       return POLYLINE;
    }
 
-   public FilledRegularPolygon regularPolygon() {
+   public FilledRegularPolygon<?> regularPolygon() {
       REGULAR_POLYGON.reset(filled());
       return REGULAR_POLYGON;
    }
 
-   public FilledCircle circle() {
+   public FilledCircle<?> circle() {
       CIRCLE.reset(filled());
       return CIRCLE;
    }
 
-   public FilledEllipse ellipse() {
+   public FilledEllipse<?> ellipse() {
       ELLIPSE.reset(filled());
       return ELLIPSE;
    }
 
-   public FilledRectangle rectangle() {
+   public FilledRectangle<?> rectangle() {
       RECTANGLE.reset(filled());
       return RECTANGLE;
    }
 
-   public FilledTriangle triangle() {
+   public FilledTriangle<?> triangle() {
       TRIANGLE.reset(filled());
       return TRIANGLE;
    }

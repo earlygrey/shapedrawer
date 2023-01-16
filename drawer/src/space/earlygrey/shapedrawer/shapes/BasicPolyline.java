@@ -11,7 +11,7 @@ import space.earlygrey.shapedrawer.ShapeDrawer;
 import space.earlygrey.shapedrawer.ShapeUtils.LineWidthFunction;
 import space.earlygrey.shapedrawer.shapes.Shape.PolyLine;
 
-public class BasicPolyline extends BasicShape<BasicPolyline> implements PolyLine {
+public class BasicPolyline extends BasicShape<BasicPolyline> implements PolyLine<BasicPolyline> {
 
     FloatArray vertices;
 

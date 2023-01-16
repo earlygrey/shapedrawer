@@ -13,7 +13,7 @@ public interface Shape<T extends Shape> {
 
     T color(Color color);
 
-    interface FilledCircle<T extends FilledCircle> extends Shape {
+    interface FilledCircle<T extends FilledCircle<T>> extends Shape<T> {
 
         T centre(float x, float y);
 
@@ -23,14 +23,14 @@ public interface Shape<T extends Shape> {
 
     }
 
-    interface OutlinedCircle extends FilledCircle<OutlinedCircle> {
+    interface OutlinedCircle<T extends OutlinedCircle<T>> extends FilledCircle<OutlinedCircle<T>> {
         OutlinedCircle joinType(JoinType joinType);
 
         OutlinedCircle lineWidth(float width);
 
     }
 
-    interface FilledEllipse<T extends FilledEllipse> extends Shape<T> {
+    interface FilledEllipse<T extends FilledEllipse<T>> extends Shape<T> {
 
         T centre(float x, float y);
 
@@ -46,7 +46,7 @@ public interface Shape<T extends Shape> {
 
     }
 
-    interface OutlinedEllipse extends FilledEllipse<OutlinedEllipse> {
+    interface OutlinedEllipse<T extends OutlinedEllipse<T>> extends FilledEllipse<OutlinedEllipse<T>> {
 
         OutlinedEllipse joinType(JoinType joinType);
 
@@ -54,7 +54,7 @@ public interface Shape<T extends Shape> {
 
     }
 
-    interface Line extends Shape<Line> {
+    interface Line<T extends Line<T>> extends Shape<Line<T>> {
 
         Line from(float x, float y);
 
@@ -76,7 +76,7 @@ public interface Shape<T extends Shape> {
 
     }
 
-    interface FilledTriangle<T extends FilledTriangle> extends Shape {
+    interface FilledTriangle<T extends FilledTriangle<T>> extends Shape<T> {
 
         T a(float x, float y);
 
@@ -91,14 +91,14 @@ public interface Shape<T extends Shape> {
         T c(Vector2 c);
     }
 
-    interface OutlinedTriangle extends FilledTriangle<OutlinedTriangle> {
+    interface OutlinedTriangle<T extends OutlinedTriangle<T>> extends FilledTriangle<OutlinedTriangle<T>> {
         OutlinedTriangle joinType(JoinType joinType);
 
         OutlinedTriangle lineWidth(float width);
 
     }
 
-    interface FilledPolygon<T extends FilledPolygon> extends Shape<T> {
+    interface FilledPolygon<T extends FilledPolygon<T>> extends Shape<T> {
 
         <V extends Vector2> T vertices(Iterable<V> points);
 
@@ -116,7 +116,7 @@ public interface Shape<T extends Shape> {
 
     }
 
-    interface OutlinedPolygon<T extends OutlinedPolygon> extends FilledPolygon<T> {
+    interface OutlinedPolygon<T extends OutlinedPolygon<T>> extends FilledPolygon<T> {
 
         T joinType(JoinType joinType);
 
@@ -124,17 +124,19 @@ public interface Shape<T extends Shape> {
 
     }
 
-    interface PolyLine extends OutlinedPolygon<PolyLine> {
+    interface PolyLine<T extends PolyLine<T>> extends OutlinedPolygon<PolyLine<T>> {
         PolyLine lineWidth(LineWidthFunction width);
     }
 
-    interface FilledRegularPolygon<T extends FilledRegularPolygon> extends Shape<T> {
+    interface FilledRegularPolygon<T extends FilledRegularPolygon<T>> extends Shape<T> {
 
         T centre(Vector2 centre);
 
         T radiusX(float radiusX);
 
         T radiusY(float radiusY);
+
+        T radius(float radius);
 
         T rotation(float rotation);
 
@@ -143,14 +145,14 @@ public interface Shape<T extends Shape> {
         T sides(int sides);
     }
 
-    interface OutlinedRegularPolygon extends FilledRegularPolygon<OutlinedRegularPolygon> {
+    interface OutlinedRegularPolygon<T extends OutlinedRegularPolygon<T>> extends FilledRegularPolygon<OutlinedRegularPolygon<T>> {
 
         OutlinedRegularPolygon joinType(JoinType joinType);
 
         OutlinedRegularPolygon lineWidth(float width);
     }
 
-    interface Sector<T extends Sector> extends Shape<T> {
+    interface Sector<T extends Sector<T>> extends Shape<T> {
 
         T centre(float x, float y);
 
@@ -166,17 +168,17 @@ public interface Shape<T extends Shape> {
 
     }
 
-    interface Arc extends Sector<Arc> {
+    interface Arc<T extends Arc<T>> extends Sector<Arc<T>> {
         Arc joinType(JoinType joinType);
 
         Arc lineWidth(float width);
     }
 
-    interface FilledRectangle<T extends FilledRectangle> extends Shape<T> {
+    interface FilledRectangle<T extends FilledRectangle<T>> extends Shape<T> {
 
         T position(float x, float y);
 
-        T position(Vector2 centre);
+        T position(Vector2 position);
 
         T size(float width, float height);
 
@@ -186,7 +188,7 @@ public interface Shape<T extends Shape> {
 
     }
 
-    interface OutlinedRectangle extends FilledRectangle<OutlinedRectangle> {
+    interface OutlinedRectangle<T extends OutlinedRectangle<T>> extends FilledRectangle<OutlinedRectangle<T>> {
 
         OutlinedRectangle joinType(JoinType joinType);
 

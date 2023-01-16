@@ -25,12 +25,12 @@ public class Pen extends Utensil {
         return false;
     }
 
-    public Line line() {
+    public Line<?> line() {
         LINE.reset(false);
         return LINE;
     }
 
-    public PolyLine polyLine() {
+    public PolyLine<?> polyLine() {
         POLYLINE.reset(false);
         POLYLINE.setOpen(true);
         return POLYLINE;
@@ -43,35 +43,36 @@ public class Pen extends Utensil {
     }
 
     @Override
-    public OutlinedRegularPolygon regularPolygon() {
+    public OutlinedRegularPolygon<?> regularPolygon() {
         REGULAR_POLYGON.reset(false);
         return REGULAR_POLYGON;
     }
 
     @Override
-    public OutlinedCircle circle() {
+    public OutlinedCircle<?> circle() {
         CIRCLE.reset(false);
         return CIRCLE;
     }
 
     @Override
-    public OutlinedEllipse ellipse() {
+    public OutlinedEllipse<?> ellipse() {
         ELLIPSE.reset(false);
         return ELLIPSE;
     }
 
     @Override
-    public OutlinedRectangle rectangle() {
+    public OutlinedRectangle<?> rectangle() {
         RECTANGLE.reset(false);
         return RECTANGLE;
     }
 
-    public Arc arc() {
+    public Arc<?> arc() {
         ARC.reset(false);
         return ARC;
     }
+
     @Override
-    public OutlinedTriangle triangle() {
+    public OutlinedTriangle<?> triangle() {
         TRIANGLE.reset(false);
         return TRIANGLE;
     }
