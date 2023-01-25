@@ -6,11 +6,11 @@
 
 A library for [libGDX](https://github.com/libgdx/libgdx), an open-source game development application framework written in java.
 
-Draws simple shapes like libGDX's [ShapeRenderer](https://libgdx.badlogicgames.com/ci/nightlies/docs/api/com/badlogic/gdx/graphics/glutils/ShapeRenderer.html) does, but uses a Batch to perform the drawing. This means it can be used in between `Batch#begin()` and `Batch#end()` without needing to flush the Batch.
+Draws simple shapes like libGDX's [ShapeRenderer](https://javadoc.io/static/com.badlogicgames.gdx/gdx/1.11.0/com/badlogic/gdx/graphics/glutils/ShapeRenderer.html) does, but uses a Batch to perform the drawing. This means it can be used in between `Batch#begin()` and `Batch#end()` without needing to flush the Batch.
 
 Comes with overloaded methods to draw lines, paths, ellipses, regular polygons and rectangles.
 
-Just needs to be provided with a Batch and a TextureRegion. However, note that if you want to draw filled shapes, it is more efficient to use a batch that implements [PolygonBatch](https://libgdx.badlogicgames.com/ci/nightlies/docs/api/com/badlogic/gdx/graphics/g2d/PolygonBatch.html) (eg a [PolygonSpriteBatch](https://libgdx.badlogicgames.com/ci/nightlies/docs/api/com/badlogic/gdx/graphics/g2d/PolygonSpriteBatch.html)) instead of a Batch that does not (eg a [SpriteBatch](https://libgdx.badlogicgames.com/ci/nightlies/docs/api/com/badlogic/gdx/graphics/g2d/SpriteBatch.html)).
+Just needs to be provided with a Batch and a TextureRegion. However, note that if you want to draw filled shapes, it is more efficient to use a batch that implements [PolygonBatch](https://javadoc.io/static/com.badlogicgames.gdx/gdx/1.11.0/com/badlogic/gdx/graphics/g2d/PolygonBatch.html) (eg a [PolygonSpriteBatch](https://javadoc.io/static/com.badlogicgames.gdx/gdx/1.11.0/com/badlogic/gdx/graphics/g2d/PolygonSpriteBatch.html)) instead of a Batch that does not (eg a [SpriteBatch](https://javadoc.io/static/com.badlogicgames.gdx/gdx/1.11.0/com/badlogic/gdx/graphics/g2d/SpriteBatch.html)).
 
 ![Gif didn't load - see wiki for images!](https://raw.githubusercontent.com/wiki/earlygrey/shapedrawer/images/readme_demo.gif)
 
