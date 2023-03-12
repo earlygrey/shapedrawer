@@ -1849,7 +1849,7 @@ public class ShapeDrawer extends AbstractShapeDrawer {
      * The originX and originY specify the point about which to rotate the rectangle.
      * The rotation is specified in degrees.
      *
-     * @apiNote It have the same usage as {@link ShapeRenderer} has
+     * @apiNote It have the same usage as {@link ShapeRenderer#rect(float, float, float, float, float, float, float, float, float)} has
      */
     public void filledRectangle2(float x, float y, float originX, float originY, float width, float height, float scaleX, float scaleY, float degrees)
     {
@@ -1866,7 +1866,7 @@ public class ShapeDrawer extends AbstractShapeDrawer {
      * @param col3 The color at (x + width, y + height)
      * @param col4 The color at (x, y + height)
      *
-     * @apiNote It have the same usage as {@link ShapeRenderer} has
+     * @apiNote It have the same usage as {@link ShapeRenderer#rect(float, float, float, float, float, float, float, float, float, Color, Color, Color, Color)} has
      */
     public void filledRectangle2(float x, float y, float originX, float originY, float width, float height, float scaleX, float scaleY,
                                  float degrees, Color col1, Color col2, Color col3, Color col4)
@@ -1883,7 +1883,7 @@ public class ShapeDrawer extends AbstractShapeDrawer {
      * @param col3 The color at (x + width, y + height)
      * @param col4 The color at (x, y + height)
      *
-     * @apiNote It have the same usage as {@link ShapeRenderer} has, but uses {@link Color#toFloatBits()}'ed colors to draw
+     * @apiNote It have the same usage as {@link ShapeRenderer#rect(float, float, float, float, float, float, float, float, float, Color, Color, Color, Color)} has, but uses {@link Color#toFloatBits()}'ed colors to draw
      */
     public void filledRectangle2(float x, float y, float originX, float originY, float width, float height, float scaleX, float scaleY,
                                  float degrees, float col1, float col2, float col3, float col4)
