@@ -1,5 +1,7 @@
 package space.earlygrey.shapedrawer;
 
+import com.badlogic.gdx.graphics.Color;
+import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import com.badlogic.gdx.math.EarClippingTriangulator;
 import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.utils.ShortArray;
@@ -68,6 +70,56 @@ abstract class FilledPolygonDrawer<T extends BatchManager> extends DrawerTemplat
         x4(halfWidth * cos - (-halfHeight * sin) + centreX);
         y4(halfWidth * sin + (-halfHeight * cos) + centreY);
         color(c1,c2,c3,c4);
+        batchManager.pushQuad();
+        if (!caching) batchManager.pushToBatch();
+    }
+
+    /** Based on {@link ShapeRenderer#rect(float, float, float, float, float, float, float, float, float, Color, Color, Color, Color)} */
+    void rectangle(float x, float y, float originX, float originY, float width, float height, float scaleX, float scaleY,
+                   float degrees, float col1, float col2, float col3, float col4)
+    {
+        boolean caching = batchManager.isCachingDraws();
+        batchManager.ensureSpaceForQuad();
+
+        float cos = MathUtils.cosDeg(degrees);
+        float sin = MathUtils.sinDeg(degrees);
+        float fx = -originX;
+        float fy = -originY;
+        float fx2 = width - originX;
+        float fy2 = height - originY;
+
+        if (scaleX != 1 || scaleY != 1) {
+            fx *= scaleX;
+            fy *= scaleY;
+            fx2 *= scaleX;
+            fy2 *= scaleY;
+        }
+
+        float worldOriginX = x + originX;
+        float worldOriginY = y + originY;
+
+        float x1 = cos * fx - sin * fy + worldOriginX;
+        float y1 = sin * fx + cos * fy + worldOriginY;
+
+        float x2 = cos * fx2 - sin * fy + worldOriginX;
+        float y2 = sin * fx2 + cos * fy + worldOriginY;
+
+        float x3 = cos * fx2 - sin * fy2 + worldOriginX;
+        float y3 = sin * fx2 + cos * fy2 + worldOriginY;
+
+        float x4 = x1 + (x3 - x2);
+        float y4 = y3 - (y2 - y1);
+
+        x1(x1);
+        y1(y1);
+        x2(x2);
+        y2(y2);
+        x3(x3);
+        y3(y3);
+        x4(x4);
+        y4(y4);
+
+        color(col1, col2, col3, col4);
         batchManager.pushQuad();
         if (!caching) batchManager.pushToBatch();
     }

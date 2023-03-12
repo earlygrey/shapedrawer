@@ -4,6 +4,7 @@ package space.earlygrey.shapedrawer;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.g2d.Batch;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
+import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.math.Polygon;
 import com.badlogic.gdx.math.Rectangle;
@@ -1844,4 +1845,49 @@ public class ShapeDrawer extends AbstractShapeDrawer {
         filledPolygonDrawer.rectangle(x, y, width, height, rotation, c1, c2, c3, c4);
     }
 
+    /** Draws a filled rectangle. The x and y specify the lower left corner.
+     * The originX and originY specify the point about which to rotate the rectangle.
+     * The rotation is specified in degrees.
+     *
+     * @apiNote It have the same usage as {@link ShapeRenderer#rect(float, float, float, float, float, float, float, float, float)} has
+     */
+    public void filledRectangle2(float x, float y, float originX, float originY, float width, float height, float scaleX, float scaleY, float degrees)
+    {
+        float c = batchManager.floatBits;
+        filledRectangle2(x, y, originX, originY, width, height, scaleX, scaleY, degrees, c, c, c, c);
+    }
+
+    /** Draws a filled rectangle. The x and y specify the lower left corner.
+     * The originX and originY specify the point about which to rotate the rectangle.
+     * The rotation is specified in degrees.
+     *
+     * @param col1 The color at (x, y)
+     * @param col2 The color at (x + width, y)
+     * @param col3 The color at (x + width, y + height)
+     * @param col4 The color at (x, y + height)
+     *
+     * @apiNote It have the same usage as {@link ShapeRenderer#rect(float, float, float, float, float, float, float, float, float, Color, Color, Color, Color)} has
+     */
+    public void filledRectangle2(float x, float y, float originX, float originY, float width, float height, float scaleX, float scaleY,
+                                 float degrees, Color col1, Color col2, Color col3, Color col4)
+    {
+        filledRectangle2(x, y, originX, originY, width, height, scaleX, scaleY, degrees, col1.toFloatBits(), col2.toFloatBits(), col3.toFloatBits(), col4.toFloatBits());
+    }
+
+    /** Draws a filled rectangle. The x and y specify the lower left corner.
+     * The originX and originY specify the point about which to rotate the rectangle.
+     * The rotation is specified in degrees.
+     *
+     * @param col1 The color at (x, y)
+     * @param col2 The color at (x + width, y)
+     * @param col3 The color at (x + width, y + height)
+     * @param col4 The color at (x, y + height)
+     *
+     * @apiNote It have the same usage as {@link ShapeRenderer#rect(float, float, float, float, float, float, float, float, float, Color, Color, Color, Color)} has, but uses {@link Color#toFloatBits()}'ed colors to draw
+     */
+    public void filledRectangle2(float x, float y, float originX, float originY, float width, float height, float scaleX, float scaleY,
+                                 float degrees, float col1, float col2, float col3, float col4)
+    {
+        filledPolygonDrawer.rectangle(x, y, originX, originY, width, height, scaleX, scaleY, degrees, col1, col2, col3, col4);
+    }
 }
