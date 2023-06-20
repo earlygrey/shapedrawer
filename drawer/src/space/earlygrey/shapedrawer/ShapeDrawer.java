@@ -1210,6 +1210,19 @@ public class ShapeDrawer extends AbstractShapeDrawer {
      * @param v1        the first vertex
      * @param v2        the second vertex
      * @param v3        the third vertex
+     * @param color     the packed float colour
+     * @param lineWidth
+     */
+    public void triangle(Vector2 v1, Vector2 v2, Vector2 v3, Color color, float lineWidth) {
+        triangle(v1, v2, v3, lineWidth, isJoinNecessary(lineWidth) ? JoinType.POINTY : JoinType.NONE, color.toFloatBits());
+    }
+
+    /**
+     * Calls {@link #triangle(Vector2, Vector2, Vector2, float, JoinType, float)}.
+     *
+     * @param v1        the first vertex
+     * @param v2        the second vertex
+     * @param v3        the third vertex
      * @param lineWidth
      * @param color     the packed float colour
      */
