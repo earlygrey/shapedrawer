@@ -1254,7 +1254,7 @@ public class ShapeDrawer extends AbstractShapeDrawer {
      * @param y2    y coord of second vertex
      * @param x3    x coord of third vertex
      * @param y3    y coord of third vertex
-     * @param color the packed float colour
+     * @param color the colour of all outer lines
      */
     public void triangle(float x1, float y1, float x2, float y2, float x3, float y3, Color color) {
         triangle(x1, y1, x2, y2, x3, y3, getDefaultLineWidth(), isJoinNecessary() ? JoinType.POINTY : JoinType.NONE, color.toFloatBits());
@@ -1288,6 +1288,22 @@ public class ShapeDrawer extends AbstractShapeDrawer {
      * @param color     the packed float colour
      */
     public void triangle(float x1, float y1, float x2, float y2, float x3, float y3, float lineWidth, float color) {
+        triangle(x1, y1, x2, y2, x3, y3, lineWidth, isJoinNecessary(lineWidth) ? JoinType.POINTY : JoinType.NONE, color);
+    }
+
+     /**
+     * Calls {@link #triangle(float, float, float, float, float, float, float, JoinType, float)}.
+     *
+     * @param x1        x coord of first vertex
+     * @param y1        y coord of first vertex
+     * @param x2        x coord of second vertex
+     * @param y2        y coord of second vertex
+     * @param x3        x coord of third vertex
+     * @param y3        y coord of third vertex
+     * @param color     the colour of all outer lines
+     * @param lineWidth
+     */
+    public void triangle(float x1, float y1, float x2, float y2, float x3, float y3, Color color, float lineWidth) {
         triangle(x1, y1, x2, y2, x3, y3, lineWidth, isJoinNecessary(lineWidth) ? JoinType.POINTY : JoinType.NONE, color);
     }
 
