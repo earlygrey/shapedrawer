@@ -454,6 +454,33 @@ public class ShapeDrawer extends AbstractShapeDrawer {
     }
 
     /**
+     * <p>Calls {@link #circle(float, float, float, float, Color)} with default line width.</p>
+     *
+     * @param centreX   the x-coordinate of the centre point
+     * @param centreY   the y-coordinate of the centre point
+     * @param radius    the radius
+     * @param color temporarily changes the ShapeDrawer's colour
+     */
+    public void circle(float centreX, float centreY, float radius, Color color) {
+        circle(centreX, centreY, radius, defaultLineWidth, color);
+    }
+
+    /**
+     * <p>Calls {@link #circle(float, float, float, float)}.</p>
+     *
+     * @param centreX   the x-coordinate of the centre point
+     * @param centreY   the y-coordinate of the centre point
+     * @param radius    the radius
+     * @param lineWidth the width of the line in world units
+     * @param color temporarily changes the ShapeDrawer's colour
+     */
+    public void circle(float centreX, float centreY, float radius, float lineWidth, Color color) {
+        float oldColor = setColor(color);
+        circle(centreX, centreY, radius, lineWidth);
+        setColor(oldColor);
+    }
+
+    /**
      * <p>Calls {@link #ellipse(float, float, float, float, float, float, JoinType)} with rotation set to 0
      * and radiusX and radiusY set to {@code radius}.</p>
      *
