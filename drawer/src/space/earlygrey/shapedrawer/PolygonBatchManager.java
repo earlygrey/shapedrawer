@@ -16,7 +16,7 @@ class PolygonBatchManager extends BatchManager {
         //need at least (3 * vxs) triangles
         //n quads arranged in a loop, each sharing 2 vxs with the next requires 2n vertices
         // and 2n triangles (so 2n*3 indices)
-        int trianglesLength = (int) Math.ceil((verts.length / VERTEX_SIZE) * 3);
+        int trianglesLength = (int) Math.ceil(((double) verts.length / (double) VERTEX_SIZE) * 3);
         triangles = new short[trianglesLength];
     }
 
@@ -104,7 +104,7 @@ class PolygonBatchManager extends BatchManager {
     @Override
     void increaseCacheSize(int minSize) {
         super.increaseCacheSize(minSize);
-        int trianglesLength = (int) Math.ceil((verts.length / VERTEX_SIZE) * 3);
+        int trianglesLength = (int) Math.ceil(((double) verts.length / (double) VERTEX_SIZE) * 3);
         triangles = new short[trianglesLength];
     }
 
